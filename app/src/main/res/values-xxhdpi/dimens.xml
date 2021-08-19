@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    /// common
+    <dimen name="button_text">18sp</dimen>
+    <dimen name="app_text">36sp</dimen>
+    <dimen name="register_padding">24dp</dimen>
+
+    /// alert dialog
+    <dimen name="alert_dialog_width">300dp</dimen>
+    <dimen name="alert_dialog_title_text">20sp</dimen>
+    <dimen name="alert_dialog_body_text">16sp</dimen>
+
+</resources>

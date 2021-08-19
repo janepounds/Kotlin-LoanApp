@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appname "eMaisha Pay"><!ENTITY currency "₹"><!ENTITY asterisk "＊">]>
+<resources>
+    <string name="app_name">&appname;</string>
+    <string name="app_name_first_part">eMaisha</string>
+    <string name="app_name_second_part">Pay</string>
+
+    /// Titles
+    <string name="title_home">Home</string>
+    <string name="title_my_business">My Business</string>
+    <string name="title_credit_score">Credit Score</string>
+    <string name="title_account">Account</string>
+
+
+    /// Common
+    <string name="share_intent_msg">&appname; - Install Now</string>
+    <string name="continue_text">Continue</string>
+    <string name="submit">Submit</string>
+    <string name="back">Back</string>
+    <string name="save">Save</string>
+    <string name="save_and_next">Save &amp; Next</string>
+    <string name="hint_balance_text">UGX 6,000,000</string>
+
+
+    /// Alert Dialog
+    <string name="alert">Alert</string>
+    <string name="exit_app">Exit the app?</string>
+    <string name="exit_app_body">Are you sure you want to exit the app?</string>
+    <string name="cancel">Cancel</string>
+    <string name="exit">Exit</string>
+    <string name="ok">OK</string>
+    <string name="okay">OKAY</string>
+    <string name="confirm">Confirm</string>
+
+
+    /// Splash
+    <string name="app_slogan">Grow your Business with quick and Affordable Loans</string>
+
+
+    /// Intro
+    <string name="intro_screen_1">Easy and Flexible Business Loans to match your Business Needs</string>
+    <string name="intro_screen_2">Money on Demand to Cover unexpected cash Flow gaps and keep your Business Moving</string>
+    <string name="intro_screen_3">Fast decision and Funding Possible in 24 Hours no Asset Security required Upfront</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+
+    /// Welcome
+    <string name="low_interest_loans">Low Interest Loans</string>
+    <string name="at_click_button">At the click of a Button</string>
+    <string name="sign_in">Sign in</string>
+    <string name="create_new_account">Create a new account</string>
+
+
+    /// Login
+    <string name="login">Login</string>
+    <string name="enter_phone_num">Please enter\nMobile Number</string>
+    <string name="enter_phone_num_subtitle">Login with your registered Mobile Number to access your account</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="create_account">Create Account</string>
+    <string name="phone_cannot_be_empty">Phone Number cannot be empty!</string>
+    <string name="invalid_phone_number">Invalid Phone Number!</string>
+
+
+    /// Sign Up
+    <string name="sign_up">Sign-up</string>
+    <string name="full_name">Full Name</string>
+    <string name="full_name_hint">As written on your National Identification</string>
+    <string name="full_name_cannot_be_empty">Full Name cannot be empty!</string>
+    <string name="email_address">Email Address</string>
+    <string name="email_address_hint">Ex. yourname@mail.com</string>
+    <string name="email_address_cannot_be_empty">Email Address cannot be empty!</string>
+    <string name="invalid_email">Invalid Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="country_code">+256</string>
+    <string name="phone_number_hint">700100100</string>
+    <string name="already_have_account">Already Have An Account?</string>
+    <string name="tac_not_accepted">Terms and Conditions is not accepted! Accept it.</string>
+
+
+    /// Verify Pin
+    <string name="otp_verify">OTP\nVerify!</string>
+    <string name="season_end">This season will end in %d seconds.</string>
+    <string name="didnt_receive_code">Didn\'t receive code?</string>
+    <string name="resend_code"><u>Resend code</u></string>
+
+
+    /// Create Pin
+    <string name="create_pin">Create PIN</string>
+    <string name="create_pin_subtitle">Enter a 4 digit PIN to get started</string>
+    <string name="pin">PIN</string>
+    <string name="pin_cannot_be_empty">Pin cannot be empty!</string>
+    <string name="confirm_pin">Confirm PIN</string>
+    <string name="confirm_pin_cannot_be_empty">Confirm Pin cannot be empty!</string>
+    <string name="confirm_pin_not_matches">Pin doesn\'t match Confirm Pin!</string>
+    <string name="pin_hint">&asterisk;&asterisk;&asterisk;&asterisk;</string>
+    <string name="both_pins_must_match">Both PINs must match</string>
+    <string name="remember_me">Remember me</string>
+
+
+    /// Enter Pin
+    <string name="enter_pin">Enter Pin</string>
+    <string name="enter_pin_hint">Enter your 4 digit PIN to confirm</string>
+    <string name="invalid_pin">Invalid Pin! Pin must be equal to 4 digits.</string>
+    <string name="forget_pin">Forget Pin?</string>
+    <string name="click_here">Click here</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="nine">9</string>
+    <string name="zero">0</string>
+    <string name="one_thousand">1000</string>
+
+
+    /// My Account
+    <string name="my_account">My Account</string>
+    <string name="customer_support">Customer Support</string>
+    <string name="do_you_need_help">Do you Need Help?</string>
+    <string name="email">Email</string>
+    <string name="live_chat">Live Chat</string>
+    <string name="toll_free">Toll Free</string>
+
+    <string name="settings_security">Settings &amp; Security</string>
+    <string name="change_your_pin">Change your Pin</string>
+    <string name="faq">FAQ\'s</string>
+    <string name="frequently_asked_questions">Frequently asked questions</string>
+
+    <string name="loan_policy">Loan Policy</string>
+    <string name="lending_disclosure">Lending Disclosure</string>
+    <string name="lending_agreement">Lending Agreement</string>
+    <string name="recovery_policy">Recovery Policy</string>
+    <string name="what_you_need_to_know">What you need to know</string>
+
+    <string name="rate_app">Rate App</string>
+    <string name="share_app">Share App</string>
+    <string name="app_version">App Version: %s</string>
+    <string name="log_out">Logout</string>
+
+
+</resources>
