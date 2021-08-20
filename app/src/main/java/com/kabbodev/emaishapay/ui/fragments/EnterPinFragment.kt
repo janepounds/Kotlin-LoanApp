@@ -2,6 +2,7 @@ package com.kabbodev.emaishapay.ui.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -86,7 +87,11 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
 
         statusDialogBinding.okayBtn.setOnClickListener {
             statusDialog.dismiss()
-            navController.navigateUsingPopUp(R.id.myLoansFragment, R.id.action_global_homeFragment)
+//            arguments = Bundle().apply {
+//                putBoolean("checked",false)
+//            }
+
+            navController.navigateUsingPopUp(R.id.myLoansFragment, R.id.myLoansFragment)
         }
     }
 

@@ -41,8 +41,12 @@
     <string name="date_of_birth_hint">dd/mm/year</string>
     <string name="education_level">Education Level</string>
     <string-array name="education_level">
-        <item>SSC</item>
-        <item>HSC</item>
+        <item>Primary</item>
+        <item>Secondary</item>
+        <item>Tertiary Institution</item>
+        <item>Diploma</item>
+        <item>Degree</item>
+        <item>Masters or PhD</item>
     </string-array>
     <string name="marital_status">Marital Status</string>
     <string-array name="marital_status">

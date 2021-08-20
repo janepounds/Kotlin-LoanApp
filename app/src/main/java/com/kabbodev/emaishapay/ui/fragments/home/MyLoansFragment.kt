@@ -1,5 +1,6 @@
 package com.kabbodev.emaishapay.ui.fragments.home
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -13,11 +14,17 @@ import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MyLoansFragment : BaseFragment<FragmentMyLoansBinding>() {
+class MyLoansFragment  : BaseFragment<FragmentMyLoansBinding>() {
 
     private val mViewModel: LoanViewModel by activityViewModels()
 
-
+//    private var newLoanCheck = true
+//
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//        arguments?.getBoolean("check")
+//        newLoanCheck = it
+//    }
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentMyLoansBinding.inflate(inflater, container, false)
 
     override fun setupTheme() {
@@ -30,6 +37,7 @@ class MyLoansFragment : BaseFragment<FragmentMyLoansBinding>() {
         binding.newLoanCardView.setOnClickListener {
             binding.newLoanChecked = true
             binding.viewpager.currentItem = 0
+
         }
         binding.loanHistoryCardView.setOnClickListener {
             binding.newLoanChecked = false

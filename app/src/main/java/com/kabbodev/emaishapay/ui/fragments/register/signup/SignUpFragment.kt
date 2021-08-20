@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
 
-    private val mViewModel: LoginViewModel by activityViewModels()
+    private  val mViewModel: LoginViewModel by activityViewModels()
 
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentSignUpBinding.inflate(inflater, container, false)
