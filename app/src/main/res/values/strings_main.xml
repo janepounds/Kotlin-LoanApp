@@ -50,8 +50,10 @@
     </string-array>
     <string name="marital_status">Marital Status</string>
     <string-array name="marital_status">
+        <item>Single</item>
         <item>Married</item>
-        <item>Not Married</item>
+        <item>Divorced</item>
+        <item>Widowed</item>
     </string-array>
     <string name="years_in_business">Years In Business</string>
     <string name="years">Years</string>
@@ -68,7 +70,7 @@
     <string name="residential_type">Residential Type</string>
     <string-array name="residential_types">
         <item>Tenant</item>
-        <item>Etc</item>
+        <item>Owner</item>
     </string-array>
     <string name="mobile_number">Mobile Number</string>
     <string name="mobile_number_hint">Enter your direct contact number</string>
@@ -86,6 +88,8 @@
         <item>Mother</item>
         <item>Sister</item>
         <item>Brother</item>
+        <item>Wife</item>
+        <item>Friend</item>
     </string-array>
     <string name="residential_address">Residential Address</string>
     <string name="residential_address_hint">Enter Area of residency Ex. District and Village </string>
@@ -122,12 +126,24 @@
     <string name="avg_monthly_revenue_hint">00.00</string>
     <string name="ugx">UGX</string>
     <string-array name="industry">
-        <item>Private Held</item>
-        <item>Public Held</item>
+        <item>Electronics</item>
+        <item>Grocery Store</item>
+        <item>Furniture</item>
+        <item>Hardware and Construction</item>
+        <item>Home Appliances</item>
+        <item>Restaurant</item>
+        <item>Restaurant</item>
+        <item>Mobile Phones and Computers</item>
+        <item>Wholesale Shop</item>
+        <item>Supermarket</item>
+        <item>Agricultural Inputs shop</item>
     </string-array>
     <string-array name="business_type">
-        <item>Private Held</item>
-        <item>Public Held</item>
+        <item>Sole Proprietorship</item>
+        <item>Partnership</item>
+        <item>Private Limited Company</item>
+        <item>Joint Venture</item>
+        <item>Others</item>
     </string-array>
 
     /// Verification Documents
