@@ -57,7 +57,7 @@
                 app:layout_constraintStart_toStartOf="@+id/tv_district"
                 app:layout_constraintTop_toBottomOf="@+id/tv_district">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/district_hint"
@@ -91,9 +91,10 @@
                 app:layout_constraintStart_toStartOf="@+id/tv_district"
                 app:layout_constraintTop_toBottomOf="@+id/tv_village">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:hint="@string/village"
                     android:inputType="text"
                     android:textColor="@color/black"
                     android:textSize="@dimen/edit_text_size" />
