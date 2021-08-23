@@ -3,12 +3,16 @@ package com.kabbodev.emaishapay.utils
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
+import android.text.Editable
+import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
@@ -69,6 +73,15 @@ fun LayoutBusinessExpandableBinding.addToggleClickListeners(callback: () -> Unit
 fun PowerSpinnerView.initSpinner(lifecycleOwner: LifecycleOwner) {
     this.lifecycleOwner = lifecycleOwner
     this.setOnSpinnerOutsideTouchListener { _, _ -> this.dismiss() }
+}
+
+fun AutoCompleteTextView.initAutoCompleteTextView(textView: AutoCompleteTextView){
+    this.addTextChangedListener(object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        override fun afterTextChanged(s: Editable){
+            textView.showDropDown()
+        }} )
 }
 
 fun LayoutUploadDocumentBinding.updatePhotoLayout(selectedUri: Uri?) {

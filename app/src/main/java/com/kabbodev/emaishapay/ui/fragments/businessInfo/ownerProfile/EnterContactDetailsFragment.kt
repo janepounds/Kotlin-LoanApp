@@ -1,5 +1,7 @@
 package com.kabbodev.emaishapay.ui.fragments.businessInfo.ownerProfile
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
@@ -7,6 +9,7 @@ import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.databinding.FragmentEnterContactDetailsBinding
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
+import com.kabbodev.emaishapay.utils.initAutoCompleteTextView
 import com.kabbodev.emaishapay.utils.initSpinner
 import com.kabbodev.emaishapay.utils.isPhoneNumberValid
 import com.kabbodev.emaishapay.utils.snackbar
@@ -18,11 +21,15 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
     private val mViewModel: LoginViewModel by activityViewModels()
 
 
-    override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentEnterContactDetailsBinding.inflate(inflater, container, false)
+    override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentEnterContactDetailsBinding.inflate(
+        inflater,
+        container,
+        false
+    )
 
     override fun setupTheme() {
         binding.spinnerResidentialType.initSpinner(this)
-
+        binding.autoCompleteDistrict.initAutoCompleteTextView()
     }
 
     override fun setupClickListeners() {
@@ -30,38 +37,55 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
         binding.saveBtn.setOnClickListener { checkInputs(false) }
         binding.saveAndNextBtn.setOnClickListener { checkInputs(true) }
     }
-
+1
     private fun checkInputs(proceedNext: Boolean) {
         val residentialTypes: List<String> = listOf(*resources.getStringArray(R.array.residential_types))
-//        val districts : List<String> = listOf()
+        val districts : List<String> = listOf(*resources.getStringArray(R.array.residential_types))
 
-        val district = binding.etDistrict.editText?.text.toString().trim()
+        val district = binding.autoCompleteDistrict?.text.toString().trim()
         val village = binding.etVillage.editText?.text.toString().trim()
         val mobileNumber = binding.etMobileNumber.etPhoneNumber.editText?.text.toString().trim()
         val landLordName = binding.etLandlordName.editText?.text.toString().trim()
         val landlordPhoneNumber = binding.etLandlordPhoneNumber.etPhoneNumber.editText?.text.toString().trim()
-        var distric: String? = null
         var residentialType: String? = null
         var error: String? = landlordPhoneNumber.isPhoneNumberValid()
         val mobileNumberError = mobileNumber.isPhoneNumberValid()
 
-//        if(binding.etDistrict.selectedIndex >=0){
-//            districts = distric[]
-//
-//        }
-
         if (binding.spinnerResidentialType.selectedIndex >= 0) {
             residentialType = residentialTypes[binding.spinnerResidentialType.selectedIndex]
         } else {
-            error = String.format(getString(R.string.select_error), getString(R.string.residential_type))
+            error = String.format(
+                getString(R.string.select_error),
+                getString(R.string.residential_type)
+            )
         }
 
         if (mobileNumberError != null) error = mobileNumberError
-        if (landlordPhoneNumber.isEmpty()) error = String.format(getString(R.string.cannot_be_empty_error), getString(R.string.land_lord_phone_number))
-        if (landLordName.isEmpty()) error = String.format(getString(R.string.cannot_be_empty_error), getString(R.string.land_lord_name))
-        if (mobileNumber.isEmpty()) error = String.format(getString(R.string.cannot_be_empty_error), getString(R.string.mobile_number))
-        if (village.isEmpty()) error = String.format(getString(R.string.cannot_be_empty_error), getString(R.string.village))
-        if (district.isEmpty()) error = String.format(getString(R.string.cannot_be_empty_error), getString(R.string.district))
+        if (landlordPhoneNumber.isEmpty()) error = String.format(
+            getString(R.string.cannot_be_empty_error), getString(
+                R.string.land_lord_phone_number
+            )
+        )
+        if (landLordName.isEmpty()) error = String.format(
+            getString(R.string.cannot_be_empty_error), getString(
+                R.string.land_lord_name
+            )
+        )
+        if (mobileNumber.isEmpty()) error = String.format(
+            getString(R.string.cannot_be_empty_error), getString(
+                R.string.mobile_number
+            )
+        )
+        if (village.isEmpty()) error = String.format(
+            getString(R.string.cannot_be_empty_error), getString(
+                R.string.village
+            )
+        )
+        if (district.isEmpty()) error = String.format(
+            getString(R.string.cannot_be_empty_error), getString(
+                R.string.district
+            )
+        )
 
         if (!error.isNullOrEmpty()) {
             binding.root.snackbar(error)
