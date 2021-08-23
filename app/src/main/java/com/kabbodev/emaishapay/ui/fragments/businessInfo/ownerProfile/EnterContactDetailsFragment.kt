@@ -4,6 +4,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.databinding.FragmentEnterContactDetailsBinding
@@ -29,7 +30,23 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
 
     override fun setupTheme() {
         binding.spinnerResidentialType.initSpinner(this)
-        binding.autoCompleteDistrict.initAutoCompleteTextView()
+
+        val districtListAdapter: ArrayAdapter<String>? =
+            context?.let { ArrayAdapter<String>(it, android.R.layout.simple_dropdown_item_1line, listOf(*resources.getStringArray(R.array.residential_types))) }
+        binding.autoCompleteDistrict.threshold = 1
+        binding.autoCompleteDistrict.setAdapter(districtListAdapter)
+        binding.autoCompleteDistrict.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                binding.autoCompleteDistrict.showDropDown()
+            }
+
+        })
     }
 
     override fun setupClickListeners() {
@@ -37,10 +54,9 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
         binding.saveBtn.setOnClickListener { checkInputs(false) }
         binding.saveAndNextBtn.setOnClickListener { checkInputs(true) }
     }
-1
+
     private fun checkInputs(proceedNext: Boolean) {
         val residentialTypes: List<String> = listOf(*resources.getStringArray(R.array.residential_types))
-        val districts : List<String> = listOf(*resources.getStringArray(R.array.residential_types))
 
         val district = binding.autoCompleteDistrict?.text.toString().trim()
         val village = binding.etVillage.editText?.text.toString().trim()
