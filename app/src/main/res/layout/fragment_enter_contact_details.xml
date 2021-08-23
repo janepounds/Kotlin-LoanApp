@@ -50,16 +50,18 @@
                 android:id="@+id/et_district"
                 style="@style/OutlinedEditTextStyle"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:layout_marginTop="@dimen/edit_text_margin_top"
                 app:hintEnabled="false"
                 app:layout_constraintEnd_toEndOf="@+id/tv_district"
                 app:layout_constraintStart_toStartOf="@+id/tv_district"
                 app:layout_constraintTop_toBottomOf="@+id/tv_district">
 
-                <AutoCompleteTextView
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingStart="@dimen/edit_text_margin_start_end"
+                    android:paddingEnd="@dimen/edit_text_margin_start_end"
                     android:hint="@string/district_hint"
                     android:inputType="text"
                     android:textColor="@color/black"
@@ -84,16 +86,18 @@
                 android:id="@+id/et_village"
                 style="@style/OutlinedEditTextStyle"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:layout_marginTop="@dimen/edit_text_margin_top"
                 app:hintEnabled="false"
                 app:layout_constraintEnd_toEndOf="@+id/tv_village"
                 app:layout_constraintStart_toStartOf="@+id/tv_district"
                 app:layout_constraintTop_toBottomOf="@+id/tv_village">
 
-                <AutoCompleteTextView
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingStart="@dimen/edit_text_margin_start_end"
+                    android:paddingEnd="@dimen/edit_text_margin_start_end"
                     android:hint="@string/village"
                     android:inputType="text"
                     android:textColor="@color/black"
