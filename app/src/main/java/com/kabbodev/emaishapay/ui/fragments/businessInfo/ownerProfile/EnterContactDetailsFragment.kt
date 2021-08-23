@@ -33,15 +33,22 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
 
     private fun checkInputs(proceedNext: Boolean) {
         val residentialTypes: List<String> = listOf(*resources.getStringArray(R.array.residential_types))
+//        val districts : List<String> = listOf()
 
         val district = binding.etDistrict.editText?.text.toString().trim()
         val village = binding.etVillage.editText?.text.toString().trim()
         val mobileNumber = binding.etMobileNumber.etPhoneNumber.editText?.text.toString().trim()
         val landLordName = binding.etLandlordName.editText?.text.toString().trim()
         val landlordPhoneNumber = binding.etLandlordPhoneNumber.etPhoneNumber.editText?.text.toString().trim()
+        var distric: String? = null
         var residentialType: String? = null
         var error: String? = landlordPhoneNumber.isPhoneNumberValid()
         val mobileNumberError = mobileNumber.isPhoneNumberValid()
+
+//        if(binding.etDistrict.selectedIndex >=0){
+//            districts = distric[]
+//
+//        }
 
         if (binding.spinnerResidentialType.selectedIndex >= 0) {
             residentialType = residentialTypes[binding.spinnerResidentialType.selectedIndex]

@@ -43,3 +43,5 @@ fastlane/report.xml
 # OS generated files #
 */.DS_Store
 .DS_Store
+
+app/src/main/java/com/cabral/emaishapay/constants/ConstantValues.kt

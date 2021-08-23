@@ -1,0 +1,6 @@
+package com.kabbodev.emaishapay.constants
+
+object Constants {
+const val LOAN_API_URL = "https://emaishapayloan.api.emaisha.com/"
+const val LOAN_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDQUJSQUwgVEVDSCBMVEQiLCJpYXQiOjE2MTM0MDk0ODcsIm5iZiI6MTYyODUxNzA5MSwiZXhwIjoxNzg2Mjc5ODkxLCJhdWQiOiJJTlQiLCJwYXJhbXMiOnsidmVuZG9yIjoiQ0FCUkFMMjAyMSIsImVtYWlsIjoiY2FicmFsdGVjaGx0ZEBnbWFpbC5jb20iLCJwYXNzd29yZCI6ImNhYnJhbCtlTWFpc2hhUGF5QDIwMjEifX0.2Mt9Rp-LlWFV5dlaZclJ_SAAdZF2QhRbUE7-NKKx5zXZaBEE9w56mkic9HElST0rX5-ZJ6l4ur46gr6FkEJjFw"
+}
