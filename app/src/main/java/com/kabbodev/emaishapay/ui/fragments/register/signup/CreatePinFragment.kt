@@ -6,22 +6,31 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.data.models.AuthenticationResponse
+import com.kabbodev.emaishapay.data.models.RegistrationResponse
 import com.kabbodev.emaishapay.databinding.FragmentCreatePinBinding
+import com.kabbodev.emaishapay.network.ApiClient
+import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.fragments.register.RegisterFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
-import com.kabbodev.emaishapay.utils.AsteriskPasswordTransformationMethod
-import com.kabbodev.emaishapay.utils.addEndIconClickListener
-import com.kabbodev.emaishapay.utils.navigateUsingPopUp
-import com.kabbodev.emaishapay.utils.snackbar
+import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @AndroidEntryPoint
 class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
     private val mViewModel: LoginViewModel by activityViewModels()
-
+    private val phoneNumber = arguments?.getString("phone")
+    private val otp = arguments?.getString("otp")
+    private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
+    private val dialogLoader: DialogLoader by lazy{
+        DialogLoader
+    }
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentCreatePinBinding.inflate(inflater, container, false)
 
@@ -68,7 +77,48 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
             return
         }
         lifecycleScope.launch { userPreferences.saveIsLoggedIn(true) }
-        navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_homeFragment)
+
+        /*************Retrofit call to verify otp******************************/
+
+        var call: Call<AuthenticationResponse?>? = apiRequests?.verifyRegistration(
+            otp,
+            phoneNumber,
+            "verifyUserRegistration",
+            generateRequestId(),
+            pin
+
+        )
+        call!!.enqueue(object : Callback<AuthenticationResponse> {
+            override fun onResponse(
+                call: Call<AuthenticationResponse>,
+                response: Response<AuthenticationResponse>
+            ) {
+                if (response.isSuccessful) {
+                    dialogLoader.hideProgressDialog()
+                    if (response.body()!!.status == 1) {
+
+                        /**********navigate to home fragment**************/
+                        navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_homeFragment)
+                    }
+
+                } else {
+                    response.body()!!.message?.let { binding.root.snackbar(it) }
+                }
+
+            }
+
+            override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
+                t.message?.let { binding.root.snackbar(it) }
+                dialogLoader.hideProgressDialog()
+
+            }
+        })
+
+
     }
+
+}
+
+private fun <T> Call<T>.enqueue(callback: Callback<AuthenticationResponse>) {
 
 }

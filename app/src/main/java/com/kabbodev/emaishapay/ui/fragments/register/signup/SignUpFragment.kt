@@ -1,25 +1,46 @@
 package com.kabbodev.emaishapay.ui.fragments.register.signup
 
+import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.constants.Constants
+import com.kabbodev.emaishapay.data.models.RegistrationResponse
 import com.kabbodev.emaishapay.databinding.FragmentSignUpBinding
+import com.kabbodev.emaishapay.network.ApiClient
+import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.fragments.register.RegisterFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
+import com.kabbodev.emaishapay.utils.DialogLoader
+import com.kabbodev.emaishapay.utils.generateRequestId
 import com.kabbodev.emaishapay.utils.isPhoneNumberValid
 import com.kabbodev.emaishapay.utils.snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
 
-    private  val mViewModel: LoginViewModel by activityViewModels()
+    private val mViewModel: LoginViewModel by activityViewModels()
+//    private var apiRequests: ApiRequests = getIn
+
+    private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
+    private val dialogLoader: DialogLoader by lazy{
+        DialogLoader
+    }
 
 
-    override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentSignUpBinding.inflate(inflater, container, false)
+    override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) =
+        FragmentSignUpBinding.inflate(
+            inflater,
+            container,
+            false
+        )
 
     override fun setupTheme() {
 
@@ -31,13 +52,16 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
     }
 
     private fun checkInputs() {
+        dialogLoader.showProgressDialog()
         val fullName = binding.etFullName.editText?.text.toString().trim()
         val emailAddress = binding.etEmailAddress.editText?.text.toString().trim()
         val phoneNumber = binding.etPhoneNumber.editText?.text.toString().trim()
         var error: String? = phoneNumber.isPhoneNumberValid()
 
-        if (!binding.termsAndConditionCheckbox.isChecked) error = getString(R.string.tac_not_accepted)
-        if (!Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()) error = getString(R.string.invalid_email)
+        if (!binding.termsAndConditionCheckbox.isChecked) error =
+            getString(R.string.tac_not_accepted)
+        if (!Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()) error =
+            getString(R.string.invalid_email)
         if (emailAddress.isEmpty()) error = getString(R.string.email_address_cannot_be_empty)
         if (fullName.isEmpty()) error = getString(R.string.full_name_cannot_be_empty)
 
@@ -46,7 +70,51 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
             return
         }
         mViewModel.setPhoneNumber(phoneNumber)
-        navController.navigate(R.id.action_registerFragment_to_otpVerifyFragment)
-    }
 
+
+
+        /*****************Retrofit call for sending otp******************************/
+        var call: Call<RegistrationResponse>? = apiRequests?.signUp(
+            generateRequestId(),
+            "registerUser",
+            fullName,
+            Constants.PREPIN + phoneNumber,
+            emailAddress
+        )
+        call!!.enqueue(object : Callback<RegistrationResponse> {
+            override fun onResponse(
+                call: Call<RegistrationResponse>,
+                response: Response<RegistrationResponse>
+            ) {
+                if (response.isSuccessful) {
+                    dialogLoader.hideProgressDialog()
+                    if (response.body()!!.status == 1) {
+                        arguments = Bundle().apply {
+                            putString("phone",Constants.PREPIN+phoneNumber)
+                        }
+
+                        /**********navigate to otp fragment**************/
+                        navController.navigate(R.id.action_registerFragment_to_otpVerifyFragment,arguments)
+                    }
+
+                } else {
+                    response.body()!!.message?.let { binding.root.snackbar(it) }
+                }
+
+            }
+
+            override fun onFailure(call: Call<RegistrationResponse>, t: Throwable) {
+                t.message?.let { binding.root.snackbar(it) }
+                dialogLoader.hideProgressDialog()
+
+            }
+        })
+
+
+    }
 }
+
+
+
+
+

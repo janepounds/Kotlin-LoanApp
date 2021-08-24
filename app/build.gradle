@@ -111,6 +111,11 @@ dependencies {
     implementation 'io.ak1.pix:piximagepicker:1.6.2'
     implementation 'com.github.paroca72:sc-gauges:3.5.4'
 
+    //retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
+
     // Dagger - Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"

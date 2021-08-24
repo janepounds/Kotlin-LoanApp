@@ -14,6 +14,8 @@ import com.kabbodev.emaishapay.data.config.Config
 import com.kabbodev.emaishapay.data.enums.EnterPinType
 import com.kabbodev.emaishapay.databinding.DialogLoanStatusBinding
 import com.kabbodev.emaishapay.databinding.FragmentEnterPinBinding
+import com.kabbodev.emaishapay.network.ApiClient
+import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.singleton.MyApplication
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel

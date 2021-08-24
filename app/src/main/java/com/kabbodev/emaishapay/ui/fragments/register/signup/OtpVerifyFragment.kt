@@ -1,17 +1,27 @@
 package com.kabbodev.emaishapay.ui.fragments.register.signup
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.constants.Constants
+import com.kabbodev.emaishapay.data.models.RegistrationResponse
 import com.kabbodev.emaishapay.databinding.FragmentOtpVerifyBinding
+import com.kabbodev.emaishapay.network.ApiClient
+import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
+import com.kabbodev.emaishapay.utils.DialogLoader
+import com.kabbodev.emaishapay.utils.generateRequestId
 import com.kabbodev.emaishapay.utils.isPhoneNumberValid
 import com.kabbodev.emaishapay.utils.snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @AndroidEntryPoint
 class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
@@ -19,6 +29,7 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
     private val mViewModel: LoginViewModel by activityViewModels()
     private var timeLeft: Int = 20
 
+    private val phoneNumber = arguments?.getString("phone")
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentOtpVerifyBinding.inflate(inflater, container, false)
 
     override fun setupTheme() {
@@ -68,8 +79,14 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
             binding.root.snackbar(error)
             return
         }
+        val otp_value = otp1+otp2+otp3+otp4
 
-        navController.navigate(R.id.action_otpVerifyFragment_to_createPinFragment)
+        arguments = Bundle().apply {
+            putString("otp",otp_value)
+            putString("phone",phoneNumber)
+        }
+
+        navController.navigate(R.id.action_otpVerifyFragment_to_createPinFragment,arguments)
     }
 
 }

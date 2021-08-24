@@ -10,7 +10,6 @@ import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.databinding.FragmentEnterContactDetailsBinding
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
-import com.kabbodev.emaishapay.utils.initAutoCompleteTextView
 import com.kabbodev.emaishapay.utils.initSpinner
 import com.kabbodev.emaishapay.utils.isPhoneNumberValid
 import com.kabbodev.emaishapay.utils.snackbar
