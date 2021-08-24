@@ -18,4 +18,12 @@ class LoginViewModel @Inject constructor(
 
     fun getPhoneNumber() = phoneNumber
 
+   private var otp: String? = null
+
+    fun setOtp(otp_updated:String){
+        otp = otp_updated
+    }
+
+    fun getOtp() = otp
+
 }

@@ -10,17 +10,16 @@ import android.view.Window
 import androidx.appcompat.app.AlertDialog
 import com.kabbodev.emaishapay.R
 
-
-object DialogLoader {
-
-    private lateinit var context:Context
+/**
+ * DialogLoader will be used to show and hide Dialog with ProgressBar
+ */
+class DialogLoader(private val context: Context) {
     private var alertDialog: AlertDialog? = null
     private var dialog: AlertDialog.Builder? = null
-    private var layoutInflater: LayoutInflater = LayoutInflater.from(context)
-
+    private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
     private fun initDialog() {
-        dialog = AlertDialog.Builder(context!!)
-        val dialogView: View = layoutInflater.inflate(R.layout.layout_dialog_loader, null)
+        dialog = AlertDialog.Builder(context)
+        val dialogView = layoutInflater.inflate(R.layout.layout_dialog_loader, null)
         dialog!!.setView(dialogView)
         dialog!!.setCancelable(false)
         alertDialog = dialog!!.create()
@@ -42,5 +41,9 @@ object DialogLoader {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    init {
+        initDialog()
     }
 }

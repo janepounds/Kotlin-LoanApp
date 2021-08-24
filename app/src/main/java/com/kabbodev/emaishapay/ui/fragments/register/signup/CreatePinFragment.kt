@@ -1,11 +1,15 @@
 package com.kabbodev.emaishapay.ui.fragments.register.signup
 
+import android.content.Context
+import android.provider.SyncStateContract
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.models.AuthenticationResponse
 import com.kabbodev.emaishapay.data.models.RegistrationResponse
 import com.kabbodev.emaishapay.databinding.FragmentCreatePinBinding
@@ -24,13 +28,12 @@ import retrofit2.Response
 @AndroidEntryPoint
 class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
+    private val TAG = "CreatePinFragment"
     private val mViewModel: LoginViewModel by activityViewModels()
-    private val phoneNumber = arguments?.getString("phone")
-    private val otp = arguments?.getString("otp")
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
-    private val dialogLoader: DialogLoader by lazy{
-        DialogLoader
-    }
+    private var dialogLoader: DialogLoader? = null
+
+
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentCreatePinBinding.inflate(inflater, container, false)
 
@@ -62,6 +65,8 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
     }
 
     private fun checkInputs() {
+        dialogLoader = context?.let { DialogLoader(it) }
+
         val pin = binding.etPin.editText?.text.toString().trim()
         val confirmPin = binding.etConfirmPin.editText?.text.toString().trim()
         val rememberMeValue = binding.tvRememberMe.tag
@@ -76,16 +81,16 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
             binding.root.snackbar(error)
             return
         }
-        lifecycleScope.launch { userPreferences.saveIsLoggedIn(true) }
+
 
         /*************Retrofit call to verify otp******************************/
-
-        var call: Call<AuthenticationResponse?>? = apiRequests?.verifyRegistration(
-            otp,
-            phoneNumber,
+        dialogLoader?.showProgressDialog()
+        var call: Call<AuthenticationResponse>? = apiRequests?.verifyRegistration(
+             mViewModel.getOtp(),
+            getString(R.string.phone_code)+mViewModel.getPhoneNumber(),
             "verifyUserRegistration",
-            generateRequestId(),
-            pin
+             generateRequestId(),
+            Constants.PREPIN+pin
 
         )
         call!!.enqueue(object : Callback<AuthenticationResponse> {
@@ -94,8 +99,10 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                 response: Response<AuthenticationResponse>
             ) {
                 if (response.isSuccessful) {
-                    dialogLoader.hideProgressDialog()
+                    dialogLoader?.hideProgressDialog()
                     if (response.body()!!.status == 1) {
+                        /***************save user as logged in***************/
+                        lifecycleScope.launch { userPreferences.saveIsLoggedIn(true) }
 
                         /**********navigate to home fragment**************/
                         navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_homeFragment)
@@ -109,7 +116,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
             override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
                 t.message?.let { binding.root.snackbar(it) }
-                dialogLoader.hideProgressDialog()
+                dialogLoader?.hideProgressDialog()
 
             }
         })
@@ -119,6 +126,3 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
 }
 
-private fun <T> Call<T>.enqueue(callback: Callback<AuthenticationResponse>) {
-
-}

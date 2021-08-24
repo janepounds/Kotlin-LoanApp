@@ -30,10 +30,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
 //    private var apiRequests: ApiRequests = getIn
 
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
-    private val dialogLoader: DialogLoader by lazy{
-        DialogLoader
-    }
-
+    private var dialogLoader: DialogLoader? = null
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentSignUpBinding.inflate(
@@ -52,7 +49,8 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
     }
 
     private fun checkInputs() {
-        dialogLoader.showProgressDialog()
+        dialogLoader = context?.let { DialogLoader(it) }
+        dialogLoader?.showProgressDialog()
         val fullName = binding.etFullName.editText?.text.toString().trim()
         val emailAddress = binding.etEmailAddress.editText?.text.toString().trim()
         val phoneNumber = binding.etPhoneNumber.editText?.text.toString().trim()
@@ -72,13 +70,12 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
         mViewModel.setPhoneNumber(phoneNumber)
 
 
-
         /*****************Retrofit call for sending otp******************************/
         var call: Call<RegistrationResponse>? = apiRequests?.signUp(
             generateRequestId(),
             "registerUser",
             fullName,
-            Constants.PREPIN + phoneNumber,
+            getString(R.string.phone_code)+ phoneNumber,
             emailAddress
         )
         call!!.enqueue(object : Callback<RegistrationResponse> {
@@ -87,10 +84,10 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
                 response: Response<RegistrationResponse>
             ) {
                 if (response.isSuccessful) {
-                    dialogLoader.hideProgressDialog()
+                    dialogLoader?.hideProgressDialog()
                     if (response.body()!!.status == 1) {
                         arguments = Bundle().apply {
-                            putString("phone",Constants.PREPIN+phoneNumber)
+                            putString("phone",getString(R.string.phone_code)+phoneNumber)
                         }
 
                         /**********navigate to otp fragment**************/
@@ -105,7 +102,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
 
             override fun onFailure(call: Call<RegistrationResponse>, t: Throwable) {
                 t.message?.let { binding.root.snackbar(it) }
-                dialogLoader.hideProgressDialog()
+                dialogLoader?.hideProgressDialog()
 
             }
         })

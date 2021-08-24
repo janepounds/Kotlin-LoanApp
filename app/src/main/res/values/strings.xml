@@ -71,6 +71,7 @@
     <string name="invalid_email">Invalid Email</string>
     <string name="phone_number">Phone Number</string>
     <string name="country_code">+256</string>
+    <string name="phone_code">256</string>
     <string name="phone_number_hint">700100100</string>
     <string name="already_have_account">Already Have An Account?</string>
     <string name="tac_not_accepted">Terms and Conditions is not accepted! Accept it.</string>

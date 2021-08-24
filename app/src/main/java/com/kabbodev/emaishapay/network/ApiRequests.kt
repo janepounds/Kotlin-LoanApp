@@ -22,7 +22,7 @@ interface ApiRequests {
     ): Call<RegistrationResponse>?
 
     @FormUrlEncoded
-    @POST("verify/registration")
+    @POST("api/verify/registration")
     fun verifyRegistration(
         @Field("otp") otp: String?,
         @Field("phoneNumber") phoneNumber: String?,
@@ -30,8 +30,15 @@ interface ApiRequests {
         @Field("request_id")request_id: String?,
         @Field("pin")pin:String?
 
-    ): Call<AuthenticationResponse?>?
+    ): Call<AuthenticationResponse>?
+
+
     @FormUrlEncoded
-    @POST()
-    fun resendOtp()
+    @POST("api/resend-otp/registration")
+    fun resendOtp(
+        @Field("phoneNumber") phoneNumber: String?,
+        @Field("action_id") action_id: String?,
+        @Field("request_id") request_id: String?
+
+    ): Call<RegistrationResponse>?
 }

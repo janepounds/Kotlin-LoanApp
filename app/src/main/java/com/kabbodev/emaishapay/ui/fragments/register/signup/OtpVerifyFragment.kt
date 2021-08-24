@@ -1,6 +1,8 @@
 package com.kabbodev.emaishapay.ui.fragments.register.signup
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
@@ -26,11 +28,18 @@ import retrofit2.Response
 @AndroidEntryPoint
 class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
 
+    private val TAG = "OtpVerifyFragment"
     private val mViewModel: LoginViewModel by activityViewModels()
     private var timeLeft: Int = 20
+    private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
 
-    private val phoneNumber = arguments?.getString("phone")
-    override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentOtpVerifyBinding.inflate(inflater, container, false)
+
+
+    override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentOtpVerifyBinding.inflate(
+        inflater,
+        container,
+        false
+    )
 
     override fun setupTheme() {
         binding.phoneNumber = mViewModel.getPhoneNumber()
@@ -58,6 +67,41 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
 
     private fun resendCode() {
         if (timeLeft == 0) {
+            /***************Retrofit call for resend otp**************************/
+            var call: Call<RegistrationResponse>? = apiRequests?.resendOtp(
+                getString(R.string.phone_code)+mViewModel.getPhoneNumber(),
+                "resendUserOTP",
+                generateRequestId()
+
+            )
+            call!!.enqueue(object : Callback<RegistrationResponse> {
+                override fun onResponse(
+                    call: Call<RegistrationResponse>,
+                    response: Response<RegistrationResponse>
+                ) {
+                    if (response.isSuccessful) {
+
+                        if (response.body()!!.status == 1) {
+                            arguments = Bundle().apply {
+                                putString("phone", getString(R.string.phone_code) + mViewModel.getPhoneNumber())
+                            }
+
+                        }
+
+                    } else {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                    }
+
+                }
+
+                override fun onFailure(call: Call<RegistrationResponse>, t: Throwable) {
+                    t.message?.let { binding.root.snackbar(it) }
+
+                }
+            })
+
+
+
         } else {
             binding.root.snackbar("Please wait. You can resend otp again after $timeLeft seconds.")
         }
@@ -79,14 +123,11 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
             binding.root.snackbar(error)
             return
         }
+
         val otp_value = otp1+otp2+otp3+otp4
+        mViewModel.setOtp(otp_value)
 
-        arguments = Bundle().apply {
-            putString("otp",otp_value)
-            putString("phone",phoneNumber)
-        }
-
-        navController.navigate(R.id.action_otpVerifyFragment_to_createPinFragment,arguments)
+        navController.navigate(R.id.action_otpVerifyFragment_to_createPinFragment)
     }
 
 }
