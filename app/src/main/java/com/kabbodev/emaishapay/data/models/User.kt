@@ -1,5 +1,7 @@
 package com.kabbodev.emaishapay.data.models
 
+import kotlinx.coroutines.flow.Flow
+
 data class User(
     val fullName: String = "",
     val emailAddress: String = "",
@@ -9,5 +11,5 @@ data class User(
     val nin: String = "",
     val regDate: String = "",
     val location: String = "",
-    val walletBalance: Long = 0
+    val walletBalance: Flow<Long?> = 0
 )

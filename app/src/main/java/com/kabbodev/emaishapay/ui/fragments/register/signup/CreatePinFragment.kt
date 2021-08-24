@@ -12,6 +12,7 @@ import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.models.AuthenticationResponse
 import com.kabbodev.emaishapay.data.models.RegistrationResponse
+import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.databinding.FragmentCreatePinBinding
 import com.kabbodev.emaishapay.network.ApiClient
 import com.kabbodev.emaishapay.network.ApiRequests
@@ -101,8 +102,18 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                 if (response.isSuccessful) {
                     dialogLoader?.hideProgressDialog()
                     if (response.body()!!.status == 1) {
-                        /***************save user as logged in***************/
-                        lifecycleScope.launch { userPreferences.saveIsLoggedIn(true) }
+                        Constants.ACCESS_TOKEN = response.body()!!.access_token.toString()
+                        val user_data = response.body()!!.data
+                        /***************save user details and login user***************/
+
+                        lifecycleScope.launch {
+                            userPreferences.saveUserId(user_data!!.id)
+                            user_data!!.name?.let { userPreferences.saveName(it) }
+                            user_data!!.email?.let { userPreferences.saveEmail(it) }
+                            user_data!!.phoneNumber?.let { userPreferences.savePhoneNumber(it) }
+                            user_data!!.balance?.let { userPreferences.saveBalance(it) }
+                            userPreferences.saveIsLoggedIn(true)
+                        }
 
                         /**********navigate to home fragment**************/
                         navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_homeFragment)

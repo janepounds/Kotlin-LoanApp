@@ -28,7 +28,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
     override fun setupTheme() {
         loadAppVersion()
-        mViewModel.getCurrentUser("user_id", false).observe(viewLifecycleOwner, { user ->
+        mViewModel.getCurrentUser(userId = userPreferences.userId.toString(), false).observe(viewLifecycleOwner, { user ->
             user?.let {
                 binding.layoutAccountAbove.user = it
             }

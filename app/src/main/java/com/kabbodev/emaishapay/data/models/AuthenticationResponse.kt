@@ -35,6 +35,6 @@ class AuthenticationResponse(
         val phoneNumber: String?,
         @SerializedName("balance")
         @Expose
-        var balance: Double?
+        var balance: Long?
 )
 
