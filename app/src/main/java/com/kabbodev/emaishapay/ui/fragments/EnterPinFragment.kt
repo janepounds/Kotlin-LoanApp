@@ -6,9 +6,6 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.datastore.preferences.core.doublePreferencesKey
-import androidx.datastore.preferences.core.floatPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
@@ -16,7 +13,6 @@ import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.config.Config
 import com.kabbodev.emaishapay.data.enums.EnterPinType
 import com.kabbodev.emaishapay.data.models.AuthenticationResponse
-import com.kabbodev.emaishapay.data.preferences.UserPreferences
 import com.kabbodev.emaishapay.databinding.DialogLoanStatusBinding
 import com.kabbodev.emaishapay.databinding.FragmentEnterPinBinding
 import com.kabbodev.emaishapay.network.ApiClient
@@ -27,7 +23,7 @@ import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -137,7 +133,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                     "initiateUserLogin"
                 )
                 call!!.enqueue(object : Callback<AuthenticationResponse> {
-                    override fun onResponse(
+                    override  fun onResponse(
                         call: Call<AuthenticationResponse>,
                         response: Response<AuthenticationResponse>
                     ) {
@@ -148,18 +144,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                                 /************user_data in shared preferences****************************/
 
 
-                                /**********navigate to home fragment**************/
-                                lifecycleScope.launch {
-                                    pinValue?.let { userPreferences.savePreference(it, stringPreferencesKey("pin")) }
-                                    response.body()!!.data?.let { userPreferences.saveUserId(it.id) }
-                                    response.body()!!.access_token?.let { userPreferences.savePreference(it, stringPreferencesKey("access_token")) }
-                                    response.body()!!.data?.name?.let { userPreferences.savePreference(it,stringPreferencesKey("name")) }
-                                    response.body()!!.data?.email?.let { userPreferences.savePreference(it,stringPreferencesKey("email"))}
-                                    response.body()!!.data?.phoneNumber?.let { userPreferences.savePreference(it,stringPreferencesKey("phoneNumber")) }
-                                    response.body()!!.data?.balance?.let { userPreferences.saveDoublePreference(it.toDouble(), doublePreferencesKey("balance")) }
-                                    response.body()!!.data?.interest_rate?.let { userPreferences.saveInterestRate(it) }
-                                    response.body()!!.data?.processing_fee?.let { userPreferences.saveDoublePreference(it, doublePreferencesKey("processing_fee")) }
-                                    userPreferences.saveIsLoggedIn(true) }
+                                lifecycleScope.launch { response.body()?.let { userPreferences.saveUserData(it!!.data, it!!.access_token,pinValue,true) }}
                                 navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_homeFragment)
                             }
 
@@ -167,7 +152,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                             response.body()!!.message?.let { binding.root.snackbar(it) }
                         }
 
-                    }
+            }
 
                     override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
                         t.message?.let { binding.root.snackbar(it) }

@@ -1,11 +1,12 @@
 package com.kabbodev.emaishapay.data.preferences
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
+import com.kabbodev.emaishapay.data.models.UserData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 
 class UserPreferences(private val dataStore: DataStore<Preferences>) {
 
@@ -19,21 +20,18 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
             preferences[KEY_LOGGED_IN]
         }
 
-    suspend fun saveShowIntro(showIntro: Boolean) {
-        dataStore.edit { mutablePreferences ->
-            mutablePreferences[KEY_SHOW_INTRO] = showIntro
-        }
-    }
 
-    suspend fun saveIsLoggedIn(isLoggedIn: Boolean) {
-        dataStore.edit { mutablePreferences ->
-            mutablePreferences[KEY_LOGGED_IN] = isLoggedIn
-        }
-    }
+
         /**************functions for retrieving user preferences*****************************/
 
     val userId: Flow<Int?>
-    get() = dataStore.data.map { preferences-> preferences[USER_ID]  }
+    get() = dataStore.data.catch { exception ->
+        if (exception is IOException) {
+            emit(emptyPreferences())
+        } else {
+            throw exception
+        }
+    }.map { preferences-> preferences[USER_ID]  }
 
     val name: Flow<String?>
         get() = dataStore.data.map { preferences-> preferences[NAME]  }
@@ -61,38 +59,46 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
 
 
 
-
-
-    /****************functions for saving  user preference****************************************/
-
-    suspend fun saveUserId(userId: Int){
-        dataStore.edit { mutablePreferences -> mutablePreferences[USER_ID] = userId }
-    }
-
-    suspend fun saveDoublePreference(value: Double,myKey: Preferences.Key<Double>){
-        dataStore.edit { mutablePreferences -> mutablePreferences[myKey] = value }
-    }
-    suspend fun saveInterestRate(interest_rate: Float){
-        dataStore.edit { mutablePreferences -> mutablePreferences[INTEREST_RATE] = interest_rate }
-    }
-
-    suspend fun savePreference( value: String, myKey: Preferences.Key<String>  ){
-        dataStore.edit { mutablePreferences -> mutablePreferences[myKey] = value }
-    }
-
     /***********clear user preferences****************/
     suspend fun clear() {
         dataStore.edit { mutablePreferences ->
             mutablePreferences.clear()
             saveShowIntro(false)
+            saveIsLoggedIn(false)
+        }
+    }
+
+    suspend fun saveShowIntro(showIntro: Boolean) {
+        dataStore.edit { mutablePreferences ->
+            mutablePreferences[KEY_SHOW_INTRO] = showIntro
+        }
+    }
+
+    suspend fun saveIsLoggedIn(login: Boolean) {
+        dataStore.edit { mutablePreferences ->
+            mutablePreferences[KEY_LOGGED_IN] = login
+        }
+    }
+
+    suspend fun saveUserData(userData: UserData?, accessToken: String?, pinValue: String,isLoggedIn: Boolean) {
+        dataStore.edit { mutablePreferences ->
+            userData?.let {
+                mutablePreferences[USER_ID] = it.id
+                mutablePreferences[NAME] = it.name
+                mutablePreferences[PHONE_NUMBER] = it.phoneNumber
+                mutablePreferences[EMAIL] = it.email
+                mutablePreferences[BALANCE] = it.balance
+                mutablePreferences[INTEREST_RATE] = it.interest_rate
+                mutablePreferences[PROCESSING_FEE] = it.processing_fee
+            }
+            accessToken?.let { mutablePreferences[ACCESS_TOKEN] =it }
+            mutablePreferences[PIN] = pinValue
+            mutablePreferences[KEY_LOGGED_IN] = isLoggedIn
         }
     }
 
 
-
     companion object {
-        private val KEY_SHOW_INTRO = booleanPreferencesKey("show_intro")
-        private val KEY_LOGGED_IN = booleanPreferencesKey("logged_in")
         private val USER_ID = intPreferencesKey("user_id")
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val PIN = stringPreferencesKey("pin")
@@ -102,6 +108,10 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
         private val BALANCE = doublePreferencesKey("balance")
         private val INTEREST_RATE = floatPreferencesKey("interest_rate")
         private val PROCESSING_FEE = doublePreferencesKey("processing_fee")
+
+
+        private val KEY_SHOW_INTRO = booleanPreferencesKey("show_intro")
+        private val KEY_LOGGED_IN = booleanPreferencesKey("logged_in")
 
     }
 

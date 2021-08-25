@@ -1,13 +1,15 @@
 package com.kabbodev.emaishapay.data.repositories
 
 import android.content.Context
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.data.preferences.UserPreferences
 import com.kabbodev.emaishapay.singleton.dataStore
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,16 +27,18 @@ class UserRepository @Inject constructor(
 
 
     fun getCurrentUser(viewModelScope: CoroutineScope, userId: String, reload: Boolean,context: Context): MutableLiveData<User> {
-        if (_currentUser == null || reload) viewModelScope.launch { loadCurrentUser(userId,context) }
+        if (_currentUser == null || reload) viewModelScope.launch { loadCurrentUser(userId,context,viewModelScope) }
         currentUser.postValue(_currentUser)
         return currentUser
     }
 
-    private suspend fun loadCurrentUser(userId: String,context: Context) {
+    private suspend fun loadCurrentUser(userId: String,context: Context,viewModelScope: CoroutineScope) {
         userPreferences = UserPreferences(context.dataStore)
-//        if(userId.equals(userPreferences.userId)) {
+        val name: LiveData<String?>  =
+            userPreferences.name.asLiveData()
+
             _currentUser =  User(
-                                fullName = userPreferences.name.asLiveData().value.toString(),
+                                fullName =  userPreferences.userId.asLiveData().value.toString(),
                                 emailAddress = userPreferences.email.asLiveData().value.toString(),
                                 phoneNumber = userPreferences.phoneNumber.asLiveData().value.toString(),
                                 profileImage = null,
@@ -45,7 +49,6 @@ class UserRepository @Inject constructor(
                                 walletBalance = 0
                             )
 
-//        }
         currentUser.postValue(_currentUser)
     }
 

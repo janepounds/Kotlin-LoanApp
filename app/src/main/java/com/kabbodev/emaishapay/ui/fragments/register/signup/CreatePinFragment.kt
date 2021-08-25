@@ -104,18 +104,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                         Constants.ACCESS_TOKEN = response.body()!!.access_token.toString()
                         val user_data = response.body()!!.data
                         /***************save user details and login user***************/
-
-                        lifecycleScope.launch {
-                            response.body()!!.data?.let { userPreferences.saveUserId(it.id) }
-                            response.body()!!.access_token?.let { userPreferences.savePreference(it, stringPreferencesKey("access_token")) }
-                            response.body()!!.data?.name?.let { userPreferences.savePreference(it,stringPreferencesKey("name")) }
-                            response.body()!!.data?.email?.let { userPreferences.savePreference(it,stringPreferencesKey("email"))}
-                            response.body()!!.data?.phoneNumber?.let { userPreferences.savePreference(it,stringPreferencesKey("phoneNumber")) }
-                            response.body()!!.data?.balance?.let { userPreferences.saveDoublePreference(it.toDouble(), doublePreferencesKey("balance")) }
-                            response.body()!!.data?.interest_rate?.let { userPreferences.saveInterestRate(it) }
-                            response.body()!!.data?.processing_fee?.let { userPreferences.saveDoublePreference(it, doublePreferencesKey("processing_fee")) }
-                            userPreferences.saveIsLoggedIn(true)
-                        }
+                        lifecycleScope.launch { response.body()?.let { userPreferences.saveUserData(it!!.data, it!!.access_token,pin, true) }}
 
                         /**********navigate to home fragment**************/
                         navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_homeFragment)

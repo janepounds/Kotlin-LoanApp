@@ -9,7 +9,7 @@ class AuthenticationResponse(
     val status:Int,
     @SerializedName("message")
     @Expose
-    val message: String?,
+    val message: String,
     @SerializedName("access_token")
     @Expose
     val access_token: String?,
@@ -26,21 +26,21 @@ class AuthenticationResponse(
         val id:Int,
         @SerializedName("name")
         @Expose
-        val name: String?,
+        val name: String,
         @SerializedName("email")
         @Expose
-        val email: String?,
+        val email: String,
         @SerializedName("phoneNumber")
         @Expose
-        val phoneNumber: String?,
+        val phoneNumber: String,
         @SerializedName("balance")
         @Expose
-        var balance: Long?,
+        var balance: Double,
         @SerializedName("interest_rate")
         @Expose
-        var interest_rate: Float?,
+        var interest_rate: Float,
         @SerializedName("processing_fee")
         @Expose
-        var processing_fee: Double?
+        var processing_fee: Double
 )
 

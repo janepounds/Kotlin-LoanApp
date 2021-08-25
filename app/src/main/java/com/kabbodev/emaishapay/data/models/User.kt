@@ -1,5 +1,6 @@
 package com.kabbodev.emaishapay.data.models
 
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
 
 data class User(
