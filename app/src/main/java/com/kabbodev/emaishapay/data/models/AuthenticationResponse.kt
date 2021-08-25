@@ -35,6 +35,12 @@ class AuthenticationResponse(
         val phoneNumber: String?,
         @SerializedName("balance")
         @Expose
-        var balance: Long?
+        var balance: Long?,
+        @SerializedName("interest_rate")
+        @Expose
+        var interest_rate: Float?,
+        @SerializedName("processing_fee")
+        @Expose
+        var processing_fee: Double?
 )
 

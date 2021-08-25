@@ -1,18 +1,17 @@
 package com.kabbodev.emaishapay.ui.fragments.register.signup
 
-import android.content.Context
-import android.provider.SyncStateContract
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.datastore.preferences.core.doublePreferencesKey
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.models.AuthenticationResponse
-import com.kabbodev.emaishapay.data.models.RegistrationResponse
-import com.kabbodev.emaishapay.data.models.User
+import com.kabbodev.emaishapay.data.preferences.UserPreferences
 import com.kabbodev.emaishapay.databinding.FragmentCreatePinBinding
 import com.kabbodev.emaishapay.network.ApiClient
 import com.kabbodev.emaishapay.network.ApiRequests
@@ -107,11 +106,14 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                         /***************save user details and login user***************/
 
                         lifecycleScope.launch {
-                            userPreferences.saveUserId(user_data!!.id)
-                            user_data!!.name?.let { userPreferences.saveName(it) }
-                            user_data!!.email?.let { userPreferences.saveEmail(it) }
-                            user_data!!.phoneNumber?.let { userPreferences.savePhoneNumber(it) }
-                            user_data!!.balance?.let { userPreferences.saveBalance(it) }
+                            response.body()!!.data?.let { userPreferences.saveUserId(it.id) }
+                            response.body()!!.access_token?.let { userPreferences.savePreference(it, stringPreferencesKey("access_token")) }
+                            response.body()!!.data?.name?.let { userPreferences.savePreference(it,stringPreferencesKey("name")) }
+                            response.body()!!.data?.email?.let { userPreferences.savePreference(it,stringPreferencesKey("email"))}
+                            response.body()!!.data?.phoneNumber?.let { userPreferences.savePreference(it,stringPreferencesKey("phoneNumber")) }
+                            response.body()!!.data?.balance?.let { userPreferences.saveDoublePreference(it.toDouble(), doublePreferencesKey("balance")) }
+                            response.body()!!.data?.interest_rate?.let { userPreferences.saveInterestRate(it) }
+                            response.body()!!.data?.processing_fee?.let { userPreferences.saveDoublePreference(it, doublePreferencesKey("processing_fee")) }
                             userPreferences.saveIsLoggedIn(true)
                         }
 

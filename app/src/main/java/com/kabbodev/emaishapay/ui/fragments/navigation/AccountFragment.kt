@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.databinding.FragmentAccountBinding
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.data.preferences.UserPreferences
 import com.kabbodev.emaishapay.ui.activities.MainActivity
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
@@ -28,11 +29,13 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
     override fun setupTheme() {
         loadAppVersion()
-        mViewModel.getCurrentUser(userId = userPreferences.userId.toString(), false).observe(viewLifecycleOwner, { user ->
-            user?.let {
-                binding.layoutAccountAbove.user = it
-            }
-        })
+        context?.let {
+            mViewModel.getCurrentUser("user_id", false, it).observe(viewLifecycleOwner, { user ->
+                user?.let {
+                    binding.layoutAccountAbove.user = it
+                }
+            })
+        }
     }
 
     override fun setupClickListeners() {

@@ -1,8 +1,6 @@
 package com.kabbodev.emaishapay.network
 
-import com.kabbodev.emaishapay.data.models.AuthenticationResponse
-import com.kabbodev.emaishapay.data.models.RegistrationResponse
-import com.kabbodev.emaishapay.data.models.User
+import com.kabbodev.emaishapay.data.models.*
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -41,4 +39,31 @@ interface ApiRequests {
         @Field("request_id") request_id: String?
 
     ): Call<RegistrationResponse>?
+
+    @FormUrlEncoded
+    @POST("api/initiate/login")
+    fun initiateLogin(
+        @Field("phoneNumber") phoneNumber: String?,
+        @Field("pin") pin: String?,
+        @Field("request_id") request_id: String?,
+        @Field("action_id") action_id: String?
+
+
+    ): Call<AuthenticationResponse>?
+
+
+    @FormUrlEncoded
+    @POST("api/change/pin")
+    fun changePin(
+        @Field("phoneNumber") phoneNumber: String?,
+        @Field("currentPin") currentPin: String?,
+        @Field("request_id") request_id: String?,
+        @Field("action_id") action_id: String?,
+        @Field("newPin") newPin: String?,
+        @Field("confirmNewPin") confirmNewPin: String?
+
+
+    ): Call<ChangePinResponse>?
+
+
 }

@@ -19,11 +19,13 @@ class TransferredSuccessfullyFragment : BaseFragment<FragmentTransferredSuccessf
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentTransferredSuccessfullyBinding.inflate(inflater, container, false)
 
     override fun setupTheme() {
-        mViewModel.getCurrentUser("user_id", false).observe(viewLifecycleOwner, { user ->
-            user?.let {
-                binding.user = it
-            }
-        })
+        context?.let {
+            mViewModel.getCurrentUser("user_id", false, it).observe(viewLifecycleOwner, { user ->
+                user?.let {
+                    binding.user = it
+                }
+            })
+        }
     }
 
     override fun setupClickListeners() {

@@ -11,5 +11,5 @@ data class User(
     val nin: String = "",
     val regDate: String = "",
     val location: String = "",
-    val walletBalance: Flow<Long?> = 0
+    val walletBalance: Long = 0
 )

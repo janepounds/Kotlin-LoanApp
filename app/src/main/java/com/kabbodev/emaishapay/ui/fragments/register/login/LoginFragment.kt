@@ -42,6 +42,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
             return
         }
         binding.etPhoneNumber.hideKeyboard()
+        mViewModel.setPhoneNumber(phoneNumber)
         navController.navigate(R.id.action_global_enterPinFragment, bundleOf(Config.LOGIN_TYPE to EnterPinType.LOGIN))
     }
 

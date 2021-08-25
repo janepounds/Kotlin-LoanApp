@@ -22,12 +22,14 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
 
     override fun setupTheme() {
         updateBusinessLayoutValues(null)
-        mViewModel.getCurrentUser("user_id", false).observe(viewLifecycleOwner, { user ->
-            user?.let {
-                binding.user = it
-                updateBusinessLayoutValues(it)
-            }
-        })
+        context?.let {
+            mViewModel.getCurrentUser("user_id", false, it).observe(viewLifecycleOwner, { user ->
+                user?.let {
+                    binding.user = it
+                    updateBusinessLayoutValues(it)
+                }
+            })
+        }
     }
 
     override fun setupClickListeners() {

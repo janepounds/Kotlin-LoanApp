@@ -57,12 +57,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun setupTheme() {
         setupViewPager()
-        mViewModel.getCurrentUser("user_id", false).observe(viewLifecycleOwner, { user ->
-            user?.let {
-                binding.user = it
-                binding.valueWalletBalance.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(user.walletBalance))
-            }
-        })
+        context?.let {
+            mViewModel.getCurrentUser("user_id", false, it).observe(viewLifecycleOwner, { user ->
+                user?.let {
+                    binding.user = it
+                    binding.valueWalletBalance.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(user.walletBalance))
+                }
+            })
+        }
 
         binding.tvNextPaymentDate.text = String.format(getString(R.string.next_payment_date), "05th August 2021")
         binding.tvPaymentDueAmt.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(800000))
