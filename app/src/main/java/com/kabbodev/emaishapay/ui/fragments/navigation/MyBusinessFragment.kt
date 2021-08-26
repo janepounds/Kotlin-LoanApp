@@ -11,6 +11,9 @@ import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
 import com.kabbodev.emaishapay.utils.addToggleClickListeners
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
@@ -22,8 +25,17 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
 
     override fun setupTheme() {
         updateBusinessLayoutValues(null)
+        /************get user from shared preferences********************/
+        var user = User()
+        GlobalScope.launch {
+            userPreferences.user.collect {
+                if (it != null) {
+                    user  =  it
+                }
+            }
+        }
         context?.let {
-            mViewModel.getCurrentUser("user_id", false, it).observe(viewLifecycleOwner, { user ->
+            mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
                 user?.let {
                     binding.user = it
                     updateBusinessLayoutValues(it)

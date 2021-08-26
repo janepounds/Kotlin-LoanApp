@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.databinding.FragmentAccountBinding
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.data.preferences.UserPreferences
 import com.kabbodev.emaishapay.ui.activities.MainActivity
 import com.kabbodev.emaishapay.ui.base.BaseFragment
@@ -17,6 +18,8 @@ import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -29,8 +32,17 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
     override fun setupTheme() {
         loadAppVersion()
+        /************get user from shared preferences********************/
+        var user = User()
+        GlobalScope.launch {
+            userPreferences.user.collect {
+                if (it != null) {
+                    user  =  it
+                }
+            }
+        }
         context?.let {
-            mViewModel.getCurrentUser("user_id", false, it).observe(viewLifecycleOwner, { user ->
+            mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
                 user?.let {
                     binding.layoutAccountAbove.user = it
                 }

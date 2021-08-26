@@ -2,6 +2,7 @@ package com.kabbodev.emaishapay.data.preferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
+import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.data.models.UserData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -23,41 +24,26 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
 
 
         /**************functions for retrieving user preferences*****************************/
-
-    val userId: Flow<Int?>
-    get() = dataStore.data.catch { exception ->
-        if (exception is IOException) {
-            emit(emptyPreferences())
-        } else {
-            throw exception
-        }
-    }.map { preferences-> preferences[USER_ID]  }
-
-    val name: Flow<String?>
-        get() = dataStore.data.map { preferences-> preferences[NAME]  }
-
-    val phoneNumber: Flow<String?>
-        get() = dataStore.data.map { preferences-> preferences[PHONE_NUMBER]  }
-
-    val email: Flow<String?>
-        get() = dataStore.data.map { preferences-> preferences[EMAIL]  }
-
-    val balance: Flow<Double?>
-        get() = dataStore.data.map { preferences-> preferences[BALANCE]  }
-
-    val interest_rate: Flow<Float?>
-        get() = dataStore.data.map { preferences-> preferences[INTEREST_RATE]  }
-
-    val processing_fee: Flow<Double?>
-        get() = dataStore.data.map { preferences-> preferences[PROCESSING_FEE]  }
-
-    val acess_token: Flow<String?>
-        get() = dataStore.data.map { preferences-> preferences[ACCESS_TOKEN]  }
-
-    val pin :Flow<String?>
-    get() = dataStore.data.map { preferences-> preferences[PIN] }
-
-
+        val user: Flow<User?>
+            get() = dataStore.data.catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }.map {preferences->
+                User(
+                    id=preferences[USER_ID],
+                    fullName = preferences[NAME]!!,
+                    emailAddress = preferences[EMAIL]!!,
+                    phoneNumber = preferences[PHONE_NUMBER]!!,
+                    accessToken=preferences[ACCESS_TOKEN],
+                    pin=preferences[PIN],
+                    walletBalance= preferences[BALANCE]!!,
+                    interestRate=preferences[INTEREST_RATE],
+                    processingFee=preferences[PROCESSING_FEE],
+                )
+            }
 
     /***********clear user preferences****************/
     suspend fun clear() {

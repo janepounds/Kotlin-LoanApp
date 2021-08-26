@@ -23,7 +23,7 @@ class LoanViewModel @Inject constructor(
     var type: String = ""
     var typePayment: Long = 0
 
-    fun getCurrentUser(userId: String, reload: Boolean,context:Context): LiveData<User> = userRepository.getCurrentUser(viewModelScope, userId, reload,context)
+    fun getCurrentUser(reload: Boolean,context:Context,user:User): LiveData<User> = userRepository.getCurrentUser(viewModelScope,  reload,context,user)
 
     fun setLoanData(amt: Long, dueAmt: Long, loanDuration: Int, loanDurationType: String, loanTypePayment: Long) {
         loanAmount = amt

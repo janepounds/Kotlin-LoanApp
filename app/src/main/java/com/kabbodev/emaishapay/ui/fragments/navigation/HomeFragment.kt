@@ -5,11 +5,13 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.data.models.screen.ScreenItem
 import com.kabbodev.emaishapay.databinding.FragmentHomeBinding
 import com.kabbodev.emaishapay.singleton.MyApplication
@@ -18,6 +20,9 @@ import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
 import com.kabbodev.emaishapay.utils.getHomeViewPagerHtmlText
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -57,11 +62,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun setupTheme() {
         setupViewPager()
+        var user = User()
+        GlobalScope.launch {
+            userPreferences.user.collect {
+                if (it != null) {
+                    user  =  it
+                }
+            }
+        }
         context?.let {
-            mViewModel.getCurrentUser("user_id", false, it).observe(viewLifecycleOwner, { user ->
+            mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
                 user?.let {
                     binding.user = it
-                    binding.valueWalletBalance.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(user.walletBalance))
+                    binding.valueWalletBalance.text = String.format(getString(R.string.wallet_balance_value), user.walletBalance)
                 }
             })
         }

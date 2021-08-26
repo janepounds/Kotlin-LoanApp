@@ -1,16 +1,18 @@
 package com.kabbodev.emaishapay.data.models
 
-import androidx.lifecycle.LiveData
-import kotlinx.coroutines.flow.Flow
-
 data class User(
-    val fullName: String = "",
-    val emailAddress: String = "",
-    val phoneNumber: String = "",
-    val profileImage: String? = "",
-    val dateOfBirth: String = "",
-    val nin: String = "",
-    val regDate: String = "",
-    val location: String = "",
-    val walletBalance: Long = 0
+    var fullName: String = "",
+    var emailAddress: String = "",
+    var phoneNumber: String = "",
+    var profileImage: String? = "",
+    var dateOfBirth: String = "",
+    var nin: String = "",
+    var regDate: String = "",
+    var location: String = "",
+    var walletBalance: Double = 0.0,
+    var id: Int?=null,
+    var accessToken: String?=null,
+    val pin: String?=null,
+    val interestRate: Float?=null,
+    val processingFee: Double?=null
 )

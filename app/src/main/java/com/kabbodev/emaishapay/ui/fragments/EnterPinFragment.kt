@@ -13,6 +13,7 @@ import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.config.Config
 import com.kabbodev.emaishapay.data.enums.EnterPinType
 import com.kabbodev.emaishapay.data.models.AuthenticationResponse
+import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.databinding.DialogLoanStatusBinding
 import com.kabbodev.emaishapay.databinding.FragmentEnterPinBinding
 import com.kabbodev.emaishapay.network.ApiClient
@@ -24,6 +25,7 @@ import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,9 +56,18 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
             EnterPinType.WITHDRAW -> binding.title = getString(R.string.withdraw_funds)
             EnterPinType.MAKE_PAYMENT -> binding.title = getString(R.string.authorize_payment)
         }
+        /************get user from shared preferences********************/
+        var user = User()
+        GlobalScope.launch {
+            userPreferences.user.collect {
+                if (it != null) {
+                    user  =  it
+                }
+            }
+        }
 
         context?.let {
-            loanViewModel.getCurrentUser("user_id", false, it).observe(viewLifecycleOwner, { user ->
+            loanViewModel.getCurrentUser( false, it,user ).observe(viewLifecycleOwner, { user ->
                 user?.let {
                     statusDialogBinding.user = it
                 }
@@ -142,7 +153,6 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                             if (response.body()!!.status == 1) {
                                 Constants.ACCESS_TOKEN = response.body()!!.access_token
                                 /************user_data in shared preferences****************************/
-
 
                                 lifecycleScope.launch { response.body()?.let { userPreferences.saveUserData(it!!.data, it!!.access_token,pinValue,true) }}
                                 navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_homeFragment)
