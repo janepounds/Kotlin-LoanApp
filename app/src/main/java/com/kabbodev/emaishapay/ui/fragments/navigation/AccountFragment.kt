@@ -33,21 +33,17 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
     override fun setupTheme() {
         loadAppVersion()
         /************get user from shared preferences********************/
-        var user = User()
+
         GlobalScope.launch {
-            userPreferences.user.collect {
-                if (it != null) {
-                    user  =  it
+            userPreferences?.user?.collect { user->
+                context?.let {
+                    mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
+                        binding.layoutAccountAbove.user=user
+                    })
                 }
             }
         }
-        context?.let {
-            mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
-                user?.let {
-                    binding.layoutAccountAbove.user = it
-                }
-            })
-        }
+
     }
 
     override fun setupClickListeners() {

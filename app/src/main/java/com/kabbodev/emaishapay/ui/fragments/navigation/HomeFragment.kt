@@ -62,22 +62,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun setupTheme() {
         setupViewPager()
-        var user = User()
+
         GlobalScope.launch {
-            userPreferences.user.collect {
-                if (it != null) {
-                    user  =  it
+            userPreferences.user?.collect { user->
+                context?.let {
+                    mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
+                        binding.user = user
+                        binding.valueWalletBalance.text = String.format(getString(R.string.wallet_balance_value), user.walletBalance)
+                    })
                 }
             }
         }
-        context?.let {
-            mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
-                user?.let {
-                    binding.user = it
-                    binding.valueWalletBalance.text = String.format(getString(R.string.wallet_balance_value), user.walletBalance)
-                }
-            })
-        }
+
 
         binding.tvNextPaymentDate.text = String.format(getString(R.string.next_payment_date), "05th August 2021")
         binding.tvPaymentDueAmt.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(800000))

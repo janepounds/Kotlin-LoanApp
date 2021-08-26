@@ -24,7 +24,7 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
 
 
         /**************functions for retrieving user preferences*****************************/
-        val user: Flow<User?>
+        val user: Flow<User>?
             get() = dataStore.data.catch { exception ->
                 if (exception is IOException) {
                     emit(emptyPreferences())

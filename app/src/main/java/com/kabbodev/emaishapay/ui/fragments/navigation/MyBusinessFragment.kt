@@ -26,22 +26,18 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
     override fun setupTheme() {
         updateBusinessLayoutValues(null)
         /************get user from shared preferences********************/
-        var user = User()
+
         GlobalScope.launch {
-            userPreferences.user.collect {
-                if (it != null) {
-                    user  =  it
+            userPreferences.user?.collect {user->
+                context?.let {
+                    mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
+                        binding.user = user
+                        updateBusinessLayoutValues(user)
+                    })
                 }
             }
         }
-        context?.let {
-            mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
-                user?.let {
-                    binding.user = it
-                    updateBusinessLayoutValues(it)
-                }
-            })
-        }
+
     }
 
     override fun setupClickListeners() {

@@ -57,22 +57,18 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
             EnterPinType.MAKE_PAYMENT -> binding.title = getString(R.string.authorize_payment)
         }
         /************get user from shared preferences********************/
-        var user = User()
+
         GlobalScope.launch {
-            userPreferences.user.collect {
-                if (it != null) {
-                    user  =  it
+            userPreferences.user?.collect{ user->
+                context?.let { myContext ->
+                    loanViewModel.getCurrentUser( false, myContext,user ).observe(viewLifecycleOwner, { user ->
+                        statusDialogBinding.user=user
+                    })
                 }
             }
         }
 
-        context?.let {
-            loanViewModel.getCurrentUser( false, it,user ).observe(viewLifecycleOwner, { user ->
-                user?.let {
-                    statusDialogBinding.user = it
-                }
-            })
-        }
+
     }
 
     override fun setupClickListeners() {

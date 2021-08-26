@@ -26,7 +26,7 @@ class TransferredSuccessfullyFragment : BaseFragment<FragmentTransferredSuccessf
         /************get user from shared preferences********************/
         var user = User()
         GlobalScope.launch {
-            userPreferences.user.collect {
+            userPreferences?.user?.collect {
                 if (it != null) {
                     user  =  it
                 }
