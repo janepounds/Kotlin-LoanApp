@@ -2,6 +2,7 @@ package com.kabbodev.emaishapay.ui.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +26,7 @@ import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -57,17 +58,24 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
             EnterPinType.MAKE_PAYMENT -> binding.title = getString(R.string.authorize_payment)
         }
         /************get user from shared preferences********************/
+        lifecycleScope.launch(Dispatchers.IO) {
+            val user = userPreferences.user!!.first()
 
-        GlobalScope.launch {
-            userPreferences.user?.collect{ user->
-                context?.let { myContext ->
-                    loanViewModel.getCurrentUser( false, myContext,user ).observe(viewLifecycleOwner, { user ->
-                        statusDialogBinding.user=user
-                    })
+            delay(1500)
+
+            withContext(Dispatchers.Main) {
+                context?.let {
+                    loanViewModel.getCurrentUser(false, it, user)
+                        .observe(viewLifecycleOwner, { user ->
+                            user?.let {
+                                statusDialogBinding.user = it
+                            }
+                        })
                 }
             }
-        }
 
+
+        }
 
     }
 
@@ -79,6 +87,8 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
         binding.keypadLayout.doneBtn.setOnClickListener { onDoneBtnClick() }
         binding.keypadLayout.setKeyPadListener { keyValue -> onKeyPadClick(keyValue) }
     }
+
+
 
     private fun setupDialog() {
         statusDialogBinding = DialogLoanStatusBinding.inflate(layoutInflater, binding.root as ViewGroup, false)

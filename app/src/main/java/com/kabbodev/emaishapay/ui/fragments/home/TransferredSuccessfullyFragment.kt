@@ -24,21 +24,26 @@ class TransferredSuccessfullyFragment : BaseFragment<FragmentTransferredSuccessf
 
     override fun setupTheme() {
         /************get user from shared preferences********************/
-        var user = User()
-        GlobalScope.launch {
-            userPreferences?.user?.collect {
-                if (it != null) {
-                    user  =  it
+
+        val user = User()
+
+        suspend fun getUserInfo() =
+            try{
+                userPreferences.user?.collect {
+                    user
+                    context?.let {
+                        mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
+                            user?.let {
+                                binding.user = it
+                            }
+                        })
+                    }
                 }
+                false
+            }catch (e:Throwable){
+                true
             }
-        }
-        context?.let {
-            mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
-                user?.let {
-                    binding.user = it
-                }
-            })
-        }
+
     }
 
     override fun setupClickListeners() {

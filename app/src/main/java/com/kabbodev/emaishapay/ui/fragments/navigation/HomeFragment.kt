@@ -2,10 +2,12 @@ package com.kabbodev.emaishapay.ui.fragments.navigation
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -20,14 +22,17 @@ import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
 import com.kabbodev.emaishapay.utils.getHomeViewPagerHtmlText
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import java.lang.Runnable
 import java.util.*
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
+    private const val TAG = "HomeFragment"
 
     private val mViewModel: LoanViewModel by activityViewModels()
     private val viewPagerList: ArrayList<ScreenItem> = ArrayList()
@@ -62,16 +67,33 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun setupTheme() {
         setupViewPager()
+        /************get user from shared preferences********************/
+        Log.d(TAG, "setupTheme: "+userPreferences.user)
 
-        GlobalScope.launch {
-            userPreferences.user?.collect { user->
-                context?.let {
-                    mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
-                        binding.user = user
-                        binding.valueWalletBalance.text = String.format(getString(R.string.wallet_balance_value), user.walletBalance)
-                    })
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val user = userPreferences.user!!.first()
+
+                delay(1500)
+
+                withContext(Dispatchers.Main) {
+                    context?.let {
+                        mViewModel.getCurrentUser(false, it, user)
+                            .observe(viewLifecycleOwner, { user ->
+                                binding.user = user
+                                binding.valueWalletBalance.text = String.format(
+                                    getString(R.string.wallet_balance_value),
+                                    user.walletBalance
+                                )
+                            })
+                    }
                 }
+                false
+            }catch ( exception){
+                true
             }
+
+
         }
 
 
