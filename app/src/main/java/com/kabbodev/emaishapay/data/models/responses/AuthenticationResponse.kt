@@ -41,6 +41,13 @@ class AuthenticationResponse(
         var interest_rate: Float,
         @SerializedName("processing_fee")
         @Expose
-        var processing_fee: Double
+        var processing_fee: Double,
+
+        @SerializedName("dob")
+        @Expose
+        var dob: String,
+        @SerializedName("nin")
+        @Expose
+        var nin: String
 )
 

@@ -1,4 +1,4 @@
-package com.kabbodev.emaishapay.data.models
+package com.kabbodev.emaishapay.data.models.responses
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

@@ -65,6 +65,15 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
         }
     }
 
+    suspend fun savePersonalInfo(nin: String,dob:String){
+        dataStore.edit { mutablePreferences ->
+
+                mutablePreferences[NIN] = nin
+                mutablePreferences[DOB] = dob
+
+        }
+    }
+
     suspend fun saveUserData(userData: UserData?, accessToken: String?, pinValue: String,isLoggedIn: Boolean) {
         dataStore.edit { mutablePreferences ->
             userData?.let {
@@ -93,6 +102,8 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
         private val BALANCE = doublePreferencesKey("balance")
         private val INTEREST_RATE = floatPreferencesKey("interest_rate")
         private val PROCESSING_FEE = doublePreferencesKey("processing_fee")
+        private val NIN = stringPreferencesKey("nin")
+        private val DOB = stringPreferencesKey("dob")
 
 
         private val KEY_SHOW_INTRO = booleanPreferencesKey("show_intro")

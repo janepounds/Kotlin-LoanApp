@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.data.models.RegistrationResponse
 import com.kabbodev.emaishapay.data.models.User
+import com.kabbodev.emaishapay.data.models.responses.UserResponse
 import com.kabbodev.emaishapay.databinding.FragmentEnterPersonalDetailsBinding
 import com.kabbodev.emaishapay.network.ApiClient
 import com.kabbodev.emaishapay.network.ApiRequests
@@ -35,7 +37,10 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentEnterPersonalDetailsBinding.inflate(inflater, container, false)
 
+
     override fun setupTheme() {
+        /*********load personal details from the server*************/
+        loadPersonalDetails()
         binding.spinnerGender.initSpinner(this)
         binding.spinnerEducationLevel.initSpinner(this)
         binding.spinnerMaritalStatus.initSpinner(this)
@@ -45,6 +50,53 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
         binding.progressLayout.layoutOwnerInfo.backBtn.setOnClickListener { requireActivity().onBackPressed() }
         binding.saveBtn.setOnClickListener { checkInputs(false) }
         binding.saveAndNextBtn.setOnClickListener { checkInputs(true) }
+    }
+
+    private fun loadPersonalDetails(){
+        GlobalScope.launch {  userPreferences.user!!.collect { token = it.accessToken.toString() } }
+        var call: Call<UserResponse>? = apiRequests?.getPersonalDetails(
+            token,
+            generateRequestId(),
+            "getPersonalDetails"
+        )
+        call!!.enqueue(object : Callback<UserResponse> {
+            override fun onResponse(
+                call: Call<UserResponse>,
+                response: Response<UserResponse>
+            ) {
+                if (response.isSuccessful) {
+
+                    if (response.body()!!.status == 1) {
+                        /************populate all fields in UI*****************/
+                        binding.etFullName.editText?.text ?:  response.body()!!.data.name
+                        binding.spinnerGender.text?: response.body()!!.data.gender
+                        binding.etDateOfBirth.editText?.text?: response.body()!!.data.dob
+                        binding.spinnerEducationLevel.text?: response.body()!!.data.education_level
+                        binding.spinnerMaritalStatus.text?: response.body()!!.data.marital_status
+                        binding.etYearInBusiness.editText?.text?: response.body()!!.data.years_in_business
+                        binding.etNationalId.editText?.text?: response.body()!!.data.nin
+
+
+                    }else{
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+
+                    }
+
+                } else {
+                    response.body()!!.message?.let { binding.root.snackbar(it) }
+
+                }
+
+            }
+
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                t.message?.let { binding.root.snackbar(it) }
+
+
+            }
+        })
+
+
     }
 
     private fun checkInputs(proceedNext: Boolean) {
@@ -115,6 +167,8 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
                     if (response.isSuccessful) {
                         dialogLoader?.hideProgressDialog()
                         if (response.body()!!.status == 1) {
+                            /************save values dob and nin in the shared preferences*****************/
+                            lifecycleScope.launch { userPreferences.savePersonalInfo(nationalId,dateOfBirth) }
                             navController.navigate(R.id.action_enterPersonalDetailsFragment_to_enterContactDetailsFragment)
                         }else{
                             response.body()!!.message?.let { binding.root.snackbar(it) }
