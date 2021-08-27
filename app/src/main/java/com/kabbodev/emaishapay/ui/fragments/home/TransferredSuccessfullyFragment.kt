@@ -25,24 +25,14 @@ class TransferredSuccessfullyFragment : BaseFragment<FragmentTransferredSuccessf
     override fun setupTheme() {
         /************get user from shared preferences********************/
 
-        val user = User()
-
-        suspend fun getUserInfo() =
-            try{
-                userPreferences.user?.collect {
-                    user
-                    context?.let {
-                        mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
-                            user?.let {
-                                binding.user = it
-                            }
-                        })
-                    }
+        context?.let {
+            mViewModel.getCurrentUser( false, it).observe(viewLifecycleOwner, { user ->
+                user?.let {
+                    binding.user = it
                 }
-                false
-            }catch (e:Throwable){
-                true
-            }
+            })
+        }
+
 
     }
 

@@ -32,7 +32,7 @@ import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
-    private const val TAG = "HomeFragment"
+    private  val TAG = "HomeFragment"
 
     private val mViewModel: LoanViewModel by activityViewModels()
     private val viewPagerList: ArrayList<ScreenItem> = ArrayList()
@@ -67,18 +67,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun setupTheme() {
         setupViewPager()
+
         /************get user from shared preferences********************/
-        Log.d(TAG, "setupTheme: "+userPreferences.user)
-
         lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val user = userPreferences.user!!.first()
-
-                delay(1500)
 
                 withContext(Dispatchers.Main) {
                     context?.let {
-                        mViewModel.getCurrentUser(false, it, user)
+                        mViewModel.getCurrentUser(false, it)
                             .observe(viewLifecycleOwner, { user ->
                                 binding.user = user
                                 binding.valueWalletBalance.text = String.format(
@@ -88,10 +83,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                             })
                     }
                 }
-                false
-            }catch ( exception){
-                true
-            }
+
 
 
         }

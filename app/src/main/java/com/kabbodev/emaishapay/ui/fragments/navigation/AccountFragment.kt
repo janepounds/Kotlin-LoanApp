@@ -34,22 +34,11 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
         loadAppVersion()
         /************get user from shared preferences********************/
 
-        val user = User()
-
-        suspend fun getUserInfo() =
-            try{
-                userPreferences?.user?.collect { user->
-                    context?.let {
-                        mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
-                            binding.layoutAccountAbove.user=user
-                        })
-                    }
-                }
-                false
-            }catch (e:Throwable){
-                true
-            }
-
+        context?.let {
+            mViewModel.getCurrentUser( false, it).observe(viewLifecycleOwner, { user ->
+                binding.layoutAccountAbove.user=user
+            })
+        }
 
     }
 

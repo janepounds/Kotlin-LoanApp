@@ -27,23 +27,12 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
         updateBusinessLayoutValues(null)
         /************get user from shared preferences********************/
 
-        val user = User()
-
-        suspend fun getUserInfo() =
-            try{
-                userPreferences.user?.collect {user->
-                    context?.let {
-                        mViewModel.getCurrentUser( false, it,user).observe(viewLifecycleOwner, { user ->
-                            binding.user = user
-                            updateBusinessLayoutValues(user)
-                        })
-                    }
-                }
-                false
-            }catch (e:Throwable){
-                true
+            context?.let {
+                mViewModel.getCurrentUser( false, it).observe(viewLifecycleOwner, { user ->
+                    binding.user = user
+                    updateBusinessLayoutValues(user)
+                })
             }
-
     }
 
     override fun setupClickListeners() {

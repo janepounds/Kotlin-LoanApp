@@ -7,6 +7,7 @@ import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.data.preferences.UserPreferences
 import com.kabbodev.emaishapay.singleton.dataStore
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,31 +24,35 @@ class UserRepository @Inject constructor(
 
 
 
-    fun getCurrentUser(viewModelScope: CoroutineScope, reload: Boolean,context: Context,user:User): MutableLiveData<User> {
-        if (_currentUser == null || reload) viewModelScope.launch { loadCurrentUser(context,user) }
+    fun getCurrentUser(viewModelScope: CoroutineScope, reload: Boolean,context: Context): MutableLiveData<User> {
+        if (_currentUser == null || reload) viewModelScope.launch { loadCurrentUser(context) }
         currentUser.postValue(_currentUser)
         return currentUser
     }
 
 
 
-    private suspend fun loadCurrentUser(context: Context,user: User) {
+    private suspend fun loadCurrentUser(context: Context) {
         userPreferences = UserPreferences(context.dataStore)
 
+        userPreferences.user?.collect {
             _currentUser =  User(
-                fullName = user.fullName,
-                emailAddress = user.emailAddress,
-                phoneNumber = user.phoneNumber,
+                fullName = it.fullName,
+                emailAddress = it.emailAddress,
+                phoneNumber = it.phoneNumber,
                 profileImage = null,
                 dateOfBirth = "25/06/1997",
                 nin = "CP1351BN23",
                 regDate = "01/08/2021",
                 location = "Dhaka",
-                walletBalance = user.walletBalance,
+                walletBalance = it.walletBalance,
 
-            )
+                )
 
-        currentUser.postValue(_currentUser)
+            currentUser.postValue(_currentUser)
+        }
+
+
     }
 
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,7 @@ import retrofit2.Response
 
 @AndroidEntryPoint
 class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
+    private  val TAG = "EnterPinFragment"
 
     private val mViewModel: LoginViewModel by activityViewModels()
     private val loanViewModel: LoanViewModel by activityViewModels()
@@ -58,14 +60,11 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
             EnterPinType.MAKE_PAYMENT -> binding.title = getString(R.string.authorize_payment)
         }
         /************get user from shared preferences********************/
+        if(loginType!=EnterPinType.LOGIN)
         lifecycleScope.launch(Dispatchers.IO) {
-            val user = userPreferences.user!!.first()
-
-            delay(1500)
-
             withContext(Dispatchers.Main) {
                 context?.let {
-                    loanViewModel.getCurrentUser(false, it, user)
+                    loanViewModel.getCurrentUser(false, it )
                         .observe(viewLifecycleOwner, { user ->
                             user?.let {
                                 statusDialogBinding.user = it
@@ -73,7 +72,6 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                         })
                 }
             }
-
 
         }
 
