@@ -86,6 +86,8 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
                                 putString("phone", getString(R.string.phone_code) + mViewModel.getPhoneNumber())
                             }
 
+                        }else{
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
                         }
 
                     } else {

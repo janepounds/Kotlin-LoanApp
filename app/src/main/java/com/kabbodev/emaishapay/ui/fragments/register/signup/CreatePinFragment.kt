@@ -108,6 +108,8 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
                         /**********navigate to home fragment**************/
                         navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_homeFragment)
+                    }else{
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
                     }
 
                 } else {

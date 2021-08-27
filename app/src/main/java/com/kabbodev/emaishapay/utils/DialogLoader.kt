@@ -17,6 +17,11 @@ class DialogLoader(private val context: Context) {
     private var alertDialog: AlertDialog? = null
     private var dialog: AlertDialog.Builder? = null
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
+
+    init {
+        initDialog()
+    }
+
     private fun initDialog() {
         dialog = AlertDialog.Builder(context)
         val dialogView = layoutInflater.inflate(R.layout.layout_dialog_loader, null)
@@ -43,7 +48,5 @@ class DialogLoader(private val context: Context) {
         }
     }
 
-    init {
-        initDialog()
-    }
+
 }

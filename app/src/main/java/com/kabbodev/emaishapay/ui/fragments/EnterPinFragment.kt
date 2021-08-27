@@ -131,6 +131,8 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
     }
 
     private fun onDoneBtnClick() {
+        dialogLoader = context?.let { DialogLoader(it) }
+        dialogLoader?.showProgressDialog()
         val pinValue = binding.etEnterPin.editText?.text.toString()
         if (pinValue.length != 4) {
             binding.root.snackbar(getString(R.string.invalid_pin))
@@ -139,7 +141,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
 
         when (loginType) {
             EnterPinType.LOGIN -> {
-                dialogLoader?.showProgressDialog()
+
                 /**********************Retrofit to initiate login *********************/
                 var call: Call<AuthenticationResponse>? = apiRequests?.initiateLogin(
                     getString(R.string.phone_code)+mViewModel.getPhoneNumber(),
@@ -160,13 +162,15 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
 
                                 lifecycleScope.launch { response.body()?.let { userPreferences.saveUserData(it!!.data, it!!.access_token,pinValue,true) }}
                                 navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_homeFragment)
+                            }else{
+                                response.body()!!.message?.let { binding.root.snackbar(it) }
                             }
 
                         } else {
                             response.body()!!.message?.let { binding.root.snackbar(it) }
                         }
 
-            }
+                    }
 
                     override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
                         t.message?.let { binding.root.snackbar(it) }

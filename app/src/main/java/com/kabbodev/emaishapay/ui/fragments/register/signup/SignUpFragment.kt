@@ -92,6 +92,8 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
 
                         /**********navigate to otp fragment**************/
                         navController.navigate(R.id.action_registerFragment_to_otpVerifyFragment,arguments)
+                    }else{
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
                     }
 
                 } else {

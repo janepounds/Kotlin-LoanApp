@@ -66,4 +66,39 @@ interface ApiRequests {
     ): Call<ChangePinResponse>?
 
 
+    @FormUrlEncoded
+    @POST("api/update/business/personaldetails")
+    fun postPersonalDetails(
+        @Header("Authorization") token:String?,
+        @Field("name") name:String?,
+        @Field("gender") gender:String?,
+        @Field("dob") dob:String?,
+        @Field("education_level")education_level:String?,
+        @Field("marital_status")marital_status:String?,
+        @Field("years_in_business")years_in_business:Int?,
+        @Field("nin") nin:String?,
+        @Field("request_id") request_id: String?,
+        @Field("action_id") action_id: String?
+    ):Call<RegistrationResponse>?
+
+//    @FormUrlEncoded
+//    @POST()
+//    fun postContactDetails()
+//
+//    @FormUrlEncoded
+//    @POST()
+//    fun postGuarantorDetails()
+//
+//    @FormUrlEncoded
+//    @POST()
+//    fun postDocuments()
+//
+//    @FormUrlEncoded
+//    @POST()
+//    fun postBusinessDetails()
+//
+//    @FormUrlEncoded
+//    @POST()
+//    fun postBusinessDocuments()
+
 }

@@ -1,21 +1,37 @@
 package com.kabbodev.emaishapay.ui.fragments.businessInfo.ownerProfile
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.data.models.RegistrationResponse
+import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.databinding.FragmentEnterPersonalDetailsBinding
+import com.kabbodev.emaishapay.network.ApiClient
+import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
+import com.kabbodev.emaishapay.utils.DialogLoader
+import com.kabbodev.emaishapay.utils.generateRequestId
 import com.kabbodev.emaishapay.utils.initSpinner
 import com.kabbodev.emaishapay.utils.snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @AndroidEntryPoint
 class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBinding>() {
 
     private val mViewModel: LoginViewModel by activityViewModels()
-
+    private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
+    private var dialogLoader: DialogLoader? = null
+    var token:String? = ""
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentEnterPersonalDetailsBinding.inflate(inflater, container, false)
 
@@ -72,7 +88,54 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
             binding.root.snackbar(error)
             return
         }
-        if (proceedNext) navController.navigate(R.id.action_enterPersonalDetailsFragment_to_enterContactDetailsFragment)
+        if (proceedNext){
+            //get  user token
+            GlobalScope.launch {  userPreferences.user!!.collect { token = it.accessToken.toString() } }
+            dialogLoader =context?.let { it -> DialogLoader(it) } }
+            dialogLoader?.showProgressDialog()
+            /***************endpoint for updating personal details*********************/
+            var call: Call<RegistrationResponse>? = apiRequests?.postPersonalDetails(
+                token,
+                name = fullName,
+                gender = gender,
+                dateOfBirth,
+                educationLevel,
+                maritalStatus,
+                years_in_business = yearsInBusiness.toInt(),
+                nin = nationalId,
+                generateRequestId(),
+                "savePersonalDetails"
+
+                )
+                call!!.enqueue(object : Callback<RegistrationResponse> {
+                override fun onResponse(
+                    call: Call<RegistrationResponse>,
+                    response: Response<RegistrationResponse>
+                     ) {
+                    if (response.isSuccessful) {
+                        dialogLoader?.hideProgressDialog()
+                        if (response.body()!!.status == 1) {
+                            navController.navigate(R.id.action_enterPersonalDetailsFragment_to_enterContactDetailsFragment)
+                        }else{
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
+
+                        }
+
+                    } else {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+                    }
+
+                }
+
+                override fun onFailure(call: Call<RegistrationResponse>, t: Throwable) {
+                    t.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
+
+                }
+            })
+
+        }
+
     }
 
-}

@@ -47,8 +47,7 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
 
     /***********clear user preferences****************/
     suspend fun clear() {
-        dataStore.edit { mutablePreferences ->
-            mutablePreferences.clear()
+        dataStore.edit { it.clear()
             saveShowIntro(false)
             saveIsLoggedIn(false)
         }

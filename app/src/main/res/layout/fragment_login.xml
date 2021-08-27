@@ -2,13 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        tools:context=".ui.fragments.register.login.LoginFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingStart="@dimen/register_padding"
-        android:paddingEnd="@dimen/register_padding"
-        tools:context=".ui.fragments.register.login.LoginFragment">
+        android:paddingEnd="@dimen/register_padding">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_enter_mobile_num"
@@ -162,5 +166,6 @@
             app:layout_constraintTop_toTopOf="@+id/divider2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </layout>
