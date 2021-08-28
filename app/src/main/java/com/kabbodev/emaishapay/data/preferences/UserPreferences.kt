@@ -72,6 +72,29 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
                 mutablePreferences[DOB] = dob
 
         }
+
+
+    }
+
+    suspend fun saveContactInfo(nin: String,dob:String){
+        dataStore.edit { mutablePreferences ->
+
+            mutablePreferences[NIN] = nin
+            mutablePreferences[DOB] = dob
+
+        }
+
+        suspend fun saveGuarantorInfo(nin: String,dob:String){
+            dataStore.edit { mutablePreferences ->
+
+                mutablePreferences[NIN] = nin
+                mutablePreferences[DOB] = dob
+
+            }
+
+
+        }
+
     }
 
     suspend fun saveUserData(userData: UserData?, accessToken: String?, pinValue: String,isLoggedIn: Boolean) {

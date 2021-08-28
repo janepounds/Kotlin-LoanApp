@@ -1,24 +1,41 @@
 package com.kabbodev.emaishapay.ui.fragments.businessInfo.ownerProfile
 
+import android.opengl.Visibility
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.data.models.RegistrationResponse
+import com.kabbodev.emaishapay.data.models.responses.ContactResponse
+import com.kabbodev.emaishapay.data.models.responses.UserResponse
 import com.kabbodev.emaishapay.databinding.FragmentEnterContactDetailsBinding
+import com.kabbodev.emaishapay.network.ApiClient
+import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
-import com.kabbodev.emaishapay.utils.initSpinner
-import com.kabbodev.emaishapay.utils.isPhoneNumberValid
-import com.kabbodev.emaishapay.utils.snackbar
+import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.security.acl.Owner
 
 @AndroidEntryPoint
 class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBinding>() {
 
     private val mViewModel: LoginViewModel by activityViewModels()
+    private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
+    private var dialogLoader: DialogLoader? = null
+    var token:String? = ""
 
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentEnterContactDetailsBinding.inflate(
@@ -28,7 +45,18 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
     )
 
     override fun setupTheme() {
+        /*********load personal details from the server*************/
+        loadContactDetails()
         binding.spinnerResidentialType.initSpinner(this)
+
+        if(binding.spinnerResidentialType.text.equals("Owner")){
+            /**********hide landord contact and name************/
+            binding.tvLandlordName.visibility = GONE
+            binding.etLandlordName.visibility = GONE
+            binding.tvLandlordPhoneNumber.visibility = GONE
+            binding.etLandlordPhoneNumber.etPhoneNumber.visibility = GONE
+
+        }
 
         val districtListAdapter: ArrayAdapter<String>? =
             context?.let { ArrayAdapter<String>(it, android.R.layout.simple_dropdown_item_1line, listOf(*resources.getStringArray(R.array.residential_types))) }
@@ -54,6 +82,67 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
         binding.saveAndNextBtn.setOnClickListener { checkInputs(true) }
     }
 
+    private fun loadContactDetails(){
+        GlobalScope.launch {  userPreferences.user!!.collect { token = it.accessToken.toString() } }
+        var call: Call<ContactResponse>? = apiRequests?.getContactDetails(
+            token,
+            generateRequestId(),
+            "getContactDetails"
+        )
+        call!!.enqueue(object : Callback<ContactResponse> {
+            override fun onResponse(
+                call: Call<ContactResponse>,
+                response: Response<ContactResponse>
+            ) {
+                if (response.isSuccessful) {
+
+                    if (response.body()!!.status == 1) {
+                        /************populate all fields in UI*****************/
+                        binding.etDistrict.editText?.text ?:  response.body()!!.data!!.district
+                        binding.etVillage.editText?.text?: response.body()!!.data!!.village
+                        binding.etMobileNumber.etPhoneNumber?.editText?.text?: response.body()!!.data!!.mobile_phone
+                        binding.spinnerResidentialType.text?: response.body()!!.data!!.residential_type
+                        if(binding.spinnerResidentialType.text.equals("Owner",)){
+
+                            /**********hide landord contact and name************/
+                            binding.tvLandlordName.visibility = GONE
+                            binding.etLandlordName.visibility = GONE
+                            binding.tvLandlordPhoneNumber.visibility = GONE
+                            binding.etLandlordPhoneNumber.etPhoneNumber.visibility = GONE
+                        }else {
+
+                            binding.etLandlordPhoneNumber.etPhoneNumber.editText?.text ?: response.body()!!.data!!.landlord_contact
+                            binding.etLandlordName.editText?.text ?: response.body()!!.data!!.landlord
+
+                        }
+
+
+                    }else{
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+
+                    }
+
+                } else if(response.code()==401) {
+                    /***************redirect to auth*********************/
+                    response.body()!!.message?.let { binding.root.snackbar(it) }
+
+
+                }else{
+                    response.body()!!.message?.let { binding.root.snackbar(it) }
+                }
+
+            }
+
+            override fun onFailure(call: Call<ContactResponse>, t: Throwable) {
+                t.message?.let { binding.root.snackbar(it) }
+
+
+            }
+        })
+
+
+    }
+
     private fun checkInputs(proceedNext: Boolean) {
         val residentialTypes: List<String> = listOf(*resources.getStringArray(R.array.residential_types))
 
@@ -76,16 +165,18 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
         }
 
         if (mobileNumberError != null) error = mobileNumberError
-        if (landlordPhoneNumber.isEmpty()) error = String.format(
-            getString(R.string.cannot_be_empty_error), getString(
-                R.string.land_lord_phone_number
+        if(residentialType.equals("Tenant",ignoreCase = true)) {
+            if (landlordPhoneNumber.isEmpty()) error = String.format(
+                getString(R.string.cannot_be_empty_error), getString(
+                    R.string.land_lord_phone_number
+                )
             )
-        )
-        if (landLordName.isEmpty()) error = String.format(
-            getString(R.string.cannot_be_empty_error), getString(
-                R.string.land_lord_name
+            if (landLordName.isEmpty()) error = String.format(
+                getString(R.string.cannot_be_empty_error), getString(
+                    R.string.land_lord_name
+                )
             )
-        )
+        }
         if (mobileNumber.isEmpty()) error = String.format(
             getString(R.string.cannot_be_empty_error), getString(
                 R.string.mobile_number
@@ -106,7 +197,46 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
             binding.root.snackbar(error)
             return
         }
-        if (proceedNext) navController.navigate(R.id.action_enterContactDetailsFragment_to_enterGuarantorDetailsFragment)
+        if (proceedNext){
+            dialogLoader?.showProgressDialog()
+            /***************endpoint for updating contact details*********************/
+            var call: Call<ContactResponse>? = apiRequests?.postContactDetails(
+                token,
+                district,village,residentialType,mobileNumber,landLordName,landlordPhoneNumber,
+                generateRequestId(),
+                "saveContactDetails"
+            )
+            call!!.enqueue(object : Callback<ContactResponse> {
+                override fun onResponse(
+                    call: Call<ContactResponse>,
+                    response: Response<ContactResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        dialogLoader?.hideProgressDialog()
+                        if (response.body()!!.status == 1) {
+
+                            navController.navigate(R.id.action_enterContactDetailsFragment_to_enterGuarantorDetailsFragment)
+                        } else {
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
+
+                        }
+
+                    } else {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+                    }
+
+                }
+
+                override fun onFailure(call: Call<ContactResponse>, t: Throwable) {
+                    t.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
+
+                }
+            })
+
+
+        }
     }
 
 }

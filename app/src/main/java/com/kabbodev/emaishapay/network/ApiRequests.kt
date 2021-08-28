@@ -2,6 +2,8 @@ package com.kabbodev.emaishapay.network
 
 import com.kabbodev.emaishapay.data.models.*
 import com.kabbodev.emaishapay.data.models.responses.ChangePinResponse
+import com.kabbodev.emaishapay.data.models.responses.ContactResponse
+import com.kabbodev.emaishapay.data.models.responses.GuarantorResponse
 import com.kabbodev.emaishapay.data.models.responses.UserResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -90,12 +92,54 @@ interface ApiRequests {
     ):Call<UserResponse>?
 
     @FormUrlEncoded
-    @POST()
-    fun postContactDetails()
+    @POST("api/update/business/contactdetails")
+    fun postContactDetails(
+        @Header("Authorization") token:String?,
+        @Field("district") district:String?,
+        @Field("village") village:String?,
+        @Field("residential_type") residential_type:String?,
+        @Field("mobile_phone") mobile_phone:String?,
+        @Field("landlord") landlord:String?,
+        @Field("landlord_contact") landlord_contact:String?,
+        @Field("request_id") request_id:String?,
+        @Field("action_id") action_id:String?,
+
+    ):Call<ContactResponse>?
+
+    @GET("api/get/business/contactdetails")
+    fun getContactDetails(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<ContactResponse>?
 
     @FormUrlEncoded
-    @POST()
-    fun postGuarantorDetails()
+    @POST("api/update/business/guarantors")
+    fun postGuarantorDetails(
+        @Header("Authorization") token:String?,
+        @Field("name1") name:String?,
+        @Field("gender1") gender:String?,
+        @Field("relationship1") relationship:String?,
+        @Field("mobile_phone1") phoneNumber:String?,
+        @Field("residential_address1") address:String?,
+        @Field("name2") name2:String?,
+        @Field("gender2") gender2:String?,
+        @Field("relationship2") relationship2:String?,
+        @Field("mobile_phone2") mobile_phone2:String?,
+        @Field("residential_address2") residential_address2:String?,
+        @Field("action_id") action_id: String?,
+        @Field("request_id") request_id: String?
+
+    ):Call<GuarantorResponse>?
+
+    @GET("api/get/business/guarantors")
+    fun getGuarantorDetails(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<GuarantorResponse>?
+
+
 //
 //    @FormUrlEncoded
 //    @POST()

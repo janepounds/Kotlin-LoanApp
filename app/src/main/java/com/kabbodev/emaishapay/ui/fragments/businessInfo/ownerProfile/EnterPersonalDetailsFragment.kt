@@ -33,9 +33,10 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
     private val mViewModel: LoginViewModel by activityViewModels()
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
     private var dialogLoader: DialogLoader? = null
-    var token:String? = ""
+    var token: String? = ""
 
-    override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentEnterPersonalDetailsBinding.inflate(inflater, container, false)
+    override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) =
+        FragmentEnterPersonalDetailsBinding.inflate(inflater, container, false)
 
 
     override fun setupTheme() {
@@ -52,8 +53,8 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
         binding.saveAndNextBtn.setOnClickListener { checkInputs(true) }
     }
 
-    private fun loadPersonalDetails(){
-        GlobalScope.launch {  userPreferences.user!!.collect { token = it.accessToken.toString() } }
+    private fun loadPersonalDetails() {
+        GlobalScope.launch { userPreferences.user!!.collect { token = it.accessToken.toString() } }
         var call: Call<UserResponse>? = apiRequests?.getPersonalDetails(
             token,
             generateRequestId(),
@@ -68,23 +69,28 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
 
                     if (response.body()!!.status == 1) {
                         /************populate all fields in UI*****************/
-                        binding.etFullName.editText?.text ?:  response.body()!!.data.name
-                        binding.spinnerGender.text?: response.body()!!.data.gender
-                        binding.etDateOfBirth.editText?.text?: response.body()!!.data.dob
-                        binding.spinnerEducationLevel.text?: response.body()!!.data.education_level
-                        binding.spinnerMaritalStatus.text?: response.body()!!.data.marital_status
-                        binding.etYearInBusiness.editText?.text?: response.body()!!.data.years_in_business
-                        binding.etNationalId.editText?.text?: response.body()!!.data.nin
+                        binding.etFullName.editText?.text ?: response.body()!!.data.name
+                        binding.spinnerGender.text ?: response.body()!!.data.gender
+                        binding.etDateOfBirth.editText?.text ?: response.body()!!.data.dob
+                        binding.spinnerEducationLevel.text ?: response.body()!!.data.education_level
+                        binding.spinnerMaritalStatus.text ?: response.body()!!.data.marital_status
+                        binding.etYearInBusiness.editText?.text
+                            ?: response.body()!!.data.years_in_business
+                        binding.etNationalId.editText?.text ?: response.body()!!.data.nin
 
 
-                    }else{
+                    } else {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
 
                     }
 
-                } else {
+                } else if (response.code() == 401) {
+                    /***************redirect to auth*********************/
                     response.body()!!.message?.let { binding.root.snackbar(it) }
 
+
+                } else {
+                    response.body()!!.message?.let { binding.root.snackbar(it) }
                 }
 
             }
@@ -101,8 +107,10 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
 
     private fun checkInputs(proceedNext: Boolean) {
         val genders: List<String> = listOf(*resources.getStringArray(R.array.gender))
-        val educationLevelArray: List<String> = listOf(*resources.getStringArray(R.array.education_level))
-        val maritalStatusArray: List<String> = listOf(*resources.getStringArray(R.array.marital_status))
+        val educationLevelArray: List<String> =
+            listOf(*resources.getStringArray(R.array.education_level))
+        val maritalStatusArray: List<String> =
+            listOf(*resources.getStringArray(R.array.marital_status))
 
         val fullName = binding.etFullName.editText?.text.toString().trim()
         val dateOfBirth = binding.etDateOfBirth.editText?.text.toString().trim()
@@ -122,28 +130,36 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
         if (binding.spinnerEducationLevel.selectedIndex >= 0) {
             educationLevel = educationLevelArray[binding.spinnerEducationLevel.selectedIndex]
         } else {
-            error = String.format(getString(R.string.select_error), getString(R.string.education_level))
+            error =
+                String.format(getString(R.string.select_error), getString(R.string.education_level))
         }
 
         if (binding.spinnerMaritalStatus.selectedIndex >= 0) {
             maritalStatus = maritalStatusArray[binding.spinnerMaritalStatus.selectedIndex]
         } else {
-            error = String.format(getString(R.string.select_error), getString(R.string.marital_status))
+            error =
+                String.format(getString(R.string.select_error), getString(R.string.marital_status))
         }
 
-        if (nationalId.isEmpty()) error = String.format(getString(R.string.cannot_be_empty_error), getString(R.string.national_id))
-        if (yearsInBusiness.isEmpty()) error = String.format(getString(R.string.cannot_be_empty_error), getString(R.string.years_in_business))
-        if (dateOfBirth.isEmpty()) error = String.format(getString(R.string.cannot_be_empty_error), getString(R.string.date_of_birth))
+        if (nationalId.isEmpty()) error = String.format(
+            getString(R.string.cannot_be_empty_error),
+            getString(R.string.national_id)
+        )
+        if (yearsInBusiness.isEmpty()) error = String.format(
+            getString(R.string.cannot_be_empty_error),
+            getString(R.string.years_in_business)
+        )
+        if (dateOfBirth.isEmpty()) error = String.format(
+            getString(R.string.cannot_be_empty_error),
+            getString(R.string.date_of_birth)
+        )
         if (fullName.isEmpty()) error = getString(R.string.full_name_cannot_be_empty)
 
         if (!error.isNullOrEmpty()) {
             binding.root.snackbar(error)
             return
         }
-        if (proceedNext){
-            //get  user token
-            GlobalScope.launch {  userPreferences.user!!.collect { token = it.accessToken.toString() } }
-            dialogLoader =context?.let { it -> DialogLoader(it) } }
+        if (proceedNext) {
             dialogLoader?.showProgressDialog()
             /***************endpoint for updating personal details*********************/
             var call: Call<RegistrationResponse>? = apiRequests?.postPersonalDetails(
@@ -158,19 +174,24 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
                 generateRequestId(),
                 "savePersonalDetails"
 
-                )
-                call!!.enqueue(object : Callback<RegistrationResponse> {
+            )
+            call!!.enqueue(object : Callback<RegistrationResponse> {
                 override fun onResponse(
                     call: Call<RegistrationResponse>,
                     response: Response<RegistrationResponse>
-                     ) {
+                ) {
                     if (response.isSuccessful) {
                         dialogLoader?.hideProgressDialog()
                         if (response.body()!!.status == 1) {
                             /************save values dob and nin in the shared preferences*****************/
-                            lifecycleScope.launch { userPreferences.savePersonalInfo(nationalId,dateOfBirth) }
+                            lifecycleScope.launch {
+                                userPreferences.savePersonalInfo(
+                                    nationalId,
+                                    dateOfBirth
+                                )
+                            }
                             navController.navigate(R.id.action_enterPersonalDetailsFragment_to_enterContactDetailsFragment)
-                        }else{
+                        } else {
                             response.body()!!.message?.let { binding.root.snackbar(it) }
 
                         }
@@ -192,4 +213,5 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
         }
 
     }
+}
 
