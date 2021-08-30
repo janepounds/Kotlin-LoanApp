@@ -58,4 +58,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), AlertDialogCallback {
         if (currentFragment == HOME_FRAGMENT) finishAndRemoveTask()
     }
 
+
+
 }

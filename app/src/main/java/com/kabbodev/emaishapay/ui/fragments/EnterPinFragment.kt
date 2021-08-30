@@ -190,4 +190,16 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
         fun onKeyClick(keyValue: Int)
     }
 
+
+
+        fun startAuth(sessionExpired: Boolean) {
+            //call fragment
+            if (navController.currentDestination?.id!! != R.id.enterPinFragment
+            ) {
+                navController.popBackStack(R.id.homeFragment, false)
+                navController.navigate(R.id.action_homeFragment_to_enterPinFragment)
+            }
+
+    }
+
 }

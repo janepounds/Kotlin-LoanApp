@@ -1,23 +1,24 @@
 package com.kabbodev.emaishapay.ui.fragments.businessInfo.ownerProfile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.models.RegistrationResponse
 import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.data.models.responses.UserResponse
 import com.kabbodev.emaishapay.databinding.FragmentEnterPersonalDetailsBinding
 import com.kabbodev.emaishapay.network.ApiClient
 import com.kabbodev.emaishapay.network.ApiRequests
+import com.kabbodev.emaishapay.ui.activities.MainActivity
 import com.kabbodev.emaishapay.ui.base.BaseFragment
+import com.kabbodev.emaishapay.ui.fragments.EnterPinFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
-import com.kabbodev.emaishapay.utils.DialogLoader
-import com.kabbodev.emaishapay.utils.generateRequestId
-import com.kabbodev.emaishapay.utils.initSpinner
-import com.kabbodev.emaishapay.utils.snackbar
+import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
@@ -30,10 +31,10 @@ import retrofit2.Response
 @AndroidEntryPoint
 class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBinding>() {
 
+    private  val TAG = "EnterPersonalDetailsFra"
     private val mViewModel: LoginViewModel by activityViewModels()
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
     private var dialogLoader: DialogLoader? = null
-    var token: String? = ""
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentEnterPersonalDetailsBinding.inflate(inflater, container, false)
@@ -48,15 +49,20 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
     }
 
     override fun setupClickListeners() {
+        binding.etDateOfBirth.setOnClickListener{ binding.etDateOfBirth?.editText?.let { it1 ->
+            addDatePicker(
+                it1,it1,context)
+        } }
         binding.progressLayout.layoutOwnerInfo.backBtn.setOnClickListener { requireActivity().onBackPressed() }
         binding.saveBtn.setOnClickListener { checkInputs(false) }
         binding.saveAndNextBtn.setOnClickListener { checkInputs(true) }
     }
 
     private fun loadPersonalDetails() {
-        GlobalScope.launch { userPreferences.user!!.collect { token = it.accessToken.toString() } }
+        dialogLoader = context?.let { DialogLoader(it) }
+        dialogLoader?.showProgressDialog()
         var call: Call<UserResponse>? = apiRequests?.getPersonalDetails(
-            token,
+            Constants.ACCESS_TOKEN,
             generateRequestId(),
             "getPersonalDetails"
         )
@@ -66,6 +72,7 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
                 response: Response<UserResponse>
             ) {
                 if (response.isSuccessful) {
+                    dialogLoader?.hideProgressDialog()
 
                     if (response.body()!!.status == 1) {
                         /************populate all fields in UI*****************/
@@ -81,22 +88,27 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
 
                     } else {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
 
                     }
 
                 } else if (response.code() == 401) {
                     /***************redirect to auth*********************/
-                    response.body()!!.message?.let { binding.root.snackbar(it) }
+                    response.body()!!.message?.let { binding.root.snackbar(it)}
+                    dialogLoader?.hideProgressDialog()
+//                    EnterPinFragment.startAuth(true)
 
 
                 } else {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
                 }
 
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 t.message?.let { binding.root.snackbar(it) }
+                dialogLoader?.hideProgressDialog()
 
 
             }
@@ -163,7 +175,7 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
             dialogLoader?.showProgressDialog()
             /***************endpoint for updating personal details*********************/
             var call: Call<RegistrationResponse>? = apiRequests?.postPersonalDetails(
-                token,
+                Constants.ACCESS_TOKEN,
                 name = fullName,
                 gender = gender,
                 dateOfBirth,
@@ -196,7 +208,11 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
 
                         }
 
-                    } else {
+                    } else if(response.code()==401) {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+//                        EnterPinFragment.startAuth(true)
+                    }else{
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                         dialogLoader?.hideProgressDialog()
                     }

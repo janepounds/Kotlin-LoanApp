@@ -20,6 +20,16 @@ import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.databinding.LayoutBusinessExpandableBinding
 import com.kabbodev.emaishapay.databinding.LayoutUploadDocumentBinding
 import com.skydoves.powerspinner.PowerSpinnerView
+import android.text.InputType
+
+import android.app.DatePickerDialog
+import android.app.DatePickerDialog.OnDateSetListener
+
+import android.widget.EditText
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
+
 
 fun View.snackbar(message: String) {
     Snackbar
@@ -105,6 +115,33 @@ fun View.makeInvisible() {
 fun View.makeGone() {
     this.visibility = View.GONE
 }
+
+fun addDatePicker(editText: EditText, ed_: EditText, context: Context?) {
+    editText.setOnClickListener{
+        val mcurrentDate = Calendar.getInstance()
+        val mYear = mcurrentDate[Calendar.YEAR]
+        val mMonth = mcurrentDate[Calendar.MONTH]
+        val mDay = mcurrentDate[Calendar.DAY_OF_MONTH]
+        val mDatePicker = DatePickerDialog(
+            context!!,
+            { date_picker, selected_year, selected_month, selected_day ->
+                val month = selected_month + 1
+                val formatter: NumberFormat = DecimalFormat("00")
+                ed_.setText(
+                    selected_year.toString() + "-" + formatter.format(month.toLong()) + "-" + formatter.format(
+                        selected_day.toLong()
+                    )
+                )
+            }, mYear, mMonth, mDay
+        )
+        mDatePicker.show()
+    }
+    ed_.inputType = InputType.TYPE_NULL
+}
+
+
+
+
 
 fun getHomeViewPagerHtmlText(): String = "You can now borrow up to <font color=\"#179bd7\">Ugx 700,000</font> Repay in instalments of Daily, Weekly or Monthly"
 

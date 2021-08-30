@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.models.RegistrationResponse
 import com.kabbodev.emaishapay.data.models.responses.ContactResponse
 import com.kabbodev.emaishapay.data.models.responses.UserResponse
@@ -18,6 +19,7 @@ import com.kabbodev.emaishapay.databinding.FragmentEnterContactDetailsBinding
 import com.kabbodev.emaishapay.network.ApiClient
 import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.ui.base.BaseFragment
+import com.kabbodev.emaishapay.ui.fragments.EnterPinFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +37,6 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
     private val mViewModel: LoginViewModel by activityViewModels()
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
     private var dialogLoader: DialogLoader? = null
-    var token:String? = ""
 
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentEnterContactDetailsBinding.inflate(
@@ -83,9 +84,10 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
     }
 
     private fun loadContactDetails(){
-        GlobalScope.launch {  userPreferences.user!!.collect { token = it.accessToken.toString() } }
+        dialogLoader = context?.let { DialogLoader(it) }
+        dialogLoader?.showProgressDialog()
         var call: Call<ContactResponse>? = apiRequests?.getContactDetails(
-            token,
+            Constants.ACCESS_TOKEN,
             generateRequestId(),
             "getContactDetails"
         )
@@ -95,6 +97,7 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
                 response: Response<ContactResponse>
             ) {
                 if (response.isSuccessful) {
+                    dialogLoader?.hideProgressDialog()
 
                     if (response.body()!!.status == 1) {
                         /************populate all fields in UI*****************/
@@ -119,23 +122,27 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
 
                     }else{
                         response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
 
                     }
 
                 } else if(response.code()==401) {
                     /***************redirect to auth*********************/
                     response.body()!!.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
+//                    EnterPinFragment.startAuth(true)
 
 
                 }else{
                     response.body()!!.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
                 }
 
             }
 
             override fun onFailure(call: Call<ContactResponse>, t: Throwable) {
                 t.message?.let { binding.root.snackbar(it) }
-
+                dialogLoader?.hideProgressDialog()
 
             }
         })
@@ -201,7 +208,7 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
             dialogLoader?.showProgressDialog()
             /***************endpoint for updating contact details*********************/
             var call: Call<ContactResponse>? = apiRequests?.postContactDetails(
-                token,
+                Constants.ACCESS_TOKEN,
                 district,village,residentialType,mobileNumber,landLordName,landlordPhoneNumber,
                 generateRequestId(),
                 "saveContactDetails"
@@ -221,7 +228,11 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
 
                         }
 
-                    } else {
+                    } else if(response.code()==401){
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+//                        EnterPinFragment.startAuth(true)
+                    }else{
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                         dialogLoader?.hideProgressDialog()
                     }

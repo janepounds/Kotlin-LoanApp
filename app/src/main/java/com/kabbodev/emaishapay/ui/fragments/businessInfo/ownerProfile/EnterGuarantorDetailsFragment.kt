@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.models.RegistrationResponse
 import com.kabbodev.emaishapay.data.models.responses.GuarantorResponse
 import com.kabbodev.emaishapay.data.models.responses.UserResponse
@@ -12,6 +13,7 @@ import com.kabbodev.emaishapay.databinding.FragmentEnterGuarantorDetailsBinding
 import com.kabbodev.emaishapay.network.ApiClient
 import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.ui.base.BaseFragment
+import com.kabbodev.emaishapay.ui.fragments.EnterPinFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.DialogLoader
 import com.kabbodev.emaishapay.utils.generateRequestId
@@ -31,7 +33,6 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
     private val mViewModel: LoginViewModel by activityViewModels()
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
     private var dialogLoader: DialogLoader? = null
-    var token: String? = ""
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentEnterGuarantorDetailsBinding.inflate(inflater, container, false)
 
@@ -50,9 +51,10 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
     }
 
     private fun loadGuarantorDetails(){
-        GlobalScope.launch { userPreferences.user!!.collect { token = it.accessToken.toString() } }
+        dialogLoader = context?.let { DialogLoader(it) }
+        dialogLoader?.showProgressDialog()
         var call: Call<GuarantorResponse>? = apiRequests?.getGuarantorDetails(
-            token,
+            Constants.ACCESS_TOKEN,
             generateRequestId(),
             "getPersonalDetails"
         )
@@ -62,6 +64,7 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
                 response: Response<GuarantorResponse>
             ) {
                 if (response.isSuccessful) {
+                    dialogLoader?.hideProgressDialog()
 
                     if (response.body()!!.status == 1) {
                         /************populate all fields in UI*****************/
@@ -84,16 +87,20 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
                 } else if (response.code() == 401) {
                     /***************redirect to auth*********************/
                     response.body()!!.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
+//                    EnterPinFragment.startAuth(true)
 
 
                 } else {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
                 }
 
             }
 
             override fun onFailure(call: Call<GuarantorResponse>, t: Throwable) {
                 t.message?.let { binding.root.snackbar(it) }
+                dialogLoader?.hideProgressDialog()
 
 
             }
@@ -163,7 +170,7 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
             dialogLoader?.showProgressDialog()
             /***************endpoint for updating guarantor details*********************/
             var call: Call<GuarantorResponse>? = apiRequests?.postGuarantorDetails(
-                token,fullName1,gender1,relationship1,phone1,residential1,fullName2,gender2,relationship2,phone2,residential2,
+                Constants.ACCESS_TOKEN,fullName1,gender1,relationship1,phone1,residential1,fullName2,gender2,relationship2,phone2,residential2,
                 "saveGuarantors",
                 generateRequestId(),
 
@@ -183,7 +190,11 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
 
                         }
 
-                    } else {
+                    } else if(response.code()==401) {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+//                        EnterPinFragment.startAuth(true)
+                    }else{
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                         dialogLoader?.hideProgressDialog()
                     }
