@@ -27,7 +27,7 @@ class ContactData(
         @SerializedName("village")
         @Expose
         val village: String?,
-        @SerializedName("user_id")
+        @SerializedName("residential_type")
         @Expose
         val residential_type:String?,
         @SerializedName("mobile_phone")

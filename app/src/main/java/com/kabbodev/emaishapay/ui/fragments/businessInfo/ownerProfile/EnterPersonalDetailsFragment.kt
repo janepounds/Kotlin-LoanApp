@@ -1,6 +1,7 @@
 package com.kabbodev.emaishapay.ui.fragments.businessInfo.ownerProfile
 
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -43,16 +44,14 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
     override fun setupTheme() {
         /*********load personal details from the server*************/
         loadPersonalDetails()
+        binding.etDateOfBirth?.editText?.let { addDatePicker(it,context) }
         binding.spinnerGender.initSpinner(this)
         binding.spinnerEducationLevel.initSpinner(this)
         binding.spinnerMaritalStatus.initSpinner(this)
+
     }
 
     override fun setupClickListeners() {
-        binding.etDateOfBirth.setOnClickListener{ binding.etDateOfBirth?.editText?.let { it1 ->
-            addDatePicker(
-                it1,it1,context)
-        } }
         binding.progressLayout.layoutOwnerInfo.backBtn.setOnClickListener { requireActivity().onBackPressed() }
         binding.saveBtn.setOnClickListener { checkInputs(false) }
         binding.saveAndNextBtn.setOnClickListener { checkInputs(true) }
@@ -76,14 +75,16 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
 
                     if (response.body()!!.status == 1) {
                         /************populate all fields in UI*****************/
-                        binding.etFullName.editText?.text ?: response.body()!!.data.name
-                        binding.spinnerGender.text ?: response.body()!!.data.gender
-                        binding.etDateOfBirth.editText?.text ?: response.body()!!.data.dob
-                        binding.spinnerEducationLevel.text ?: response.body()!!.data.education_level
-                        binding.spinnerMaritalStatus.text ?: response.body()!!.data.marital_status
-                        binding.etYearInBusiness.editText?.text
-                            ?: response.body()!!.data.years_in_business
-                        binding.etNationalId.editText?.text ?: response.body()!!.data.nin
+
+                        binding.etFullName.editText?.setText(response.body()!!.data.name)
+//                        selectSpinnerItemByValue(binding.spinnerGender,response.body()!!.data.gender)
+//                        binding.etDateOfBirth.editText?.setText(response.body()!!.data.dob)
+//                        binding.spinnerEducationLevel.text ?: response.body()!!.data.education_level
+//                        binding.spinnerMaritalStatus.text ?: response.body()!!.data.marital_status
+
+                        binding.etYearInBusiness.editText?.setText(response.body()!!.data.years_in_business.toString())
+
+                        binding.etNationalId.editText?.setText( response.body()!!.data.nin)
 
 
                     } else {

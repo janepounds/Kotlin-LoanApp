@@ -1,5 +1,6 @@
 package com.kabbodev.emaishapay.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
@@ -24,6 +25,7 @@ import android.text.InputType
 
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
+import android.widget.DatePicker
 
 import android.widget.EditText
 import java.text.DecimalFormat
@@ -115,24 +117,24 @@ fun View.makeInvisible() {
 fun View.makeGone() {
     this.visibility = View.GONE
 }
-
-fun addDatePicker(editText: EditText, ed_: EditText, context: Context?) {
-    editText.setOnClickListener{
-        val mcurrentDate = Calendar.getInstance()
-        val mYear = mcurrentDate[Calendar.YEAR]
-        val mMonth = mcurrentDate[Calendar.MONTH]
-        val mDay = mcurrentDate[Calendar.DAY_OF_MONTH]
+@SuppressLint("SetTextI18n")
+fun addDatePicker(ed_: EditText, context: Context?) {
+    ed_.setOnClickListener { view: View? ->
+        val mCurrentDate = Calendar.getInstance()
+        val mYear = mCurrentDate[Calendar.YEAR]
+        val mMonth = mCurrentDate[Calendar.MONTH]
+        val mDay = mCurrentDate[Calendar.DAY_OF_MONTH]
         val mDatePicker = DatePickerDialog(
             context!!,
-            { date_picker, selected_year, selected_month, selected_day ->
-                val month = selected_month + 1
+            { datePicker: DatePicker?, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+                val month = selectedMonth + 1
                 val formatter: NumberFormat = DecimalFormat("00")
-                ed_.setText(
-                    selected_year.toString() + "-" + formatter.format(month.toLong()) + "-" + formatter.format(
-                        selected_day.toLong()
-                    )
-                )
-            }, mYear, mMonth, mDay
+                ed_.setText(selectedYear.toString() + "-" + formatter.format(month.toLong()) + "-" + formatter.format(
+                    selectedDay.toLong()))
+            },
+            mYear,
+            mMonth,
+            mDay
         )
         mDatePicker.show()
     }

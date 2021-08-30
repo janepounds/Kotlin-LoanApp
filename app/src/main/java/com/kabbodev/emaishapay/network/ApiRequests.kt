@@ -1,10 +1,9 @@
 package com.kabbodev.emaishapay.network
 
+import com.google.gson.JsonObject
 import com.kabbodev.emaishapay.data.models.*
-import com.kabbodev.emaishapay.data.models.responses.ChangePinResponse
-import com.kabbodev.emaishapay.data.models.responses.ContactResponse
-import com.kabbodev.emaishapay.data.models.responses.GuarantorResponse
-import com.kabbodev.emaishapay.data.models.responses.UserResponse
+import com.kabbodev.emaishapay.data.models.responses.*
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -140,14 +139,23 @@ interface ApiRequests {
     ):Call<GuarantorResponse>?
 
 
-//
-//    @FormUrlEncoded
-//    @POST()
-//    fun postDocuments()
-//
-//    @FormUrlEncoded
-//    @POST()
-//    fun postBusinessDetails()
+
+    @FormUrlEncoded
+    @POST("api/update/business/Ids")
+    fun postIdDocuments(
+        @Header("Authorization") token:String?,
+        @Field("profile_picture") pics:JSONObject,
+        @Field("request_id") request_id: String?,
+        @Field("action_id") action_id: String?
+    ):Call<IdDocumentResponse>
+
+
+    @GET("api/get/business/iddocs")
+    fun getIdDocuments(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<IdDocumentResponse>
 //
 //    @FormUrlEncoded
 //    @POST()

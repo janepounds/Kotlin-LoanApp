@@ -101,9 +101,9 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
 
                     if (response.body()!!.status == 1) {
                         /************populate all fields in UI*****************/
-                        binding.etDistrict.editText?.text ?:  response.body()!!.data!!.district
-                        binding.etVillage.editText?.text?: response.body()!!.data!!.village
-                        binding.etMobileNumber.etPhoneNumber?.editText?.text?: response.body()!!.data!!.mobile_phone
+                        binding.etDistrict.editText?.setText(response.body()!!.data!!.district)
+                        binding.etVillage.editText?.setText(response.body()!!.data!!.village)
+                        binding.etMobileNumber.etPhoneNumber?.editText?.setText(response.body()!!.data!!.mobile_phone.substring(3))
                         binding.spinnerResidentialType.text?: response.body()!!.data!!.residential_type
                         if(binding.spinnerResidentialType.text.equals("Owner",)){
 
@@ -114,8 +114,8 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
                             binding.etLandlordPhoneNumber.etPhoneNumber.visibility = GONE
                         }else {
 
-                            binding.etLandlordPhoneNumber.etPhoneNumber.editText?.text ?: response.body()!!.data!!.landlord_contact
-                            binding.etLandlordName.editText?.text ?: response.body()!!.data!!.landlord
+                            binding.etLandlordPhoneNumber.etPhoneNumber.editText?.setText(response.body()!!.data!!.landlord_contact?.substring(3))
+                            binding.etLandlordName.editText?.setText(response.body()!!.data!!.landlord)
 
                         }
 
@@ -209,7 +209,7 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
             /***************endpoint for updating contact details*********************/
             var call: Call<ContactResponse>? = apiRequests?.postContactDetails(
                 Constants.ACCESS_TOKEN,
-                district,village,residentialType,mobileNumber,landLordName,landlordPhoneNumber,
+                district,village,residentialType,getString(R.string.phone_code)+mobileNumber,landLordName,getString(R.string.phone_code)+landlordPhoneNumber,
                 generateRequestId(),
                 "saveContactDetails"
             )

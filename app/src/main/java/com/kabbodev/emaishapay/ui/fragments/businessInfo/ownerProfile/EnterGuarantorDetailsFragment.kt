@@ -56,7 +56,7 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
         var call: Call<GuarantorResponse>? = apiRequests?.getGuarantorDetails(
             Constants.ACCESS_TOKEN,
             generateRequestId(),
-            "getPersonalDetails"
+            "getGuarantors"
         )
         call!!.enqueue(object : Callback<GuarantorResponse> {
             override fun onResponse(
@@ -68,16 +68,16 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
 
                     if (response.body()!!.status == 1) {
                         /************populate all fields in UI*****************/
-                        binding.firstKin.etFullName.editText?.text ?: response.body()!!.data!!.name
+                        binding.firstKin.etFullName.editText?.setText(response.body()!!.data!!.name)
                         binding.firstKin.spinnerGender.text ?: response.body()!!.data!!.gender
                         binding.firstKin.spinnerRelationship.text ?: response.body()!!.data!!.relationship
-                        binding.firstKin.etMobileNumber.etPhoneNumber.editText?.text ?: response.body()!!.data!!.mobile
-                        binding.firstKin.etResidentialAddress.editText?.text ?: response.body()!!.data!!.residential_address
-                        binding.secondKin.etFullName.editText?.text ?: response.body()!!.data!!.name2
+                        binding.firstKin.etMobileNumber.etPhoneNumber.editText?.setText(response.body()!!.data!!.mobile?.substring(3))
+                        binding.firstKin.etResidentialAddress.editText?.setText(response.body()!!.data!!.residential_address)
+                        binding.secondKin.etFullName.editText?.setText(response.body()!!.data!!.name2)
                         binding.secondKin.spinnerGender.text ?: response.body()!!.data!!.gender2
                         binding.secondKin.spinnerRelationship.text ?: response.body()!!.data!!.relationship2
-                        binding.secondKin.etMobileNumber.etPhoneNumber.editText?.text ?: response.body()!!.data!!.mobile2
-                        binding.secondKin.etResidentialAddress.editText?.text ?: response.body()!!.data!!.residential_address2
+                        binding.secondKin.etMobileNumber.etPhoneNumber.editText?.setText(response.body()!!.data!!.mobile2?.substring(3))
+                        binding.secondKin.etResidentialAddress.editText?.setText(response.body()!!.data!!.residential_address2)
 
                     } else {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -170,7 +170,7 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
             dialogLoader?.showProgressDialog()
             /***************endpoint for updating guarantor details*********************/
             var call: Call<GuarantorResponse>? = apiRequests?.postGuarantorDetails(
-                Constants.ACCESS_TOKEN,fullName1,gender1,relationship1,phone1,residential1,fullName2,gender2,relationship2,phone2,residential2,
+                Constants.ACCESS_TOKEN,fullName1,gender1,relationship1,getString(R.string.phone_code)+phone1,residential1,fullName2,gender2,relationship2,getString(R.string.phone_code)+phone2,residential2,
                 "saveGuarantors",
                 generateRequestId(),
 
