@@ -119,7 +119,7 @@
                     android:drawableTint="@color/primaryColor"
                     android:hint="@string/date_of_birth_hint"
                     android:inputType="date"
-                    android:maxLength="8"
+                    android:maxLength="10"
                     android:textColor="@color/black"
                     android:textSize="@dimen/edit_text_size" />
 

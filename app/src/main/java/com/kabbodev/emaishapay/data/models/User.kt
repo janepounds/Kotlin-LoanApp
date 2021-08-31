@@ -14,5 +14,6 @@ data class User(
     var accessToken: String?=null,
     val pin: String?=null,
     val interestRate: Float?=null,
-    val processingFee: Double?=null
+    val processingFee: Double?=null,
+
 )

@@ -139,7 +139,6 @@ interface ApiRequests {
     ):Call<GuarantorResponse>?
 
 
-
     @FormUrlEncoded
     @POST("api/update/business/Ids")
     fun postIdDocuments(
@@ -156,9 +155,31 @@ interface ApiRequests {
         @Query("request_id") request_id: String?,
         @Query("action_id") action_id: String?
     ):Call<IdDocumentResponse>
-//
-//    @FormUrlEncoded
-//    @POST()
-//    fun postBusinessDocuments()
+
+    @FormUrlEncoded
+    @POST("api/update/businessdetails")
+    fun postBusinessDetails(
+        @Header("Authorization") token:String?,
+        @Field("business_name") business_name:String?,
+        @Field("business_type") business_type:String?,
+        @Field("reg_no") reg_no:String?,
+        @Field("reg_date") reg_date:String?,
+        @Field("industry") industry:String?,
+        @Field("location") location:String?,
+        @Field("contact_person") contact_person:String?,
+        @Field("phone_number") phone_number:String?,
+        @Field("no_employeees") no_employeees:String?,
+        @Field("avg_monthly_revenue") avg_monthly_revenue:Double?,
+        @Field("request_id") request_id: String?,
+        @Field("action_id") action_id: String?
+    ):Call<BusinessDetailsResponse>
+
+
+    @GET("api/get/businessdetails")
+    fun getBusinessDetails(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<BusinessDetailsResponse>
 
 }

@@ -2,25 +2,37 @@ package com.kabbodev.emaishapay.ui.fragments.businessInfo.businessProfile
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.constants.Constants
+import com.kabbodev.emaishapay.data.models.responses.BusinessDetailsResponse
+import com.kabbodev.emaishapay.data.models.responses.IdDocumentResponse
 import com.kabbodev.emaishapay.databinding.FragmentEnterBusinessDetailsBinding
+import com.kabbodev.emaishapay.network.ApiClient
+import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
-import com.kabbodev.emaishapay.utils.initSpinner
-import com.kabbodev.emaishapay.utils.isPhoneNumberValid
-import com.kabbodev.emaishapay.utils.snackbar
+import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @AndroidEntryPoint
 class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBinding>() {
 
     private val mViewModel: LoginViewModel by activityViewModels()
-
+    private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
+    private var dialogLoader: DialogLoader? = null
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentEnterBusinessDetailsBinding.inflate(inflater, container, false)
 
     override fun setupTheme() {
+        loadBusinessDetails()
+        binding.etDateRegistered?.editText?.let { addDatePicker(it,context) }
         binding.spinnerBusinessType.initSpinner(this)
         binding.spinnerIndustry.initSpinner(this)
     }
@@ -31,7 +43,60 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
         binding.saveAndNextBtn.setOnClickListener { checkInputs(true) }
     }
 
+    private fun loadBusinessDetails(){
+        dialogLoader = context?.let { DialogLoader(it) }
+        dialogLoader?.showProgressDialog()
+        var call: Call<BusinessDetailsResponse>? = apiRequests?.getBusinessDetails(
+            Constants.ACCESS_TOKEN,
+            generateRequestId(),
+            "getBusinessDetails"
+        )
+        call!!.enqueue(object : Callback<BusinessDetailsResponse> {
+            override fun onResponse(
+                call: Call<BusinessDetailsResponse>,
+                response: Response<BusinessDetailsResponse>
+            ) {
+                if (response.isSuccessful) {
+                    dialogLoader?.hideProgressDialog()
+
+                    if (response.body()!!.status == 1) {
+                        /************populate all fields in UI*****************/
+
+
+
+                    } else {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+
+                    }
+
+                } else if (response.code() == 401) {
+                    /***************redirect to auth*********************/
+                    response.body()!!.message?.let { binding.root.snackbar(it)}
+                    dialogLoader?.hideProgressDialog()
+//                    EnterPinFragment.startAuth(true)
+
+
+                } else {
+                    response.body()!!.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
+                }
+
+            }
+
+            override fun onFailure(call: Call<BusinessDetailsResponse>, t: Throwable) {
+                t.message?.let { binding.root.snackbar(it) }
+                dialogLoader?.hideProgressDialog()
+
+
+            }
+        })
+
+
+    }
+
     private fun checkInputs(proceedNext: Boolean) {
+
         val businessTypes: List<String> = listOf(*resources.getStringArray(R.array.business_type))
         val industryArray: List<String> = listOf(*resources.getStringArray(R.array.industry))
 
@@ -72,7 +137,63 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
             binding.root.snackbar(error)
             return
         }
-        if (proceedNext) navController.navigate(R.id.action_enterBusinessDetailsFragment_to_verificationDocumentsFragment)
+        if (proceedNext) {
+            dialogLoader?.showProgressDialog()
+            var call: Call<BusinessDetailsResponse>? = apiRequests?.postBusinessDetails(
+                Constants.ACCESS_TOKEN,
+                businessName,businessType,registrationNo,dateRegistered,industry,location,contactPerson,getString(R.string.phone_code)+phoneNumber,
+                numberOfEmployees,avgMonthlyRevenue.toDouble(),
+                generateRequestId(),
+                "saveBusinessDetails"
+            )
+            call!!.enqueue(object : Callback<BusinessDetailsResponse> {
+                override fun onResponse(
+                    call: Call<BusinessDetailsResponse>,
+                    response: Response<BusinessDetailsResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        dialogLoader?.hideProgressDialog()
+
+                        if (response.body()!!.status == 1) {
+                            /************save values reg and location in the shared preferences*****************/
+                            lifecycleScope.launch {
+                                userPreferences.savePersonalInfo(
+                                    dateRegistered,
+                                    location
+                                )
+                            }
+                            navController.navigate(R.id.action_enterBusinessDetailsFragment_to_verificationDocumentsFragment)
+
+                        } else {
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
+                            dialogLoader?.hideProgressDialog()
+
+                        }
+
+                    } else if (response.code() == 401) {
+                        /***************redirect to auth*********************/
+                        response.body()!!.message?.let { binding.root.snackbar(it)}
+                        dialogLoader?.hideProgressDialog()
+//                    EnterPinFragment.startAuth(true)
+
+
+                    } else {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+                    }
+
+                }
+
+                override fun onFailure(call: Call<BusinessDetailsResponse>, t: Throwable) {
+                    t.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
+
+
+                }
+            })
+
+
+        }
     }
 
 

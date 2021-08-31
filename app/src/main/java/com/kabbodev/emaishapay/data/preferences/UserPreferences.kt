@@ -42,6 +42,10 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
                     walletBalance= preferences[BALANCE]!!,
                     interestRate=preferences[INTEREST_RATE],
                     processingFee=preferences[PROCESSING_FEE],
+                    dateOfBirth = preferences[DOB]!!,
+                    nin = preferences[NIN]!!,
+                    location = preferences[LOCATION]!!,
+                    regDate = preferences[REG_DATE]!!
                 )
             }
 
@@ -76,11 +80,11 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
 
     }
 
-    suspend fun saveContactInfo(nin: String,dob:String){
+    suspend fun saveBusinessInfo(location: String,reg_date:String){
         dataStore.edit { mutablePreferences ->
 
-            mutablePreferences[NIN] = nin
-            mutablePreferences[DOB] = dob
+            mutablePreferences[LOCATION] = location
+            mutablePreferences[REG_DATE] = reg_date
 
         }
 
@@ -127,6 +131,8 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
         private val PROCESSING_FEE = doublePreferencesKey("processing_fee")
         private val NIN = stringPreferencesKey("nin")
         private val DOB = stringPreferencesKey("dob")
+        private val REG_DATE = stringPreferencesKey("reg_date")
+        private val LOCATION = stringPreferencesKey("location")
 
 
         private val KEY_SHOW_INTRO = booleanPreferencesKey("show_intro")
