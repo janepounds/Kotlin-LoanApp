@@ -41,10 +41,10 @@ class UserRepository @Inject constructor(
                 emailAddress = it.emailAddress,
                 phoneNumber = it.phoneNumber,
                 profileImage = null,
-                dateOfBirth = "25/06/1997",
-                nin = "CP1351BN23",
-                regDate = "01/08/2021",
-                location = "Dhaka",
+                dateOfBirth = it.dateOfBirth,
+                nin = it.nin,
+                regDate = it.regDate,
+                location = it.location,
                 walletBalance = it.walletBalance,
 
                 )

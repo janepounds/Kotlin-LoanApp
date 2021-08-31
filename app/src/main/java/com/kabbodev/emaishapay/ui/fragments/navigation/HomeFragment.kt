@@ -83,9 +83,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                             })
                     }
                 }
-
-
-
         }
 
 

@@ -61,13 +61,14 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
         val data = activityResult.data
         if (activityResult.resultCode == Activity.RESULT_OK) {
             val result = data?.getStringExtra("result")
+
 //            val imageBitmap: Bitmap = BitmapFactory.decodeFile(result?.toUri()?.path)
 //            val byteArrayOutputStream = ByteArrayOutputStream()
 //            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
 //            val b = byteArrayOutputStream.toByteArray()
 
             Timber.d("Result $result")
-            Log.d(TAG, "result: "+result)
+            Log.d(TAG, "result: "+data)
             if (result != null) {
                 when (mode) {
                     1 -> {

@@ -6,6 +6,7 @@ import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.data.models.UserData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
@@ -42,18 +43,18 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
                     walletBalance= preferences[BALANCE]!!,
                     interestRate=preferences[INTEREST_RATE],
                     processingFee=preferences[PROCESSING_FEE],
-                    dateOfBirth = preferences[DOB]!!,
-                    nin = preferences[NIN]!!,
-                    location = preferences[LOCATION]!!,
-                    regDate = preferences[REG_DATE]!!
+//                    dateOfBirth = preferences[DOB]!!,
+//                    nin = preferences[NIN]!!,
+//                    location = preferences[LOCATION]!!,
+//                    regDate = preferences[REG_DATE]!!
                 )
             }
 
     /***********clear user preferences****************/
     suspend fun clear() {
-        dataStore.edit { it.clear()
-            saveShowIntro(false)
-            saveIsLoggedIn(false)
+        dataStore.edit { mutablePreferences ->
+            mutablePreferences.clear()
+
         }
     }
 
@@ -80,7 +81,7 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
 
     }
 
-    suspend fun saveBusinessInfo(location: String,reg_date:String){
+    suspend fun saveBusinessInfo(reg_date: String,location:String){
         dataStore.edit { mutablePreferences ->
 
             mutablePreferences[LOCATION] = location

@@ -157,7 +157,7 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
                         if (response.body()!!.status == 1) {
                             /************save values reg and location in the shared preferences*****************/
                             lifecycleScope.launch {
-                                userPreferences.savePersonalInfo(
+                                userPreferences.saveBusinessInfo(
                                     dateRegistered,
                                     location
                                 )
