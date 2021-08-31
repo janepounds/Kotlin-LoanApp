@@ -3,7 +3,10 @@ package com.kabbodev.emaishapay.ui.fragments.businessInfo.ownerProfile
 import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -32,6 +35,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import java.io.ByteArrayOutputStream
+import java.util.Base64.getEncoder
 
 @AndroidEntryPoint
 class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>() {
@@ -40,41 +45,57 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
     private val mViewModel: LoginViewModel by activityViewModels()
     private var mode: Int = -1
     private var nidFrontSidePhotoUri: Uri? = null
+    private var nidFrontSidePhotoEncoded: String? = null
     private var nidBackSidePhotoUri: Uri? = null
+    private var nidBackSidePhotoEncoded: String? = null
     private var profilePhotoUri: Uri? = null
+    private var profilePhotoEncoded: String? = null
     private var selfieInBusinessPhotoUri: Uri? = null
+    private var selfieInBusinessPhotoEncoded: String? = null
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
     private var dialogLoader: DialogLoader? = null
     private var images: ArrayList<String>? = null
-    private var imageData:JsonObject? = null
+
 
     private val photosLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
         val data = activityResult.data
         if (activityResult.resultCode == Activity.RESULT_OK) {
             val result = data?.getStringExtra("result")
+//            val imageBitmap: Bitmap = BitmapFactory.decodeFile(result?.toUri()?.path)
+//            val byteArrayOutputStream = ByteArrayOutputStream()
+//            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+//            val b = byteArrayOutputStream.toByteArray()
+
             Timber.d("Result $result")
             Log.d(TAG, "result: "+result)
             if (result != null) {
                 when (mode) {
                     1 -> {
-                        loadPics(result)
+
                         nidFrontSidePhotoUri = result.toUri()
                         binding.nationalIdFrontSide.updatePhotoLayout(nidFrontSidePhotoUri)
+
+//                        nidFrontSidePhotoEncoded = Base64.encod.encodeToString(result.toByteArray())
+                        Log.d(TAG, ": encoded"+nidFrontSidePhotoEncoded)
+                        loadPics(nidFrontSidePhotoEncoded)
                     }
                     2 -> {
-                        loadPics(result)
+//                        nidBackSidePhotoEncoded = Base64.encodeToString(b, Base64.DEFAULT)
                         nidBackSidePhotoUri = result.toUri()
                         binding.nationalIdBackSide.updatePhotoLayout(nidBackSidePhotoUri)
+                        loadPics(nidBackSidePhotoEncoded)
                     }
                     3 -> {
-                        loadPics(result)
+//                        profilePhotoEncoded = Base64.encodeToString(b, Base64.DEFAULT)
                         profilePhotoUri = result.toUri()
                         binding.profilePhoto.updatePhotoLayout(profilePhotoUri)
+                        loadPics(profilePhotoEncoded)
                     }
                     4 -> {
-                        loadPics(result)
+//                        selfieInBusinessPhotoEncoded = Base64.encodeToString(b, Base64.DEFAULT)
                         selfieInBusinessPhotoUri = result.toUri()
                         binding.selfieInYourBusiness.updatePhotoLayout(selfieInBusinessPhotoUri)
+                        loadPics(selfieInBusinessPhotoEncoded)
                     }
                 }
 
@@ -88,8 +109,10 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
     override fun setupTheme() {
         loadIdDocuments()
     }
-    private fun loadPics(result: String){
-      images?.add(result)
+    private fun loadPics(result: String?){
+        if (result != null) {
+            images?.add(result)
+        }
     }
     private fun loadIdDocuments(){
         dialogLoader = context?.let { DialogLoader(it) }

@@ -15,31 +15,31 @@ import com.kabbodev.emaishapay.singleton.dataStore
 
 abstract class BaseFragment<dataBinding : ViewDataBinding> : Fragment() {
 
-    protected lateinit var binding: dataBinding
-    protected lateinit var navController: NavController
-    protected lateinit var userPreferences: UserPreferences
+  protected lateinit var binding: dataBinding
+  protected lateinit var navController: NavController
+  protected lateinit var userPreferences: UserPreferences
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        userPreferences = UserPreferences(requireContext().dataStore)
-        binding = getFragmentBinding(inflater, container)
-        return binding.root
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    userPreferences = UserPreferences(requireContext().dataStore)
+    binding = getFragmentBinding(inflater, container)
+    return binding.root
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    binding.apply {
+      lifecycleOwner = this@BaseFragment
     }
+    navController = findNavController()
+    setupTheme()
+    setupClickListeners()
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.apply {
-            lifecycleOwner = this@BaseFragment
-        }
-        navController = findNavController()
-        setupTheme()
-        setupClickListeners()
-    }
+  abstract fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?): dataBinding
 
-    abstract fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?): dataBinding
+  abstract fun setupTheme()
 
-    abstract fun setupTheme()
-
-    abstract fun setupClickListeners()
+  abstract fun setupClickListeners()
 
 
 }

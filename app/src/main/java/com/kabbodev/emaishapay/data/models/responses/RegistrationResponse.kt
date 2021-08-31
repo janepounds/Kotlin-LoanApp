@@ -12,11 +12,11 @@ class RegistrationResponse(
     val message: String?,
     @SerializedName("data")
     @Expose
-     val data: ResponseData?
+    val data: ResponseData?
 
 )
 
-    class ResponseData(
-        @SerializedName("sms_results")
-        @Expose
-        val sms_results: String?)
+class ResponseData(
+    @SerializedName("sms_results")
+    @Expose
+    val sms_results: String?)
