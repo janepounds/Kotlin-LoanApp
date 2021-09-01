@@ -86,8 +86,8 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
 //                        binding.spinnerMaritalStatus.text ?: response.body()!!.data.marital_status
 
                         binding.etYearInBusiness.editText?.setText(response.body()!!.data.years_in_business.toString())
-
                         binding.etNationalId.editText?.setText( response.body()!!.data.nin)
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
 
 
                     } else {
@@ -206,6 +206,7 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
                                     dateOfBirth
                                 )
                             }
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
                             navController.navigate(R.id.action_enterPersonalDetailsFragment_to_enterContactDetailsFragment)
                         } else {
                             response.body()!!.message?.let { binding.root.snackbar(it) }

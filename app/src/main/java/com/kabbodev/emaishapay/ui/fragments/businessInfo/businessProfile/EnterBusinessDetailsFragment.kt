@@ -64,7 +64,15 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
 
                     if (response.body()!!.status == 1) {
                         /************populate all fields in UI*****************/
-
+                        binding.etBusinessName.editText?.setText(response.body()!!.data!!.business_name)
+                        binding.etDateRegistered.editText?.setText(response.body()!!.data!!.reg_date)
+                        binding.etRegistrationNo.editText?.setText(response.body()!!.data!!.reg_no)
+                        binding.etLocation.editText?.setText(response.body()!!.data!!.location)
+                        binding.etContactPerson.editText?.setText(response.body()!!.data!!.contact_person)
+                        binding.etPhoneNumber.editText?.setText(response.body()!!.data!!.phone_number)
+                        binding.etNumberOfEmployees.editText?.setText(response.body()!!.data!!.no_employeees)
+                        binding.etAvgMonthlyRevenue.editText?.setText(response.body()!!.data!!.avg_monthly_revenue)
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
 
 
                     } else {
@@ -170,6 +178,7 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
                                     location
                                 )
                             }
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
                             navController.navigate(R.id.action_enterBusinessDetailsFragment_to_verificationDocumentsFragment)
 
                         } else {

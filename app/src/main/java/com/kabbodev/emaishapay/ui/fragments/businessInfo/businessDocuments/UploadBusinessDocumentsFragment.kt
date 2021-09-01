@@ -30,6 +30,8 @@ import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -69,43 +71,49 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
             if (result != null) {
                 when (mode) {
                     1 -> {
-                        encodedTradeLicensePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
+
                         tradeLicensePhotoUri = result.toUri()
+                        encodedTradeLicensePhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),tradeLicensePhotoUri)!!)
                         binding.tradeLicense.updatePhotoLayout(tradeLicensePhotoUri)
                     }
                     2 -> {
-                        encodedRegistrationCertificatePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
+
                         registrationCertificatePhotoUri = result.toUri()
+                        encodedRegistrationCertificatePhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),registrationCertificatePhotoUri)!!)
                         binding.registrationCertificate.updatePhotoLayout(registrationCertificatePhotoUri)
                     }
                     3 -> {
-                        encodedTaxRegCertificatePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         taxRegCertificatePhotoUri = result.toUri()
+                        encodedTaxRegCertificatePhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),taxRegCertificatePhotoUri)!!)
                         binding.taxRegCertificate.updatePhotoLayout(taxRegCertificatePhotoUri)
                     }
                     4 -> {
-                        encodedTaxClearanceCertificatePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
+
                         taxClearanceCertificatePhotoUri = result.toUri()
+                        encodedTaxClearanceCertificatePhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),taxClearanceCertificatePhotoUri)!!)
                         binding.taxClearanceCertificate.updatePhotoLayout(taxClearanceCertificatePhotoUri)
                     }
                     5 -> {
-                        encodedBankStatementPhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
+
                         bankStatementPhotoUri = result.toUri()
+                        encodedBankStatementPhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),bankStatementPhotoUri)!!)
                         binding.bankStatement.updatePhotoLayout(bankStatementPhotoUri)
                     }
                     6 -> {
-                        encodedAuditedFinancialsPhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
+
                         auditedFinancialsPhotoUri = result.toUri()
+                        encodedAuditedFinancialsPhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),auditedFinancialsPhotoUri)!!)
                         binding.auditedFinancials.updatePhotoLayout(auditedFinancialsPhotoUri)
                     }
                     7 -> {
-                        encodedBusinessPlanPhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         businessPlanPhotoUri = result.toUri()
+                        encodedBusinessPlanPhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),businessPlanPhotoUri)!!)
                         binding.businessPlan.updatePhotoLayout(businessPlanPhotoUri)
                     }
                     8 -> {
-                        encodedReceiptBookPhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
+
                         receiptBookPhotoUri = result.toUri()
+                        encodedReceiptBookPhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),receiptBookPhotoUri)!!)
                         binding.receiptBook.updatePhotoLayout(receiptBookPhotoUri)
                     }
                 }
@@ -144,6 +152,7 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
                         binding.bankStatement.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.bank_statement).toUri())
                         binding.auditedFinancials.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.audited_financials).toUri())
                         binding.receiptBook.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.receipt_book).toUri())
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
 
                     } else {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -244,6 +253,7 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
                     dialogLoader?.hideProgressDialog()
 
                     if (response.body()!!.status == 1) {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
                         navController.navigateUsingPopUp(R.id.homeFragment, R.id.action_global_homeFragment)
 
                     } else {

@@ -118,7 +118,7 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
                             binding.etLandlordName.editText?.setText(response.body()!!.data!!.landlord)
 
                         }
-
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
 
                     }else{
                         response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -221,7 +221,7 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
                     if (response.isSuccessful) {
                         dialogLoader?.hideProgressDialog()
                         if (response.body()!!.status == 1) {
-
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
                             navController.navigate(R.id.action_enterContactDetailsFragment_to_enterGuarantorDetailsFragment)
                         } else {
                             response.body()!!.message?.let { binding.root.snackbar(it) }

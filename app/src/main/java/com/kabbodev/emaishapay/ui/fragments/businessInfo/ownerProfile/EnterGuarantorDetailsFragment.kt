@@ -78,6 +78,7 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
                         binding.secondKin.spinnerRelationship.text ?: response.body()!!.data!!.relationship2
                         binding.secondKin.etMobileNumber.etPhoneNumber.editText?.setText(response.body()!!.data!!.mobile2?.substring(3))
                         binding.secondKin.etResidentialAddress.editText?.setText(response.body()!!.data!!.residential_address2)
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
 
                     } else {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -183,7 +184,7 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
                     if (response.isSuccessful) {
                         dialogLoader?.hideProgressDialog()
                         if (response.body()!!.status == 1) {
-
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
                             navController.navigate(R.id.action_enterGuarantorDetailsFragment_to_uploadIdDocumentsFragment)
                         } else {
                             response.body()!!.message?.let { binding.root.snackbar(it) }

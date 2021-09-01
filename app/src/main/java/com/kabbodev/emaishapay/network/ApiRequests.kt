@@ -3,6 +3,7 @@ package com.kabbodev.emaishapay.network
 import com.google.gson.JsonObject
 import com.kabbodev.emaishapay.data.models.*
 import com.kabbodev.emaishapay.data.models.responses.*
+import okhttp3.RequestBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.*
@@ -199,6 +200,7 @@ interface ApiRequests {
         @Query("action_id") action_id: String?
     ):Call<VerificationDocumentsResponse>
 
+    @Multipart
     @FormUrlEncoded
     @POST("api/update/businessDocuments")
     fun postBusinessDocuments(

@@ -60,28 +60,28 @@ class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocuments
             if (result != null) {
                 when (mode) {
                     1 -> {
-                        encodedOfficeShopPhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         officeShopPhotoUri = result.toUri()
+                        encodedOfficeShopPhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),officeShopPhotoUri)!!)
                         binding.officeShopPhoto.updatePhotoLayout(officeShopPhotoUri)
                     }
                     2 -> {
-                        encodedOfficeShopVideoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         officeShopVideoUri = result.toUri()
+                        encodedOfficeShopVideoID = encodeSelectedImage(getRealPathFromUri(requireContext(),officeShopVideoUri)!!)
                         binding.officeShopVideo.updatePhotoLayout(officeShopVideoUri)
                     }
                     3 -> {
-                        encodedSelfieShopOfficePhoto = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         selfieShopOfficePhotoUri = result.toUri()
+                        encodedSelfieShopOfficePhoto = encodeSelectedImage(getRealPathFromUri(requireContext(),selfieShopOfficePhotoUri)!!)
                         binding.selfieShopOffice.updatePhotoLayout(selfieShopOfficePhotoUri)
                     }
                     4 -> {
-                        encodedNeighbourhoodPhoto = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         neighbourhoodPhotoUri = result.toUri()
+                        encodedNeighbourhoodPhoto = encodeSelectedImage(getRealPathFromUri(requireContext(),neighbourhoodPhotoUri)!!)
                         binding.neighbourhoodPhoto.updatePhotoLayout(neighbourhoodPhotoUri)
                     }
                     5 -> {
-                        encodedUtilityBillPhoto = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         utilityBillPhotoUri = result.toUri()
+                        encodedUtilityBillPhoto = encodeSelectedImage(getRealPathFromUri(requireContext(),utilityBillPhotoUri)!!)
                         binding.utilityBill.updatePhotoLayout(utilityBillPhotoUri)
                     }
                 }
@@ -114,7 +114,12 @@ class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocuments
 
                     if (response.body()!!.status == 1) {
                         /************populate all fields in UI*****************/
-
+                        binding.officeShopPhoto.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.business_photo).toUri())
+                        binding.officeShopVideo.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.business_video).toUri())
+                        binding.selfieShopOffice.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.selfie_in_business).toUri())
+                        binding.neighbourhoodPhoto.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.neighbourhood_photo).toUri())
+                        binding.utilityBill.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.utility_bill).toUri())
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
 
 
                     } else {
@@ -206,6 +211,7 @@ class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocuments
                     dialogLoader?.hideProgressDialog()
 
                     if (response.body()!!.status == 1) {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
                         navController.navigateUsingPopUp(R.id.homeFragment, R.id.action_global_homeFragment)
 
                     } else {

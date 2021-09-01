@@ -57,7 +57,6 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
     private var dialogLoader: DialogLoader? = null
     private var images: ArrayList<String>? = null
 
-
     private val photosLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
         val data = activityResult.data
         if (activityResult.resultCode == Activity.RESULT_OK) {
@@ -66,24 +65,24 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
             if (result != null) {
                 when (mode) {
                     1 -> {
-                        encodedNidFrontSidePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         nidFrontSidePhotoUri = result.toUri()
+                        encodedNidFrontSidePhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),nidFrontSidePhotoUri)!!)
                         binding.nationalIdFrontSide.updatePhotoLayout(nidFrontSidePhotoUri)
 
                     }
                     2 -> {
-                        encodedNidBackSidePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         nidBackSidePhotoUri = result.toUri()
+                        encodedNidBackSidePhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),nidBackSidePhotoUri)!!)
                         binding.nationalIdBackSide.updatePhotoLayout(nidBackSidePhotoUri)
                     }
                     3 -> {
-                        encodedProfilePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         profilePhotoUri = result.toUri()
+                        encodedProfilePhotoID = encodeSelectedImage(getRealPathFromUri(requireContext(),profilePhotoUri)!!)
                         binding.profilePhoto.updatePhotoLayout(profilePhotoUri)
                     }
                     4 -> {
-                        encodedSelfieInBusinessPhotoID =encodeSelectedImage(BitmapFactory.decodeFile(result))
                         selfieInBusinessPhotoUri = result.toUri()
+                        encodedSelfieInBusinessPhotoID =encodeSelectedImage(getRealPathFromUri(requireContext(),selfieInBusinessPhotoUri)!!)
                         binding.selfieInYourBusiness.updatePhotoLayout(selfieInBusinessPhotoUri)
                     }
                 }
@@ -98,11 +97,7 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
     override fun setupTheme() {
         loadIdDocuments()
     }
-    private fun loadPics(result: String?){
-        if (result != null) {
-            images?.add(result)
-        }
-    }
+
     private fun loadIdDocuments(){
         dialogLoader = context?.let { DialogLoader(it) }
         dialogLoader?.showProgressDialog()
@@ -125,7 +120,7 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
                         binding.nationalIdBackSide.updatePhotoLayout((Constants.LOAN_API_URL+ response.body()!!.data?.national_id_back).toUri())
                         binding.profilePhoto.updatePhotoLayout((Constants.LOAN_API_URL+ response.body()!!.data?.profile_picture).toUri())
                         binding.selfieInYourBusiness.updatePhotoLayout((Constants.LOAN_API_URL+ response.body()!!.data?.selfie_in_business).toUri())
-
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
 
                     } else {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -212,7 +207,7 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
                 if (response.isSuccessful) {
                     dialogLoader?.hideProgressDialog()
                     if (response.body()!!.status == 1) {
-
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
                         navController.navigateUsingPopUp(R.id.homeFragment, R.id.action_global_homeFragment)
                     } else {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
