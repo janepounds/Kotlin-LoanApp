@@ -2,22 +2,40 @@ package com.kabbodev.emaishapay.ui.fragments.businessInfo.businessDocuments
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.constants.Constants
+import com.kabbodev.emaishapay.data.config.Config
+import com.kabbodev.emaishapay.data.enums.EnterPinType
+import com.kabbodev.emaishapay.data.models.responses.BusinessDetailsResponse
+import com.kabbodev.emaishapay.data.models.responses.BusinessDocumentsData
+import com.kabbodev.emaishapay.data.models.responses.BusinessDocumentsResponse
+import com.kabbodev.emaishapay.data.models.responses.IdDocumentData
 import com.kabbodev.emaishapay.databinding.FragmentUploadBusinessDocumentsBinding
+import com.kabbodev.emaishapay.network.ApiClient
+import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.ui.activities.ImagePickerActivity
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
-import com.kabbodev.emaishapay.utils.navigateUsingPopUp
-import com.kabbodev.emaishapay.utils.snackbar
-import com.kabbodev.emaishapay.utils.updatePhotoLayout
+import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import timber.log.Timber
+import java.io.ByteArrayOutputStream
 
 @AndroidEntryPoint
 class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocumentsBinding>() {
@@ -32,6 +50,16 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
     private var auditedFinancialsPhotoUri: Uri? = null
     private var businessPlanPhotoUri: Uri? = null
     private var receiptBookPhotoUri: Uri? = null
+    private var encodedTradeLicensePhotoID: String? =null
+    private var encodedRegistrationCertificatePhotoID: String? =null
+    private var encodedTaxRegCertificatePhotoID: String? =null
+    private var encodedTaxClearanceCertificatePhotoID: String? =null
+    private var encodedBankStatementPhotoID: String? =null
+    private var encodedAuditedFinancialsPhotoID: String? =null
+    private var encodedBusinessPlanPhotoID: String? =null
+    private var encodedReceiptBookPhotoID: String? =null
+    private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
+    private var dialogLoader: DialogLoader? = null
 
     private val photosLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
         val data = activityResult.data
@@ -41,34 +69,42 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
             if (result != null) {
                 when (mode) {
                     1 -> {
+                        encodedTradeLicensePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         tradeLicensePhotoUri = result.toUri()
                         binding.tradeLicense.updatePhotoLayout(tradeLicensePhotoUri)
                     }
                     2 -> {
+                        encodedRegistrationCertificatePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         registrationCertificatePhotoUri = result.toUri()
                         binding.registrationCertificate.updatePhotoLayout(registrationCertificatePhotoUri)
                     }
                     3 -> {
+                        encodedTaxRegCertificatePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         taxRegCertificatePhotoUri = result.toUri()
                         binding.taxRegCertificate.updatePhotoLayout(taxRegCertificatePhotoUri)
                     }
                     4 -> {
+                        encodedTaxClearanceCertificatePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         taxClearanceCertificatePhotoUri = result.toUri()
                         binding.taxClearanceCertificate.updatePhotoLayout(taxClearanceCertificatePhotoUri)
                     }
                     5 -> {
+                        encodedBankStatementPhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         bankStatementPhotoUri = result.toUri()
                         binding.bankStatement.updatePhotoLayout(bankStatementPhotoUri)
                     }
                     6 -> {
+                        encodedAuditedFinancialsPhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         auditedFinancialsPhotoUri = result.toUri()
                         binding.auditedFinancials.updatePhotoLayout(auditedFinancialsPhotoUri)
                     }
                     7 -> {
+                        encodedBusinessPlanPhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         businessPlanPhotoUri = result.toUri()
                         binding.businessPlan.updatePhotoLayout(businessPlanPhotoUri)
                     }
                     8 -> {
+                        encodedReceiptBookPhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         receiptBookPhotoUri = result.toUri()
                         binding.receiptBook.updatePhotoLayout(receiptBookPhotoUri)
                     }
@@ -80,6 +116,67 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentUploadBusinessDocumentsBinding.inflate(inflater, container, false)
 
     override fun setupTheme() {
+        loadBusinessDocuments()
+    }
+
+    private fun loadBusinessDocuments(){
+        dialogLoader = context?.let { DialogLoader(it) }
+        dialogLoader?.showProgressDialog()
+        var call: Call<BusinessDocumentsResponse>? = apiRequests?.getBusinessDocuments(
+            Constants.ACCESS_TOKEN,
+            generateRequestId(),
+            "getBusinessDocs"
+        )
+        call!!.enqueue(object : Callback<BusinessDocumentsResponse> {
+            override fun onResponse(
+                call: Call<BusinessDocumentsResponse>,
+                response: Response<BusinessDocumentsResponse>
+            ) {
+                if (response.isSuccessful) {
+                    dialogLoader?.hideProgressDialog()
+
+                    if (response.body()!!.status == 1) {
+                        /************populate all fields in UI*****************/
+                        binding.tradeLicense.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.trade_license).toUri())
+                        binding.registrationCertificate.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.reg_certificate).toUri())
+                        binding.taxRegCertificate.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.tax_reg_certificate).toUri())
+                        binding.taxClearanceCertificate.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.tax_clearance_certificate).toUri())
+                        binding.bankStatement.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.bank_statement).toUri())
+                        binding.auditedFinancials.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.audited_financials).toUri())
+                        binding.receiptBook.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.receipt_book).toUri())
+
+                    } else {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+
+                    }
+
+                } else if (response.code() == 401) {
+                    /***************redirect to auth*********************/
+                    response.body()!!.message?.let { binding.root.snackbar(it)}
+                    dialogLoader?.hideProgressDialog()
+                    if (navController.currentDestination?.id!! != R.id.enterPinFragment) {
+                        navController.popBackStack(R.id.homeFragment, false)
+                        navController.navigate(
+                            R.id.action_homeFragment_to_enterPinFragment,
+                            bundleOf(Config.LOGIN_TYPE to EnterPinType.LOGIN)
+                        )
+                    }
+
+                } else {
+                    response.body()!!.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
+                }
+
+            }
+
+            override fun onFailure(call: Call<BusinessDocumentsResponse>, t: Throwable) {
+                t.message?.let { binding.root.snackbar(it) }
+                dialogLoader?.hideProgressDialog()
+
+
+            }
+        })
     }
 
     override fun setupClickListeners() {
@@ -117,8 +214,73 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
             binding.root.snackbar(error)
             return
         }
+        /*****************post documents and redirect to home*************************/
+        val requestObject = JSONObject()
+        val data = BusinessDocumentsData(
+            trade_license = encodedTradeLicensePhotoID!!,
+            reg_certificate = encodedRegistrationCertificatePhotoID!!,
+            tax_reg_certificate = encodedTaxRegCertificatePhotoID!!,
+            tax_clearance_certificate = encodedTaxClearanceCertificatePhotoID!!,
+            bank_statement = encodedBankStatementPhotoID!!,
+            audited_financials = encodedAuditedFinancialsPhotoID!!,
+            business_plan = encodedBusinessPlanPhotoID!!,
+            receipt_book = encodedReceiptBookPhotoID!!
+        )
+        requestObject.put("params",data)
 
-        navController.navigateUsingPopUp(R.id.homeFragment, R.id.action_global_homeFragment)
+        dialogLoader?.showProgressDialog()
+        var call: Call<BusinessDocumentsResponse>? = apiRequests?.postBusinessDocuments(
+            Constants.ACCESS_TOKEN,
+            requestObject,
+            generateRequestId(),
+            "saveBusinessDocs"
+        )
+        call!!.enqueue(object : Callback<BusinessDocumentsResponse> {
+            override fun onResponse(
+                call: Call<BusinessDocumentsResponse>,
+                response: Response<BusinessDocumentsResponse>
+            ) {
+                if (response.isSuccessful) {
+                    dialogLoader?.hideProgressDialog()
+
+                    if (response.body()!!.status == 1) {
+                        navController.navigateUsingPopUp(R.id.homeFragment, R.id.action_global_homeFragment)
+
+                    } else {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+
+                    }
+
+                } else if (response.code() == 401) {
+                    /***************redirect to auth*********************/
+                    response.body()!!.message?.let { binding.root.snackbar(it)}
+                    dialogLoader?.hideProgressDialog()
+//                    EnterPinFragment.startAuth(true)
+
+
+                } else {
+                    response.body()!!.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
+                }
+
+            }
+
+            override fun onFailure(call: Call<BusinessDocumentsResponse>, t: Throwable) {
+                t.message?.let { binding.root.snackbar(it) }
+                dialogLoader?.hideProgressDialog()
+
+
+            }
+        })
+
+    }
+
+    private fun encodeSelectedImage(bm: Bitmap): String? {
+        val baos = ByteArrayOutputStream()
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val b = baos.toByteArray()
+        return Base64.encodeToString(b, Base64.DEFAULT)
     }
 
 }

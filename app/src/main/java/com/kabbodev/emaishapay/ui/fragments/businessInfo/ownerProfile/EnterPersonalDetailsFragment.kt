@@ -77,6 +77,9 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
                         /************populate all fields in UI*****************/
 
                         binding.etFullName.editText?.setText(response.body()!!.data.name)
+                        binding.etDateOfBirth.editText?.setText(response.body()!!.data.dob)
+                        binding.spinnerGender.getSpinnerAdapter<String>().spinnerView.  text =
+                            response.body()!!.data.gender
 //                        selectSpinnerItemByValue(binding.spinnerGender,response.body()!!.data.gender)
 //                        binding.etDateOfBirth.editText?.setText(response.body()!!.data.dob)
 //                        binding.spinnerEducationLevel.text ?: response.body()!!.data.education_level

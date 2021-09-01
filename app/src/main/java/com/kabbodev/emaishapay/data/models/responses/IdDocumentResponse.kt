@@ -16,21 +16,9 @@ class IdDocumentResponse (
         )
 
 class IdDocumentData(
-    @SerializedName("user_id")
-    @Expose
-    val user_id:Int,
     @SerializedName("national_id_front")
     @Expose
     val national_id_front: String,
-    @SerializedName("updated_at")
-    @Expose
-    val updated_at: String,
-    @SerializedName("created_at")
-    @Expose
-    val created_at: String,
-    @SerializedName("id")
-    @Expose
-    val id: String,
     @SerializedName("national_id_back")
     @Expose
     val national_id_back: String,

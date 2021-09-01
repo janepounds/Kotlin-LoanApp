@@ -1,8 +1,10 @@
 package com.kabbodev.emaishapay.utils
 
+import android.graphics.Bitmap
+import android.util.Base64
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import com.skydoves.powerspinner.PowerSpinnerView
+import java.io.ByteArrayOutputStream
 import java.math.BigInteger
 import java.sql.Timestamp
 import java.util.*
@@ -26,4 +28,6 @@ fun selectSpinnerItemByValue(spnr: Spinner, value: String?) {
             return
         }
     }
+
+
 }

@@ -20,6 +20,7 @@ import com.google.gson.JsonObject
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.models.responses.GuarantorResponse
+import com.kabbodev.emaishapay.data.models.responses.IdDocumentData
 import com.kabbodev.emaishapay.data.models.responses.IdDocumentResponse
 import com.kabbodev.emaishapay.data.models.responses.UserResponse
 import com.kabbodev.emaishapay.databinding.FragmentUploadIdDocumentsBinding
@@ -45,13 +46,13 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
     private val mViewModel: LoginViewModel by activityViewModels()
     private var mode: Int = -1
     private var nidFrontSidePhotoUri: Uri? = null
-    private var nidFrontSidePhotoEncoded: String? = null
+    private var encodedNidFrontSidePhotoID: String? = null
     private var nidBackSidePhotoUri: Uri? = null
-    private var nidBackSidePhotoEncoded: String? = null
+    private var encodedNidBackSidePhotoID: String? = null
     private var profilePhotoUri: Uri? = null
-    private var profilePhotoEncoded: String? = null
+    private var encodedProfilePhotoID: String? = null
     private var selfieInBusinessPhotoUri: Uri? = null
-    private var selfieInBusinessPhotoEncoded: String? = null
+    private var encodedSelfieInBusinessPhotoID: String? = null
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
     private var dialogLoader: DialogLoader? = null
     private var images: ArrayList<String>? = null
@@ -61,42 +62,29 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
         val data = activityResult.data
         if (activityResult.resultCode == Activity.RESULT_OK) {
             val result = data?.getStringExtra("result")
-
-//            val imageBitmap: Bitmap = BitmapFactory.decodeFile(result?.toUri()?.path)
-//            val byteArrayOutputStream = ByteArrayOutputStream()
-//            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-//            val b = byteArrayOutputStream.toByteArray()
-
             Timber.d("Result $result")
-            Log.d(TAG, "result: "+data)
             if (result != null) {
                 when (mode) {
                     1 -> {
-
+                        encodedNidFrontSidePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         nidFrontSidePhotoUri = result.toUri()
                         binding.nationalIdFrontSide.updatePhotoLayout(nidFrontSidePhotoUri)
 
-//                        nidFrontSidePhotoEncoded = Base64.encod.encodeToString(result.toByteArray())
-                        Log.d(TAG, ": encoded"+nidFrontSidePhotoEncoded)
-                        loadPics(nidFrontSidePhotoEncoded)
                     }
                     2 -> {
-//                        nidBackSidePhotoEncoded = Base64.encodeToString(b, Base64.DEFAULT)
+                        encodedNidBackSidePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         nidBackSidePhotoUri = result.toUri()
                         binding.nationalIdBackSide.updatePhotoLayout(nidBackSidePhotoUri)
-                        loadPics(nidBackSidePhotoEncoded)
                     }
                     3 -> {
-//                        profilePhotoEncoded = Base64.encodeToString(b, Base64.DEFAULT)
+                        encodedProfilePhotoID = encodeSelectedImage(BitmapFactory.decodeFile(result))
                         profilePhotoUri = result.toUri()
                         binding.profilePhoto.updatePhotoLayout(profilePhotoUri)
-                        loadPics(profilePhotoEncoded)
                     }
                     4 -> {
-//                        selfieInBusinessPhotoEncoded = Base64.encodeToString(b, Base64.DEFAULT)
+                        encodedSelfieInBusinessPhotoID =encodeSelectedImage(BitmapFactory.decodeFile(result))
                         selfieInBusinessPhotoUri = result.toUri()
                         binding.selfieInYourBusiness.updatePhotoLayout(selfieInBusinessPhotoUri)
-                        loadPics(selfieInBusinessPhotoEncoded)
                     }
                 }
 
@@ -201,14 +189,18 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
         }
 
         /*****************post documents and redirect to home*************************/
-
-        val gson = Gson()
-        val user = gson.toJson(images)
-        val userobject = JSONObject(user)
+        val requestObject = JSONObject()
+        val data = IdDocumentData(
+            national_id_back = encodedNidBackSidePhotoID!!,
+            national_id_front = encodedNidFrontSidePhotoID!!,
+            profile_picture = encodedProfilePhotoID!!,
+            selfie_in_business = encodedSelfieInBusinessPhotoID!!
+        )
+        requestObject.put("params",data)
         dialogLoader?.showProgressDialog()
         var call: Call<IdDocumentResponse>? = apiRequests?.postIdDocuments(
             Constants.ACCESS_TOKEN,
-            userobject,
+            requestObject,
             generateRequestId(),
             "saveIdDocuments"
             )
@@ -246,6 +238,13 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
         })
 
 
+    }
+
+    private fun encodeSelectedImage(bm: Bitmap): String? {
+        val baos = ByteArrayOutputStream()
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val b = baos.toByteArray()
+        return Base64.encodeToString(b, Base64.DEFAULT)
     }
 
 }

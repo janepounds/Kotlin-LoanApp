@@ -143,7 +143,7 @@ interface ApiRequests {
     @POST("api/update/business/Ids")
     fun postIdDocuments(
         @Header("Authorization") token:String?,
-        @Field("profile_picture") pics:JSONObject,
+        @Body pics:JSONObject,
         @Field("request_id") request_id: String?,
         @Field("action_id") action_id: String?
     ):Call<IdDocumentResponse>
@@ -182,4 +182,97 @@ interface ApiRequests {
         @Query("action_id") action_id: String?
     ):Call<BusinessDetailsResponse>
 
+    @FormUrlEncoded
+    @POST("api/update/businessVerification")
+    fun postVerificationDocuments(
+        @Header("Authorization") token:String?,
+        @Body request: JSONObject,
+        @Field("request_id") request_id: String?,
+        @Field("action_id") action_id: String?,
+    ):Call<VerificationDocumentsResponse>
+
+
+    @GET("api/get/businessVerification")
+    fun getVerificationDocuments(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<VerificationDocumentsResponse>
+
+    @FormUrlEncoded
+    @POST("api/update/businessDocuments")
+    fun postBusinessDocuments(
+        @Header("Authorization") token:String?,
+        @Body data:JSONObject,
+        @Field("request_id") request_id: String?,
+        @Field("action_id") action_id: String?
+    ):Call<BusinessDocumentsResponse>
+
+
+    @GET("api/get/businessDocuments")
+    fun getBusinessDocuments(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<BusinessDocumentsResponse>
+
+    @GET("api/get/businessdetails")
+    fun getUser(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<UserResponse>
+
+    @GET("api/get/businessdetails")
+    fun getCreditScore(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<CreditScoreResponse>
+
+    @GET("api/get/businessdetails")
+    fun getPastWithdraw(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<CreditScoreResponse>
+
+    @GET("api/get/businessdetails")
+    fun getWithdrawRecepient(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<CreditScoreResponse>
+
+    @FormUrlEncoded
+    @POST("api/update/businessdetails")
+    fun postNewLoan(
+        @Header("Authorization") token:String?,
+        @Field("loanAmount") loanAmount:Double?,
+        @Field("loanDurationType") loanDurationType:String?,
+        @Field("laonDueAmount") laonDueAmount:Double?,
+        @Field("interestRate") interestRate:Double?,
+        @Field("processingFee") processingFee:String?,
+    ):Call<LoanResponse>
+
+    @GET("api/get/businessdetails")
+    fun getLoanHistory(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<LoanResponse>
+
+    @GET("api/get/businessdetails")
+    fun getPastRepayment(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<LoanRepaymentResponse>
+
+    @GET("api/get/businessdetails")
+    fun makePayment(
+        @Header("Authorization") token:String?,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
+    ):Call<LoanRepaymentResponse>
 }

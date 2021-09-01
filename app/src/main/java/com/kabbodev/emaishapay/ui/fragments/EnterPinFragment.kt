@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
@@ -190,16 +191,5 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
         fun onKeyClick(keyValue: Int)
     }
 
-
-
-        fun startAuth(sessionExpired: Boolean) {
-            //call fragment
-            if (navController.currentDestination?.id!! != R.id.enterPinFragment
-            ) {
-                navController.popBackStack(R.id.homeFragment, false)
-                navController.navigate(R.id.action_homeFragment_to_enterPinFragment)
-            }
-
-    }
 
 }

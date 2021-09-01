@@ -3,10 +3,13 @@ package com.kabbodev.emaishapay.ui.fragments.businessInfo.businessProfile
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
+import com.kabbodev.emaishapay.data.config.Config
+import com.kabbodev.emaishapay.data.enums.EnterPinType
 import com.kabbodev.emaishapay.data.models.responses.BusinessDetailsResponse
 import com.kabbodev.emaishapay.data.models.responses.IdDocumentResponse
 import com.kabbodev.emaishapay.databinding.FragmentEnterBusinessDetailsBinding
@@ -74,8 +77,13 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
                     /***************redirect to auth*********************/
                     response.body()!!.message?.let { binding.root.snackbar(it)}
                     dialogLoader?.hideProgressDialog()
-//                    EnterPinFragment.startAuth(true)
-
+                    if (navController.currentDestination?.id!! != R.id.enterPinFragment) {
+                        navController.popBackStack(R.id.homeFragment, false)
+                        navController.navigate(
+                            R.id.action_homeFragment_to_enterPinFragment,
+                            bundleOf(Config.LOGIN_TYPE to EnterPinType.LOGIN)
+                        )
+                    }
 
                 } else {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -191,7 +199,6 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
 
                 }
             })
-
 
         }
     }
