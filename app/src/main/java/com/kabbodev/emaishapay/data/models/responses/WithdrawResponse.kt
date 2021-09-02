@@ -3,7 +3,7 @@ package com.kabbodev.emaishapay.data.models.responses
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class LoanRepaymentResponse (
+class WithdrawResponse (
     @SerializedName("status")
     @Expose
     val status:Int,
@@ -12,10 +12,10 @@ class LoanRepaymentResponse (
     val message:String,
     @SerializedName("data")
     @Expose
-    val data: List<LoanRepaymentData>?
-        )
+    val data: List<WithdrawData>?
 
-class LoanRepaymentData(
+        )
+class WithdrawData(
     @SerializedName("txnId")
     @Expose
     val txnId:String,
@@ -31,5 +31,4 @@ class LoanRepaymentData(
     @SerializedName("detination")
     @Expose
     val detination:String
-
 )

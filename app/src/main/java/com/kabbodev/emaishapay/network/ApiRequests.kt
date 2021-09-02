@@ -232,12 +232,12 @@ interface ApiRequests {
         @Query("action_id") action_id: String?
     ):Call<CreditScoreResponse>
 
-    @GET("api/get/businessdetails")
+    @GET("api/get/pastwithdraws")
     fun getPastWithdraw(
         @Header("Authorization") token:String?,
         @Query("request_id") request_id: String?,
         @Query("action_id") action_id: String?
-    ):Call<CreditScoreResponse>
+    ):Call<WithdrawResponse>
 
     @GET("api/get/businessdetails")
     fun getWithdrawRecepient(
@@ -247,17 +247,32 @@ interface ApiRequests {
     ):Call<CreditScoreResponse>
 
     @FormUrlEncoded
-    @POST("api/update/businessdetails")
+    @POST("api/get/businessdetails")
+    fun withdrawFunds(
+        @Header("Authorization") token:String?,
+        @Field("recipientMobileNumber") recipientMobileNumber:String?,
+        @Field("amount") amount:Long?,
+        @Field("pin") pin:String?,
+        @Field("request_id") request_id: String?,
+        @Field("action_id") action_id: String?
+    ):Call<WithdrawResponse>
+
+    @FormUrlEncoded
+    @POST("api/apply/loan")
     fun postNewLoan(
         @Header("Authorization") token:String?,
-        @Field("loanAmount") loanAmount:Double?,
-        @Field("loanDurationType") loanDurationType:String?,
-        @Field("laonDueAmount") laonDueAmount:Double?,
-        @Field("interestRate") interestRate:Double?,
-        @Field("processingFee") processingFee:String?,
+        @Field("amount") loanAmount:Double?,
+        @Field("duration") duration:Int?,
+        @Field("duration_units") duration_units:String?,
+        @Field("amount_due") amount_due:Double?,
+        @Field("interest_rate") interestRate:Int?,
+        @Field("processing_fee") processingFee:Double?,
+        @Field("pin") pin:String?,
+        @Field("request_id") request_id:String?,
+        @Field("action_id") action_id:String?,
     ):Call<LoanResponse>
 
-    @GET("api/get/businessdetails")
+    @GET("api/get/loanhistory")
     fun getLoanHistory(
         @Header("Authorization") token:String?,
         @Query("request_id") request_id: String?,
@@ -271,10 +286,14 @@ interface ApiRequests {
         @Query("action_id") action_id: String?
     ):Call<LoanRepaymentResponse>
 
-    @GET("api/get/businessdetails")
-    fun makePayment(
+    @FormUrlEncoded
+    @POST("api/get/businessdetails")
+    fun makeLoanPayment(
         @Header("Authorization") token:String?,
-        @Query("request_id") request_id: String?,
-        @Query("action_id") action_id: String?
+        @Field("amount") amount: Double?,
+        @Field("recipientMobileNumber") recipientMobileNumber: String?,
+        @Field("pin") pin: String?,
+        @Field("request_id") request_id: String?,
+        @Field("action_id") action_id: String?
     ):Call<LoanRepaymentResponse>
 }

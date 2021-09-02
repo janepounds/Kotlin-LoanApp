@@ -3,6 +3,7 @@ package com.kabbodev.emaishapay.ui.fragments.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.databinding.FragmentNewLoanBinding
 import com.kabbodev.emaishapay.singleton.MyApplication
@@ -12,17 +13,38 @@ import com.kabbodev.emaishapay.utils.calculation.CalculationUtils
 import com.kabbodev.emaishapay.utils.initSpinner
 import com.kabbodev.emaishapay.utils.snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class NewLoanFragment : BaseFragment<FragmentNewLoanBinding>() {
 
     private val mViewModel: LoanViewModel by activityViewModels()
+    private var interestRate:Double = 0.0
+    private var processingFee:Double = 0.0
+
 
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentNewLoanBinding.inflate(inflater, container, false)
 
     override fun setupTheme() {
         binding.spinnerDuration.initSpinner(this)
+        /************get user from shared preferences********************/
+        lifecycleScope.launch(Dispatchers.IO) {
+
+            withContext(Dispatchers.Main) {
+                context?.let {
+                    userPreferences.user?.first().let { user ->
+
+                        interestRate = user!!.interestRate!!.toDouble()
+                        processingFee = user!!.processingFee!!.toDouble()
+                    }
+
+                }
+            }
+        }
 
     }
 
@@ -51,10 +73,9 @@ class NewLoanFragment : BaseFragment<FragmentNewLoanBinding>() {
             binding.root.snackbar(error)
             return
         }
-        val interestRate = 10
-        val processingFee: Long = 1000
-        val loanDueAmount = CalculationUtils.calculateLoanDueAmount(amount.toLong(), interestRate, processingFee)
-        calculateInputs(amount.toLong(), loanDueAmount, interestRate, processingFee, duration.toInt(), durationType!!)
+
+        val loanDueAmount = CalculationUtils.calculateLoanDueAmount(amount.toLong(), interestRate.toInt(), processingFee.toLong())
+        calculateInputs(amount.toLong(), loanDueAmount, interestRate.toInt(), processingFee.toLong(), duration.toInt(), durationType!!)
     }
 
     private fun calculateInputs(loanAmount: Long, loanDueAmount: Long, interestRate: Int, processingFee: Long, duration: Int, durationType: String) {
@@ -71,7 +92,7 @@ class NewLoanFragment : BaseFragment<FragmentNewLoanBinding>() {
         binding.valueDuration.text = String.format(getString(R.string.duration_with_type_value), duration, type)
         binding.valuePayment.text = String.format(getString(R.string.ugx_with_duration), MyApplication.getNumberFormattedString(payment), type.lowercase().substring(0, type.length - 1))
 
-        mViewModel.setLoanData(loanAmount, loanDueAmount, duration, type, payment)
+        mViewModel.setLoanData(loanAmount, loanDueAmount, duration, type, payment,interestRate,processingFee)
     }
 
     private fun applyLoan() {

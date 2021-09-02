@@ -88,7 +88,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
         binding.tvNextPaymentDate.text = String.format(getString(R.string.next_payment_date), "05th August 2021")
         binding.tvPaymentDueAmt.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(800000))
-        binding.tvPaymentDueDate.text = "25/08/2021"
+        binding.tvPaymentDueDate.text = mViewModel.loanDueAmount.toString()
     }
 
     override fun setupClickListeners() {

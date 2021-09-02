@@ -68,7 +68,7 @@ fun MaterialTextView.setProgressTextColor(isCurrentItem: Boolean) {
 fun MaterialTextView.setStatusText(loanStatus: LoanStatus) {
     this.text = loanStatus.status
     when (loanStatus) {
-        LoanStatus.COMPLETED -> {
+        LoanStatus.APPROVED -> {
             this.setTextColor(ContextCompat.getColorStateList(this.context, R.color.green))
             this.setBackgroundResource(R.drawable.slider_bg_with_stroke_7)
         }
@@ -76,7 +76,7 @@ fun MaterialTextView.setStatusText(loanStatus: LoanStatus) {
             this.setTextColor(ContextCompat.getColorStateList(this.context, R.color.green))
             this.setBackgroundResource(R.drawable.slider_bg_with_stroke_7)
         }
-        LoanStatus.IN_PROGRESS -> {
+        LoanStatus.PENDING -> {
             this.setTextColor(ContextCompat.getColorStateList(this.context, R.color.primaryColor))
             this.setBackgroundResource(R.drawable.slider_bg_with_stroke_2)
         }

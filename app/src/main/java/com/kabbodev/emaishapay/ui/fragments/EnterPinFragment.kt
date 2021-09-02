@@ -16,7 +16,12 @@ import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.config.Config
 import com.kabbodev.emaishapay.data.enums.EnterPinType
 import com.kabbodev.emaishapay.data.models.AuthenticationResponse
+import com.kabbodev.emaishapay.data.models.Loan
 import com.kabbodev.emaishapay.data.models.User
+import com.kabbodev.emaishapay.data.models.Withdraw
+import com.kabbodev.emaishapay.data.models.responses.LoanRepaymentResponse
+import com.kabbodev.emaishapay.data.models.responses.LoanResponse
+import com.kabbodev.emaishapay.data.models.responses.WithdrawResponse
 import com.kabbodev.emaishapay.databinding.DialogLoanStatusBinding
 import com.kabbodev.emaishapay.databinding.FragmentEnterPinBinding
 import com.kabbodev.emaishapay.network.ApiClient
@@ -45,6 +50,8 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
     private var dialogLoader: DialogLoader? = null
 
+
+
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentEnterPinBinding.inflate(inflater, container, false)
 
     override fun setupTheme() {
@@ -69,6 +76,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                         .observe(viewLifecycleOwner, { user ->
                             user?.let {
                                 statusDialogBinding.user = it
+
                             }
                         })
                 }
@@ -181,9 +189,128 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                 })
 
             }
-            EnterPinType.NEW_LOAN -> statusDialog.show()
-            EnterPinType.WITHDRAW -> navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_transferredSuccessfullyFragment)
-            EnterPinType.MAKE_PAYMENT -> statusDialog.show()
+            EnterPinType.NEW_LOAN -> {
+                /**********************Retrofit to call new loan Endpoint *********************/
+                var call: Call<LoanResponse>? = apiRequests?.postNewLoan(
+                    Constants.ACCESS_TOKEN,
+                    loanViewModel.loanAmount.toDouble(),
+                    loanViewModel.duration,
+                    loanViewModel.type,
+                    loanViewModel.loanDueAmount.toDouble(),
+                    loanViewModel.interestRate,
+                    loanViewModel.processingFee.toDouble(),
+                    Constants.PREPIN+pinValue,
+                    generateRequestId(),
+                    "applyForLoan"
+                )
+                call!!.enqueue(object : Callback<LoanResponse> {
+                    override  fun onResponse(
+                        call: Call<LoanResponse>,
+                        response: Response<LoanResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            dialogLoader?.hideProgressDialog()
+                            if (response.body()!!.status == 1) {
+                                statusDialog.show()
+                            }else{
+                                dialogLoader?.hideProgressDialog()
+                                response.body()!!.message?.let { binding.root.snackbar(it) }
+                            }
+
+                        } else {
+                            dialogLoader?.hideProgressDialog()
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
+                        }
+
+                    }
+
+                    override fun onFailure(call: Call<LoanResponse>, t: Throwable) {
+                        t.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+
+                    }
+                })
+
+            }
+
+            EnterPinType.WITHDRAW ->{
+
+
+                /**********************Retrofit to call withdraw funds Endpoint *********************/
+                var call: Call<WithdrawResponse>? = apiRequests?.withdrawFunds(
+                    Constants.ACCESS_TOKEN,
+                    loanViewModel.getWithdraw()?.phoneNumber,
+                    loanViewModel.getWithdraw()?.amount,
+                    Constants.PREPIN+pinValue,
+                    generateRequestId(),
+                    ""
+                )
+                call!!.enqueue(object : Callback<WithdrawResponse> {
+                    override  fun onResponse(
+                        call: Call<WithdrawResponse>,
+                        response: Response<WithdrawResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            dialogLoader?.hideProgressDialog()
+                            if (response.body()!!.status == 1) {
+                                navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_transferredSuccessfullyFragment)
+                            }else{
+                                response.body()!!.message?.let { binding.root.snackbar(it) }
+                            }
+
+                        } else {
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
+                        }
+
+                    }
+
+                    override fun onFailure(call: Call<WithdrawResponse>, t: Throwable) {
+                        t.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+
+                    }
+                })
+
+            }
+
+            EnterPinType.MAKE_PAYMENT -> {
+                /**********************Retrofit to call make payment Endpoint *********************/
+                var call: Call<LoanRepaymentResponse>? = apiRequests?.makeLoanPayment(
+                    Constants.ACCESS_TOKEN,
+                    loanViewModel.getPayment()?.amount?.toDouble(),
+                    loanViewModel.getPayment()?.phoneNumber,
+                    Constants.PREPIN+pinValue,
+                    generateRequestId(),
+                    ""
+                )
+                call!!.enqueue(object : Callback<LoanRepaymentResponse> {
+                    override  fun onResponse(
+                        call: Call<LoanRepaymentResponse>,
+                        response: Response<LoanRepaymentResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            dialogLoader?.hideProgressDialog()
+                            if (response.body()!!.status == 1) {
+                                statusDialog.show()
+                            }else{
+                                response.body()!!.message?.let { binding.root.snackbar(it) }
+                            }
+
+                        } else {
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
+                        }
+
+                    }
+
+                    override fun onFailure(call: Call<LoanRepaymentResponse>, t: Throwable) {
+                        t.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+
+                    }
+                })
+
+            }
+
         }
     }
 
