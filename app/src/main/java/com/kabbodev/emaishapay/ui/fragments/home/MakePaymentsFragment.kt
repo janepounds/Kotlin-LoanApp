@@ -153,7 +153,7 @@ class MakePaymentsFragment : BaseFragment<FragmentMakePaymentsBinding>() {
             return
         }
 
-        mViewModel.setPayment(Withdraw(amount = amount.toLong(),Constants.PREPIN+mobileNumber))
+        mViewModel.setPayment(Withdraw(amount = amount.toLong(),getString(R.string.phone_code)+mobileNumber))
         payAmount()
     }
 
