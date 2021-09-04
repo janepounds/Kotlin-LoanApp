@@ -139,6 +139,7 @@
     <string name="share_app">Share App</string>
     <string name="app_version">App Version: %s</string>
     <string name="log_out">Logout</string>
+    <string name="currency_code">UGX</string>
 
 
 </resources>

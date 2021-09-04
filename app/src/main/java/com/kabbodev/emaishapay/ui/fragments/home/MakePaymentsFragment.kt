@@ -50,8 +50,9 @@ class MakePaymentsFragment : BaseFragment<FragmentMakePaymentsBinding>() {
         /**********************Retrofit to call repayments Endpoint *********************/
         var call: Call<LoanRepaymentResponse>? = apiRequests?.getPastRepayment(
             Constants.ACCESS_TOKEN,
+            mViewModel.getLoan()!!.loanId,
             generateRequestId(),
-            "getRepaymentHistory"
+            "getPaymentHistory"
         )
         call!!.enqueue(object : Callback<LoanRepaymentResponse> {
             override  fun onResponse(
@@ -102,6 +103,7 @@ class MakePaymentsFragment : BaseFragment<FragmentMakePaymentsBinding>() {
         /**********************Retrofit to call get repayments Endpoint *********************/
         var call: Call<LoanRepaymentResponse>? = apiRequests?.getPastRepayment(
             Constants.ACCESS_TOKEN,
+            mViewModel.getLoan()!!.loanId,
             generateRequestId(),
             "getRepaymentHistory"
         )

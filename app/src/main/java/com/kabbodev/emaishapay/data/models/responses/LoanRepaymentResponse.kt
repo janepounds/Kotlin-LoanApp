@@ -28,8 +28,5 @@ class LoanRepaymentData(
     @SerializedName("txnCurrency")
     @Expose
     val txnCurrency:String,
-    @SerializedName("detination")
-    @Expose
-    val detination:String
 
 )

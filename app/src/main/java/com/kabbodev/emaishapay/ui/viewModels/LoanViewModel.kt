@@ -57,7 +57,6 @@ class LoanViewModel @Inject constructor(
     }
 
 
-
     fun setWithdraw(updated: Withdraw) {
         withdraw = updated
     }

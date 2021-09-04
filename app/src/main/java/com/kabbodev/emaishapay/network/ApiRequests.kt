@@ -270,7 +270,7 @@ interface ApiRequests {
         @Field("pin") pin:String?,
         @Field("request_id") request_id:String?,
         @Field("action_id") action_id:String?,
-    ):Call<LoanResponse>
+    ):Call<LoanInitiationResponse>
 
     @GET("api/get/loanhistory")
     fun getLoanHistory(
@@ -279,20 +279,23 @@ interface ApiRequests {
         @Query("action_id") action_id: String?
     ):Call<LoanResponse>
 
-    @GET("api/get/businessdetails")
+    @GET("api/get/pastpayments")
     fun getPastRepayment(
         @Header("Authorization") token:String?,
+        @Query("loan_id") loan_id: String?,
         @Query("request_id") request_id: String?,
         @Query("action_id") action_id: String?
     ):Call<LoanRepaymentResponse>
 
     @FormUrlEncoded
-    @POST("api/get/businessdetails")
+    @POST("api/momo/loanpayment")
     fun makeLoanPayment(
         @Header("Authorization") token:String?,
         @Field("amount") amount: Double?,
-        @Field("recipientMobileNumber") recipientMobileNumber: String?,
+        @Field("mobile_number") mobile_number: String?,
         @Field("pin") pin: String?,
+        @Field("currency_code") currency_code: String?,
+        @Field("loan_id") loan_id: String?,
         @Field("request_id") request_id: String?,
         @Field("action_id") action_id: String?
     ):Call<LoanRepaymentResponse>

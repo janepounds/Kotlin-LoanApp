@@ -19,6 +19,7 @@ import com.kabbodev.emaishapay.data.models.AuthenticationResponse
 import com.kabbodev.emaishapay.data.models.Loan
 import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.data.models.Withdraw
+import com.kabbodev.emaishapay.data.models.responses.LoanInitiationResponse
 import com.kabbodev.emaishapay.data.models.responses.LoanRepaymentResponse
 import com.kabbodev.emaishapay.data.models.responses.LoanResponse
 import com.kabbodev.emaishapay.data.models.responses.WithdrawResponse
@@ -150,7 +151,6 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
 
         when (loginType) {
             EnterPinType.LOGIN -> {
-
                 /**********************Retrofit to initiate login *********************/
                 var call: Call<AuthenticationResponse>? = apiRequests?.initiateLogin(
                     getString(R.string.phone_code)+mViewModel.getPhoneNumber(),
@@ -191,7 +191,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
             }
             EnterPinType.NEW_LOAN -> {
                 /**********************Retrofit to call new loan Endpoint *********************/
-                var call: Call<LoanResponse>? = apiRequests?.postNewLoan(
+                var call: Call<LoanInitiationResponse>? = apiRequests?.postNewLoan(
                     Constants.ACCESS_TOKEN,
                     loanViewModel.loanAmount.toDouble(),
                     loanViewModel.duration,
@@ -203,10 +203,10 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                     generateRequestId(),
                     "applyForLoan"
                 )
-                call!!.enqueue(object : Callback<LoanResponse> {
+                call!!.enqueue(object : Callback<LoanInitiationResponse> {
                     override  fun onResponse(
-                        call: Call<LoanResponse>,
-                        response: Response<LoanResponse>
+                        call: Call<LoanInitiationResponse>,
+                        response: Response<LoanInitiationResponse>
                     ) {
                         if (response.isSuccessful) {
                             dialogLoader?.hideProgressDialog()
@@ -224,7 +224,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
 
                     }
 
-                    override fun onFailure(call: Call<LoanResponse>, t: Throwable) {
+                    override fun onFailure(call: Call<LoanInitiationResponse>, t: Throwable) {
                         t.message?.let { binding.root.snackbar(it) }
                         dialogLoader?.hideProgressDialog()
 
@@ -234,8 +234,6 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
             }
 
             EnterPinType.WITHDRAW ->{
-
-
                 /**********************Retrofit to call withdraw funds Endpoint *********************/
                 var call: Call<WithdrawResponse>? = apiRequests?.withdrawFunds(
                     Constants.ACCESS_TOKEN,
@@ -280,8 +278,10 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                     loanViewModel.getPayment()?.amount?.toDouble(),
                     loanViewModel.getPayment()?.phoneNumber,
                     Constants.PREPIN+pinValue,
+                    getString(R.string.currency_code),
+                    loanViewModel.getLoan()!!.loanId,
                     generateRequestId(),
-                    ""
+                "mobileMoneyLoanPayment"
                 )
                 call!!.enqueue(object : Callback<LoanRepaymentResponse> {
                     override  fun onResponse(
