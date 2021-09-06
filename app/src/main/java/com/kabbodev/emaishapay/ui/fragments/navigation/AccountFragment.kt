@@ -11,18 +11,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.databinding.FragmentAccountBinding
 import com.kabbodev.emaishapay.R
-import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.data.models.screen.AccountExpandableLayout
-import com.kabbodev.emaishapay.data.models.screen.BusinessExpandableLayout
-import com.kabbodev.emaishapay.data.preferences.UserPreferences
 import com.kabbodev.emaishapay.ui.activities.MainActivity
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
-import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -35,6 +29,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
     override fun setupTheme() {
         loadAppVersion()
+        updateAccountDetails()
 
         /************get user from shared preferences********************/
 
@@ -47,10 +42,14 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
     }
 
+    private fun updateAccountDetails(){
+        binding.layoutAccountCategories.accountExpandableItem = getCustomerSupportItem()
+
+    }
 
     override fun setupClickListeners() {
         binding.layoutAccountAbove.editBtn.setOnClickListener { }
-        binding.layoutAccountCategories.customerSupportCardView.setOnClickListener{getCustomerSupportItem()}
+
         binding.layoutAccountCategories.settingsCardView.setOnClickListener { }
         binding.layoutAccountCategories.faqCardView.setOnClickListener { }
         binding.layoutAccountCategories.loanPolicyCardView.setOnClickListener { }
