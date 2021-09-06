@@ -3,6 +3,7 @@ package com.kabbodev.emaishapay.ui.fragments.navigation
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.data.models.screen.BusinessExpandableLayout
@@ -11,14 +12,18 @@ import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
 import com.kabbodev.emaishapay.utils.addToggleClickListeners
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
 
     private val mViewModel: LoanViewModel by activityViewModels()
+
 
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentMyBusinessBinding.inflate(inflater, container, false)
@@ -51,7 +56,7 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
         binding.layoutOwnerProfile.businessExpandableItem = getOwnerProfileItem(
             valueOne = user?.fullName ?: "",
             valueTwo = user?.dateOfBirth ?: "",
-            valueThree = user?.nin ?: ""
+            valueThree = user?.nin ?:""
         )
         binding.layoutBusinessProfile.businessExpandableItem = getBusinessProfileItem(
             valueOne = user?.fullName ?: "",

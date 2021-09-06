@@ -6,11 +6,14 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.databinding.FragmentAccountBinding
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.data.models.User
+import com.kabbodev.emaishapay.data.models.screen.AccountExpandableLayout
+import com.kabbodev.emaishapay.data.models.screen.BusinessExpandableLayout
 import com.kabbodev.emaishapay.data.preferences.UserPreferences
 import com.kabbodev.emaishapay.ui.activities.MainActivity
 import com.kabbodev.emaishapay.ui.base.BaseFragment
@@ -32,6 +35,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
     override fun setupTheme() {
         loadAppVersion()
+
         /************get user from shared preferences********************/
 
         context?.let {
@@ -40,11 +44,13 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
             })
         }
 
+
     }
+
 
     override fun setupClickListeners() {
         binding.layoutAccountAbove.editBtn.setOnClickListener { }
-        binding.layoutAccountCategories.customerSupportCardView.setOnClickListener { }
+        binding.layoutAccountCategories.customerSupportCardView.setOnClickListener{getCustomerSupportItem()}
         binding.layoutAccountCategories.settingsCardView.setOnClickListener { }
         binding.layoutAccountCategories.faqCardView.setOnClickListener { }
         binding.layoutAccountCategories.loanPolicyCardView.setOnClickListener { }
@@ -92,5 +98,13 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
         startActivity(intent)
         requireActivity().finish()
     }
+
+
+    private fun getCustomerSupportItem(): AccountExpandableLayout = AccountExpandableLayout(
+        tv_text_1 = getString(R.string.email),
+        tv_text_2 = getString(R.string.live_chat),
+        tv_text_3 = getString(R.string.toll_free),
+
+    )
 
 }

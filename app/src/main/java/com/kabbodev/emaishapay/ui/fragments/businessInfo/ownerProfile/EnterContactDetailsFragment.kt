@@ -50,14 +50,35 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
         loadContactDetails()
         binding.spinnerResidentialType.initSpinner(this)
 
-        if(binding.spinnerResidentialType.text.equals("Owner")){
-            /**********hide landord contact and name************/
-            binding.tvLandlordName.visibility = GONE
-            binding.etLandlordName.visibility = GONE
-            binding.tvLandlordPhoneNumber.visibility = GONE
-            binding.etLandlordPhoneNumber.etPhoneNumber.visibility = GONE
+        binding.spinnerResidentialType.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-        }
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if(binding.spinnerResidentialType.text.equals("Owner")){
+                    /**********hide landlord contact and name************/
+                    binding.tvLandlordName.visibility = GONE
+                    binding.etLandlordName.visibility = GONE
+                    binding.tvLandlordPhoneNumber.visibility = GONE
+                    binding.etLandlordPhoneNumber.etPhoneNumber.visibility = GONE
+
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if(binding.spinnerResidentialType.text.equals("Owner")){
+                    /**********hide landlord contact and name************/
+                    binding.tvLandlordName.visibility = GONE
+                    binding.etLandlordName.visibility = GONE
+                    binding.tvLandlordPhoneNumber.visibility = GONE
+                    binding.etLandlordPhoneNumber.etPhoneNumber.visibility = GONE
+
+                }
+            }
+
+        })
+
 
         val districtListAdapter: ArrayAdapter<String>? =
             context?.let { ArrayAdapter<String>(it, android.R.layout.simple_dropdown_item_1line, listOf(*resources.getStringArray(R.array.residential_types))) }
@@ -104,20 +125,10 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
                         binding.etDistrict.editText?.setText(response.body()!!.data!!.district)
                         binding.etVillage.editText?.setText(response.body()!!.data!!.village)
                         binding.etMobileNumber.etPhoneNumber?.editText?.setText(response.body()!!.data!!.mobile_phone.substring(3))
-                        binding.spinnerResidentialType.text?: response.body()!!.data!!.residential_type
-                        if(binding.spinnerResidentialType.text.equals("Owner",)){
+                        binding.spinnerResidentialType.getSpinnerAdapter<String>().spinnerView.text =  response.body()!!.data!!.residential_type
+                        binding.etLandlordPhoneNumber.etPhoneNumber.editText?.setText(response.body()!!.data!!.landlord_contact?.substring(3))
+                        binding.etLandlordName.editText?.setText(response.body()!!.data!!.landlord)
 
-                            /**********hide landord contact and name************/
-                            binding.tvLandlordName.visibility = GONE
-                            binding.etLandlordName.visibility = GONE
-                            binding.tvLandlordPhoneNumber.visibility = GONE
-                            binding.etLandlordPhoneNumber.etPhoneNumber.visibility = GONE
-                        }else {
-
-                            binding.etLandlordPhoneNumber.etPhoneNumber.editText?.setText(response.body()!!.data!!.landlord_contact?.substring(3))
-                            binding.etLandlordName.editText?.setText(response.body()!!.data!!.landlord)
-
-                        }
                         response.body()!!.message?.let { binding.root.snackbar(it) }
 
                     }else{
@@ -151,8 +162,6 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
     }
 
     private fun checkInputs(proceedNext: Boolean) {
-        val residentialTypes: List<String> = listOf(*resources.getStringArray(R.array.residential_types))
-
         val district = binding.autoCompleteDistrict?.text.toString().trim()
         val village = binding.etVillage.editText?.text.toString().trim()
         val mobileNumber = binding.etMobileNumber.etPhoneNumber.editText?.text.toString().trim()
@@ -162,8 +171,8 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
         var error: String? = landlordPhoneNumber.isPhoneNumberValid()
         val mobileNumberError = mobileNumber.isPhoneNumberValid()
 
-        if (binding.spinnerResidentialType.selectedIndex >= 0) {
-            residentialType = residentialTypes[binding.spinnerResidentialType.selectedIndex]
+        if (!binding.spinnerResidentialType.text.equals(getString(R.string.select))) {
+            residentialType = binding.spinnerResidentialType.text.toString().trim()
         } else {
             error = String.format(
                 getString(R.string.select_error),

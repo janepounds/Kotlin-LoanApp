@@ -72,6 +72,8 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
                         binding.etPhoneNumber.editText?.setText(response.body()!!.data!!.phone_number)
                         binding.etNumberOfEmployees.editText?.setText(response.body()!!.data!!.no_employeees)
                         binding.etAvgMonthlyRevenue.editText?.setText(response.body()!!.data!!.avg_monthly_revenue)
+                        binding.spinnerBusinessType.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.business_type
+                        binding.spinnerIndustry.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.industry
                         response.body()!!.message?.let { binding.root.snackbar(it) }
 
 
@@ -112,10 +114,6 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
     }
 
     private fun checkInputs(proceedNext: Boolean) {
-
-        val businessTypes: List<String> = listOf(*resources.getStringArray(R.array.business_type))
-        val industryArray: List<String> = listOf(*resources.getStringArray(R.array.industry))
-
         val businessName = binding.etBusinessName.editText?.text.toString().trim()
         val dateRegistered = binding.etDateRegistered.editText?.text.toString().trim()
         val registrationNo = binding.etRegistrationNo.editText?.text.toString().trim()
@@ -129,14 +127,14 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
         var businessType: String? = null
         var error: String? = phoneNumber.isPhoneNumberValid()
 
-        if (binding.spinnerIndustry.selectedIndex >= 0) {
-            industry = industryArray[binding.spinnerIndustry.selectedIndex]
+        if (!binding.spinnerIndustry.text.equals(getString(R.string.select))) {
+            industry = binding.spinnerIndustry.text.toString().trim()
         } else {
             error = String.format(getString(R.string.select_error), getString(R.string.industry))
         }
 
-        if (binding.spinnerBusinessType.selectedIndex >= 0) {
-            businessType = businessTypes[binding.spinnerBusinessType.selectedIndex]
+        if (!binding.spinnerBusinessType.text.equals(getString(R.string.select))) {
+            businessType = binding.spinnerBusinessType.text.toString().trim()
         } else {
             error = String.format(getString(R.string.select_error), getString(R.string.business_type))
         }

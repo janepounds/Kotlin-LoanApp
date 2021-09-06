@@ -22,7 +22,19 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
             preferences[KEY_LOGGED_IN]
         }
 
-
+   val personalInfo: Flow<User>?
+   get() = dataStore.data.catch { exception ->
+       if(exception is IOException){
+           emit(emptyPreferences())
+       }else{
+           throw exception
+       }
+   }.map { preferences ->
+       User(
+           nin =preferences[NIN]!!,
+           dateOfBirth = preferences[DOB]!!
+       )
+   }
 
         /**************functions for retrieving user preferences*****************************/
         val user: Flow<User>?
@@ -43,12 +55,10 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
                     walletBalance= preferences[BALANCE]!!,
                     interestRate=preferences[INTEREST_RATE],
                     processingFee=preferences[PROCESSING_FEE],
-//                    dateOfBirth = preferences[DOB]!!,
-//                    nin = preferences[NIN]!!,
-//                    location = preferences[LOCATION]!!,
-//                    regDate = preferences[REG_DATE]!!
+
                 )
             }
+
 
     /***********clear user preferences****************/
     suspend fun clear() {
@@ -69,6 +79,7 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
             mutablePreferences[KEY_LOGGED_IN] = login
         }
     }
+
 
     suspend fun savePersonalInfo(nin: String,dob:String){
         dataStore.edit { mutablePreferences ->

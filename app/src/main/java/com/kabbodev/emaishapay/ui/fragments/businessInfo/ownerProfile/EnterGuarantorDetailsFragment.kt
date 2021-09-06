@@ -69,13 +69,13 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
                     if (response.body()!!.status == 1) {
                         /************populate all fields in UI*****************/
                         binding.firstKin.etFullName.editText?.setText(response.body()!!.data!!.name)
-                        binding.firstKin.spinnerGender.text ?: response.body()!!.data!!.gender
-                        binding.firstKin.spinnerRelationship.text ?: response.body()!!.data!!.relationship
+                        binding.firstKin.spinnerGender.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.gender
+                        binding.firstKin.spinnerRelationship.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.relationship
                         binding.firstKin.etMobileNumber.etPhoneNumber.editText?.setText(response.body()!!.data!!.mobile?.substring(3))
                         binding.firstKin.etResidentialAddress.editText?.setText(response.body()!!.data!!.residential_address)
                         binding.secondKin.etFullName.editText?.setText(response.body()!!.data!!.name2)
-                        binding.secondKin.spinnerGender.text ?: response.body()!!.data!!.gender2
-                        binding.secondKin.spinnerRelationship.text ?: response.body()!!.data!!.relationship2
+                        binding.secondKin.spinnerGender.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.gender2
+                        binding.secondKin.spinnerRelationship.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.relationship2
                         binding.secondKin.etMobileNumber.etPhoneNumber.editText?.setText(response.body()!!.data!!.mobile2?.substring(3))
                         binding.secondKin.etResidentialAddress.editText?.setText(response.body()!!.data!!.residential_address2)
                         response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -110,10 +110,6 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
     }
 
     private fun checkInputs(proceedNext: Boolean) {
-        val genders: List<String> = listOf(*resources.getStringArray(R.array.gender))
-        val relationshipArray: List<String> = listOf(*resources.getStringArray(R.array.relationship))
-        val maritalStatusArray: List<String> = listOf(*resources.getStringArray(R.array.marital_status))
-
         val fullName1 = binding.firstKin.etFullName.editText?.text.toString().trim()
         val fullName2 = binding.secondKin.etFullName.editText?.text.toString().trim()
         val phone1 = binding.firstKin.etMobileNumber.etPhoneNumber.editText?.text.toString().trim()
@@ -127,24 +123,24 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
 
 
         var error: String? = null
-        if (binding.firstKin.spinnerGender.selectedIndex >= 0) {
-            gender1 = genders[binding.firstKin.spinnerGender.selectedIndex]
+        if (!binding.firstKin.spinnerGender.text.equals(getString(R.string.select))) {
+            gender1 = binding.firstKin.spinnerGender.text.toString().trim()
         } else {
             error = String.format(getString(R.string.select_error), getString(R.string.gender))
         }
-        if (binding.secondKin.spinnerGender.selectedIndex >= 0) {
-            gender2 = genders[binding.firstKin.spinnerGender.selectedIndex]
+        if (!binding.secondKin.spinnerGender.text.equals(getString(R.string.select))) {
+            gender2 = binding.secondKin.spinnerGender.text.toString().trim()
         } else {
             error = String.format(getString(R.string.select_error), getString(R.string.gender))
         }
 
-        if (binding.firstKin.spinnerRelationship.selectedIndex >= 0) {
-            relationship1 = relationshipArray[binding.firstKin.spinnerRelationship.selectedIndex]
+        if (!binding.firstKin.spinnerRelationship.text.equals(getString(R.string.select))) {
+            relationship1 = binding.firstKin.spinnerRelationship.text.toString().trim()
         } else {
             error = String.format(getString(R.string.select_error), getString(R.string.education_level))
         }
-        if (binding.secondKin.spinnerRelationship.selectedIndex >= 0) {
-            relationship2 = relationshipArray[binding.firstKin.spinnerRelationship.selectedIndex]
+        if (!binding.secondKin.spinnerRelationship.text.equals(getString(R.string.select))) {
+            relationship2 = binding.secondKin.spinnerRelationship.text.toString().trim()
         } else {
             error = String.format(getString(R.string.select_error), getString(R.string.education_level))
         }

@@ -169,7 +169,7 @@ interface ApiRequests {
         @Field("location") location:String?,
         @Field("contact_person") contact_person:String?,
         @Field("phone_number") phone_number:String?,
-        @Field("no_employeees") no_employeees:String?,
+        @Field("no_employees") no_employees:String?,
         @Field("avg_monthly_revenue") avg_monthly_revenue:Double?,
         @Field("request_id") request_id: String?,
         @Field("action_id") action_id: String?

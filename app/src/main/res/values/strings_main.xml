@@ -90,6 +90,7 @@
         <item>Brother</item>
         <item>Wife</item>
         <item>Friend</item>
+        <item>Husband</item>
     </string-array>
     <string name="residential_address">Residential Address</string>
     <string name="residential_address_hint">Enter Area of residency Ex. District and Village </string>
@@ -129,14 +130,14 @@
         <item>Electronics</item>
         <item>Grocery Store</item>
         <item>Furniture</item>
-        <item>Hardware and Construction</item>
+        <item>Hardware &amp; Construction</item>
         <item>Home Appliances</item>
         <item>Restaurant</item>
-        <item>Restaurant</item>
-        <item>Mobile Phones and Computers</item>
+        <item>Mobile Phones &amp; Computers</item>
         <item>Wholesale Shop</item>
         <item>Supermarket</item>
         <item>Agricultural Inputs shop</item>
+        <item>Stationery &amp; Printery &amp; Agency Business</item>
     </string-array>
     <string-array name="business_type">
         <item>Sole Proprietorship</item>

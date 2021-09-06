@@ -40,12 +40,15 @@ class BusinessData(
     @SerializedName("phone_number")
     @Expose
     val phone_number: String,
-    @SerializedName("no_employeees")
+    @SerializedName("no_employees")
     @Expose
     val no_employeees:Int,
     @SerializedName("avg_monthly_revenue")
     @Expose
     val avg_monthly_revenue: String,
+    @SerializedName("industry")
+    @Expose
+    val industry:String
 
 
 )

@@ -78,13 +78,9 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
 
                         binding.etFullName.editText?.setText(response.body()!!.data.name)
                         binding.etDateOfBirth.editText?.setText(response.body()!!.data.dob)
-                        binding.spinnerGender.getSpinnerAdapter<String>().spinnerView.  text =
-                            response.body()!!.data.gender
-//                        selectSpinnerItemByValue(binding.spinnerGender,response.body()!!.data.gender)
-//                        binding.etDateOfBirth.editText?.setText(response.body()!!.data.dob)
-//                        binding.spinnerEducationLevel.text ?: response.body()!!.data.education_level
-//                        binding.spinnerMaritalStatus.text ?: response.body()!!.data.marital_status
-
+                        binding.spinnerGender.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data.gender
+                        binding.spinnerEducationLevel.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data.education_level
+                        binding.spinnerMaritalStatus.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data.marital_status
                         binding.etYearInBusiness.editText?.setText(response.body()!!.data.years_in_business.toString())
                         binding.etNationalId.editText?.setText( response.body()!!.data.nin)
                         response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -122,12 +118,6 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
     }
 
     private fun checkInputs(proceedNext: Boolean) {
-        val genders: List<String> = listOf(*resources.getStringArray(R.array.gender))
-        val educationLevelArray: List<String> =
-            listOf(*resources.getStringArray(R.array.education_level))
-        val maritalStatusArray: List<String> =
-            listOf(*resources.getStringArray(R.array.marital_status))
-
         val fullName = binding.etFullName.editText?.text.toString().trim()
         val dateOfBirth = binding.etDateOfBirth.editText?.text.toString().trim()
         val yearsInBusiness = binding.etYearInBusiness.editText?.text.toString().trim()
@@ -137,21 +127,21 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
         var maritalStatus: String? = null
 
         var error: String? = null
-        if (binding.spinnerGender.selectedIndex >= 0) {
-            gender = genders[binding.spinnerGender.selectedIndex]
+        if (!binding.spinnerGender.text.equals(getString(R.string.select))) {
+            gender = binding.spinnerGender.text.toString().trim()
         } else {
             error = String.format(getString(R.string.select_error), getString(R.string.gender))
         }
 
-        if (binding.spinnerEducationLevel.selectedIndex >= 0) {
-            educationLevel = educationLevelArray[binding.spinnerEducationLevel.selectedIndex]
+        if (!binding.spinnerEducationLevel.text.equals(getString(R.string.select))) {
+            educationLevel = binding.spinnerEducationLevel.text.toString().trim()
         } else {
             error =
                 String.format(getString(R.string.select_error), getString(R.string.education_level))
         }
 
-        if (binding.spinnerMaritalStatus.selectedIndex >= 0) {
-            maritalStatus = maritalStatusArray[binding.spinnerMaritalStatus.selectedIndex]
+        if (!binding.spinnerMaritalStatus.text.equals(getString(R.string.select))) {
+            maritalStatus = binding.spinnerMaritalStatus.text.toString().trim()
         } else {
             error =
                 String.format(getString(R.string.select_error), getString(R.string.marital_status))
@@ -200,6 +190,7 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
                         dialogLoader?.hideProgressDialog()
                         if (response.body()!!.status == 1) {
                             /************save values dob and nin in the shared preferences*****************/
+
                             lifecycleScope.launch {
                                 userPreferences.savePersonalInfo(
                                     nationalId,
