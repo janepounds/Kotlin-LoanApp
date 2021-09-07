@@ -15,13 +15,11 @@ import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.fragments.EnterPinFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
-import com.kabbodev.emaishapay.utils.DialogLoader
-import com.kabbodev.emaishapay.utils.generateRequestId
-import com.kabbodev.emaishapay.utils.initSpinner
-import com.kabbodev.emaishapay.utils.snackbar
+import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -87,9 +85,13 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
 
                 } else if (response.code() == 401) {
                     /***************redirect to auth*********************/
-                    response.body()!!.message?.let { binding.root.snackbar(it) }
+                    lifecycleScope.launch { userPreferences.user?.first()?.let {
+                        mViewModel.setPhoneNumber(
+                            it.phoneNumber.substring(3 ))
+                    } }
                     dialogLoader?.hideProgressDialog()
-//                    EnterPinFragment.startAuth(true)
+                    binding.root.snackbar(getString(R.string.session_expired))
+                    startAuth(navController)
 
 
                 } else {
@@ -188,9 +190,13 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
                         }
 
                     } else if(response.code()==401) {
-                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        lifecycleScope.launch { userPreferences.user?.first()?.let {
+                            mViewModel.setPhoneNumber(
+                                it.phoneNumber.substring(3 ))
+                        } }
                         dialogLoader?.hideProgressDialog()
-//                        EnterPinFragment.startAuth(true)
+                        binding.root.snackbar(getString(R.string.session_expired))
+                        startAuth(navController)
                     }else{
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                         dialogLoader?.hideProgressDialog()

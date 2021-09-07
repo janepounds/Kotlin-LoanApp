@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.config.Config
@@ -27,6 +28,10 @@ import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -130,15 +135,13 @@ class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocuments
 
                 } else if (response.code() == 401) {
                     /***************redirect to auth*********************/
-                    response.body()!!.message?.let { binding.root.snackbar(it)}
+                    lifecycleScope.launch { userPreferences.user?.first()?.let {
+                        mViewModel.setPhoneNumber(
+                            it.phoneNumber.substring(3 ))
+                    } }
                     dialogLoader?.hideProgressDialog()
-                    if (navController.currentDestination?.id!! != R.id.enterPinFragment) {
-                        navController.popBackStack(R.id.homeFragment, false)
-                        navController.navigate(
-                            R.id.action_homeFragment_to_enterPinFragment,
-                            bundleOf(Config.LOGIN_TYPE to EnterPinType.LOGIN)
-                        )
-                    }
+                    binding.root.snackbar(getString(R.string.session_expired))
+                    startAuth(navController)
 
                 } else {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -186,19 +189,19 @@ class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocuments
             return
         }
 
-        val requestObject = JSONObject()
-        val data = VerificationDocumentsData(
-           business_photo = encodedOfficeShopPhotoID!!,
-            business_video = encodedOfficeShopVideoID!!,
-            selfie_in_business = encodedSelfieShopOfficePhoto!!,
-            neighbourhood_photo = encodedNeighbourhoodPhoto!!,
-            utility_bill = encodedUtilityBillPhoto!!
-        )
-        requestObject.put("params",data)
+        val requestBody: RequestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("business_photo", encodedOfficeShopPhotoID!!)
+            .addFormDataPart("business_video", encodedOfficeShopVideoID!!)
+            .addFormDataPart("selfie_in_business", encodedSelfieShopOfficePhoto!!)
+            .addFormDataPart("neighbourhood_photo", encodedNeighbourhoodPhoto!!)
+            .addFormDataPart("utility_bill", encodedUtilityBillPhoto!!)
+            .build()
         dialogLoader?.showProgressDialog()
         var call: Call<VerificationDocumentsResponse>? = apiRequests?.postVerificationDocuments(
             Constants.ACCESS_TOKEN,
-            requestObject,
+            "application/x-www-form-urlencoded",
+            requestBody,
             generateRequestId(),
             "saveVerificationDocs"
         )
@@ -222,9 +225,13 @@ class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocuments
 
                 } else if (response.code() == 401) {
                     /***************redirect to auth*********************/
-                    response.body()!!.message?.let { binding.root.snackbar(it)}
+                    lifecycleScope.launch { userPreferences.user?.first()?.let {
+                        mViewModel.setPhoneNumber(
+                            it.phoneNumber.substring(3 ))
+                    } }
                     dialogLoader?.hideProgressDialog()
-//                    EnterPinFragment.startAuth(true)
+                    binding.root.snackbar(getString(R.string.session_expired))
+                    startAuth(navController)
 
 
                 } else {

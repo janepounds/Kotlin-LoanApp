@@ -140,6 +140,7 @@
     <string name="app_version">App Version: %s</string>
     <string name="log_out">Logout</string>
     <string name="currency_code">UGX</string>
+    <string name="session_expired">Session Expired</string>
 
 
 </resources>

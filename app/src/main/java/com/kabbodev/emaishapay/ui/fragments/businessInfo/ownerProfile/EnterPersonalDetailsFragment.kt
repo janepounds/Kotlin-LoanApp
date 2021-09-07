@@ -94,9 +94,13 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
 
                 } else if (response.code() == 401) {
                     /***************redirect to auth*********************/
-                    response.body()!!.message?.let { binding.root.snackbar(it)}
+                    lifecycleScope.launch { userPreferences.user?.first()?.let {
+                        mViewModel.setPhoneNumber(
+                            it.phoneNumber.substring(3 ))
+                    } }
                     dialogLoader?.hideProgressDialog()
-//                    EnterPinFragment.startAuth(true)
+                    binding.root.snackbar(getString(R.string.session_expired))
+                    startAuth(navController)
 
 
                 } else {
@@ -205,9 +209,13 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
                         }
 
                     } else if(response.code()==401) {
-                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        lifecycleScope.launch { userPreferences.user?.first()?.let {
+                            mViewModel.setPhoneNumber(
+                                it.phoneNumber.substring(3 ))
+                        } }
                         dialogLoader?.hideProgressDialog()
-//                        EnterPinFragment.startAuth(true)
+                        binding.root.snackbar(getString(R.string.session_expired))
+                        startAuth(navController)
                     }else{
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                         dialogLoader?.hideProgressDialog()

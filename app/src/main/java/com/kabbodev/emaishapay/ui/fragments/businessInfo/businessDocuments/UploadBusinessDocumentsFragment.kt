@@ -3,24 +3,17 @@ package com.kabbodev.emaishapay.ui.fragments.businessInfo.businessDocuments
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
-import com.kabbodev.emaishapay.data.config.Config
-import com.kabbodev.emaishapay.data.enums.EnterPinType
-import com.kabbodev.emaishapay.data.models.responses.BusinessDetailsResponse
-import com.kabbodev.emaishapay.data.models.responses.BusinessDocumentsData
 import com.kabbodev.emaishapay.data.models.responses.BusinessDocumentsResponse
-import com.kabbodev.emaishapay.data.models.responses.IdDocumentData
 import com.kabbodev.emaishapay.databinding.FragmentUploadBusinessDocumentsBinding
 import com.kabbodev.emaishapay.network.ApiClient
 import com.kabbodev.emaishapay.network.ApiRequests
@@ -29,15 +22,22 @@ import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import org.json.JSONObject
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
+
+
+import okhttp3.MultipartBody
+
+import okhttp3.RequestBody
+
+
+
 
 @AndroidEntryPoint
 class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocumentsBinding>() {
@@ -162,15 +162,13 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
 
                 } else if (response.code() == 401) {
                     /***************redirect to auth*********************/
-                    response.body()!!.message?.let { binding.root.snackbar(it)}
+                    lifecycleScope.launch { userPreferences.user?.first()?.let {
+                        mViewModel.setPhoneNumber(
+                            it.phoneNumber.substring(3 ))
+                    } }
                     dialogLoader?.hideProgressDialog()
-                    if (navController.currentDestination?.id!! != R.id.enterPinFragment) {
-                        navController.popBackStack(R.id.homeFragment, false)
-                        navController.navigate(
-                            R.id.action_homeFragment_to_enterPinFragment,
-                            bundleOf(Config.LOGIN_TYPE to EnterPinType.LOGIN)
-                        )
-                    }
+                    binding.root.snackbar(getString(R.string.session_expired))
+                    startAuth(navController)
 
                 } else {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -224,23 +222,24 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
             return
         }
         /*****************post documents and redirect to home*************************/
-        val requestObject = JSONObject()
-        val data = BusinessDocumentsData(
-            trade_license = encodedTradeLicensePhotoID!!,
-            reg_certificate = encodedRegistrationCertificatePhotoID!!,
-            tax_reg_certificate = encodedTaxRegCertificatePhotoID!!,
-            tax_clearance_certificate = encodedTaxClearanceCertificatePhotoID!!,
-            bank_statement = encodedBankStatementPhotoID!!,
-            audited_financials = encodedAuditedFinancialsPhotoID!!,
-            business_plan = encodedBusinessPlanPhotoID!!,
-            receipt_book = encodedReceiptBookPhotoID!!
-        )
-        requestObject.put("params",data)
+
+        val requestBody: RequestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("trade_license", encodedTradeLicensePhotoID!!)
+            .addFormDataPart("reg_certificate", encodedRegistrationCertificatePhotoID!!)
+            .addFormDataPart("tax_reg_certificate", encodedTaxRegCertificatePhotoID!!)
+            .addFormDataPart("tax_clearance_certificate", encodedTaxClearanceCertificatePhotoID!!)
+            .addFormDataPart("bank_statement", encodedBankStatementPhotoID!!)
+            .addFormDataPart("audited_financials", encodedAuditedFinancialsPhotoID!!)
+            .addFormDataPart("business_plan", encodedBusinessPlanPhotoID!!)
+            .addFormDataPart("receipt_book", encodedReceiptBookPhotoID!!)
+            .build()
 
         dialogLoader?.showProgressDialog()
         var call: Call<BusinessDocumentsResponse>? = apiRequests?.postBusinessDocuments(
             Constants.ACCESS_TOKEN,
-            requestObject,
+            "application/x-www-form-urlencoded",
+            requestBody,
             generateRequestId(),
             "saveBusinessDocs"
         )
@@ -264,9 +263,13 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
 
                 } else if (response.code() == 401) {
                     /***************redirect to auth*********************/
-                    response.body()!!.message?.let { binding.root.snackbar(it)}
+                    lifecycleScope.launch { userPreferences.user?.first()?.let {
+                        mViewModel.setPhoneNumber(
+                            it.phoneNumber.substring(3 ))
+                    } }
                     dialogLoader?.hideProgressDialog()
-//                    EnterPinFragment.startAuth(true)
+                    binding.root.snackbar(getString(R.string.session_expired))
+                    startAuth(navController)
 
 
                 } else {

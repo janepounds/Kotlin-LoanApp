@@ -217,6 +217,14 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                                 response.body()!!.message?.let { binding.root.snackbar(it) }
                             }
 
+                        }else if(response.code()==401){
+                            lifecycleScope.launch { userPreferences.user?.first()?.let {
+                                mViewModel.setPhoneNumber(
+                                    it.phoneNumber.substring(3 ))
+                            } }
+                            dialogLoader?.hideProgressDialog()
+                            binding.root.snackbar(getString(R.string.session_expired))
+                            startAuth(navController)
                         } else {
                             dialogLoader?.hideProgressDialog()
                             response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -256,7 +264,16 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                                 response.body()!!.message?.let { binding.root.snackbar(it) }
                             }
 
+                        }else if(response.code()==401){
+                            lifecycleScope.launch { userPreferences.user?.first()?.let {
+                                mViewModel.setPhoneNumber(
+                                    it.phoneNumber.substring(3 ))
+                            } }
+                            dialogLoader?.hideProgressDialog()
+                            binding.root.snackbar(getString(R.string.session_expired))
+                            startAuth(navController)
                         } else {
+                            dialogLoader?.hideProgressDialog()
                             response.body()!!.message?.let { binding.root.snackbar(it) }
                         }
 
@@ -296,7 +313,15 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                                 response.body()!!.message?.let { binding.root.snackbar(it) }
                             }
 
-                        } else {
+                        } else if(response.code()==401){
+                            lifecycleScope.launch { userPreferences.user?.first()?.let {
+                                mViewModel.setPhoneNumber(
+                                    it.phoneNumber.substring(3 ))
+                            } }
+                            dialogLoader?.hideProgressDialog()
+                            binding.root.snackbar(getString(R.string.session_expired))
+                            startAuth(navController)
+                        }else {
                             response.body()!!.message?.let { binding.root.snackbar(it) }
                         }
 

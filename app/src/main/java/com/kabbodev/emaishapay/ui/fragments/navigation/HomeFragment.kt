@@ -33,7 +33,6 @@ import kotlin.collections.ArrayList
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private  val TAG = "HomeFragment"
-
     private val mViewModel: LoanViewModel by activityViewModels()
     private val viewPagerList: ArrayList<ScreenItem> = ArrayList()
     private var currentPos = 0
@@ -87,8 +86,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
 
         binding.tvNextPaymentDate.text = String.format(getString(R.string.next_payment_date), "05th August 2021")
-        binding.tvPaymentDueAmt.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(800000))
-        binding.tvPaymentDueDate.text = mViewModel.loanDueAmount.toString()
+        binding.tvPaymentDueAmt.text = String.format(getString(R.string.wallet_balance_value),mViewModel.loanDueAmount)
+        binding.tvPaymentDueDate.text ="05th August 2021"
     }
 
     override fun setupClickListeners() {

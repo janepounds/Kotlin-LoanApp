@@ -7,9 +7,12 @@ import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.data.config.Config
+import com.kabbodev.emaishapay.data.enums.EnterPinType
 import com.kabbodev.emaishapay.singleton.MyApplication
 
 fun NavController.navigateUsingPopUp(popUpFragId: Int, destinationId: Int, args: Bundle? = null) {
@@ -41,4 +44,16 @@ fun String.isPhoneNumberValid(): String? {
     if (this.isEmpty()) return context.getString(R.string.phone_cannot_be_empty)
     if (this.length != 9) return context.getString(R.string.invalid_phone_number)
     return null
+}
+
+fun startAuth( navController: NavController){
+
+    //call fragment
+    if (navController.currentDestination!!.id !== R.id.enterPinFragment
+    ) {
+        navController.popBackStack(R.id.homeFragment, false)
+        navController.navigate(R.id.action_homeFragment_to_enterPinFragment,
+            bundleOf(Config.LOGIN_TYPE to EnterPinType.LOGIN)
+        )
+    }
 }

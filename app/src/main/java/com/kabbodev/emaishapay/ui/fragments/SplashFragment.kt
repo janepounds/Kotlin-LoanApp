@@ -31,6 +31,8 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
             withContext(Dispatchers.Main) {
                 if (isLoggedIn == true) {
+                    /************check if token expired*******************/
+
                     navController.navigateUsingPopUp(R.id.splashFragment, R.id.action_global_homeFragment)
 
                 } else {

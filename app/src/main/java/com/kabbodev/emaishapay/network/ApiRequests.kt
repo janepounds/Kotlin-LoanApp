@@ -187,7 +187,8 @@ interface ApiRequests {
     @POST("api/update/businessVerification")
     fun postVerificationDocuments(
         @Header("Authorization") token:String?,
-        @Body request: JSONObject,
+        @Header("Content-Type") contentType:String?,
+        @Body request: RequestBody,
         @Field("request_id") request_id: String?,
         @Field("action_id") action_id: String?,
     ):Call<VerificationDocumentsResponse>
@@ -200,14 +201,14 @@ interface ApiRequests {
         @Query("action_id") action_id: String?
     ):Call<VerificationDocumentsResponse>
 
-    @Multipart
-    @FormUrlEncoded
+
     @POST("api/update/businessDocuments")
     fun postBusinessDocuments(
         @Header("Authorization") token:String?,
-        @Body data:JSONObject,
-        @Field("request_id") request_id: String?,
-        @Field("action_id") action_id: String?
+        @Header("Content-Type") contentType:String?,
+        @Body data:RequestBody,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
     ):Call<BusinessDocumentsResponse>
 
 
@@ -225,7 +226,7 @@ interface ApiRequests {
         @Query("action_id") action_id: String?
     ):Call<UserResponse>
 
-    @GET("api/get/businessdetails")
+    @GET("api/get/creditscore")
     fun getCreditScore(
         @Header("Authorization") token:String?,
         @Query("request_id") request_id: String?,

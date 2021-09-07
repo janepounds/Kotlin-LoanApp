@@ -19,6 +19,7 @@ import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,10 +35,12 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentEnterBusinessDetailsBinding.inflate(inflater, container, false)
 
     override fun setupTheme() {
+
         loadBusinessDetails()
         binding.etDateRegistered?.editText?.let { addDatePicker(it,context) }
         binding.spinnerBusinessType.initSpinner(this)
         binding.spinnerIndustry.initSpinner(this)
+
     }
 
     override fun setupClickListeners() {
@@ -70,7 +73,7 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
                         binding.etLocation.editText?.setText(response.body()!!.data!!.location)
                         binding.etContactPerson.editText?.setText(response.body()!!.data!!.contact_person)
                         binding.etPhoneNumber.editText?.setText(response.body()!!.data!!.phone_number)
-                        binding.etNumberOfEmployees.editText?.setText(response.body()!!.data!!.no_employeees)
+                        binding.etNumberOfEmployees.editText?.setText(response.body()!!.data!!.no_employees)
                         binding.etAvgMonthlyRevenue.editText?.setText(response.body()!!.data!!.avg_monthly_revenue)
                         binding.spinnerBusinessType.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.business_type
                         binding.spinnerIndustry.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.industry
@@ -85,16 +88,13 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
 
                 } else if (response.code() == 401) {
                     /***************redirect to auth*********************/
-                    response.body()!!.message?.let { binding.root.snackbar(it)}
                     dialogLoader?.hideProgressDialog()
-                    if (navController.currentDestination?.id!! != R.id.enterPinFragment) {
-                        navController.popBackStack(R.id.homeFragment, false)
-                        navController.navigate(
-                            R.id.action_homeFragment_to_enterPinFragment,
-                            bundleOf(Config.LOGIN_TYPE to EnterPinType.LOGIN)
-                        )
-                    }
-
+                    lifecycleScope.launch { userPreferences.user?.first()?.let {
+                        mViewModel.setPhoneNumber(
+                            it.phoneNumber.substring(3 ))
+                    } }
+                    binding.root.snackbar(getString(R.string.session_expired))
+                    startAuth(navController)
                 } else {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
                     dialogLoader?.hideProgressDialog()
@@ -187,9 +187,13 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
 
                     } else if (response.code() == 401) {
                         /***************redirect to auth*********************/
-                        response.body()!!.message?.let { binding.root.snackbar(it)}
+                        lifecycleScope.launch { userPreferences.user?.first()?.let {
+                            mViewModel.setPhoneNumber(
+                                it.phoneNumber.substring(3 ))
+                        } }
                         dialogLoader?.hideProgressDialog()
-//                    EnterPinFragment.startAuth(true)
+                        binding.root.snackbar(getString(R.string.session_expired))
+                        startAuth(navController)
 
 
                     } else {

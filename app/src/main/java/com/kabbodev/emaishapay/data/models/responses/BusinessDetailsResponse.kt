@@ -42,7 +42,7 @@ class BusinessData(
     val phone_number: String,
     @SerializedName("no_employees")
     @Expose
-    val no_employeees:Int,
+    val no_employees:String,
     @SerializedName("avg_monthly_revenue")
     @Expose
     val avg_monthly_revenue: String,

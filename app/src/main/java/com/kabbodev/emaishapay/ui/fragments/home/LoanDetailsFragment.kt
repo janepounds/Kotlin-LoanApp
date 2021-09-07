@@ -23,14 +23,14 @@ class LoanDetailsFragment : BaseFragment<FragmentLoanDetailsBinding>() {
     override fun setupTheme() {
         loan = mViewModel.getLoan()!!
         binding.valueLoanId.text = String.format(getString(R.string.loan_id), loan.loanId)
-        binding.valueRemaining.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(50000))
+        binding.valueRemaining.text = String.format(getString(R.string.wallet_balance_value), loan.amt)
 
-        binding.tvPaidToAmt.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(25000))
+        binding.tvPaidToAmt.text = String.format(getString(R.string.wallet_balance_value), loan.amt)
         binding.tvWeeklyPaymentValue.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(7500))
 
         binding.valueLoanAmt.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(loan.amt))
-        binding.valueLoanPeriod.text = String.format(getString(R.string.weeks), 12)
-        binding.valueInterestRate.text = String.format(getString(R.string.interest_rate_value), 10)
+        binding.valueLoanPeriod.text = String.format(getString(R.string.weeks), mViewModel.duration)
+        binding.valueInterestRate.text = String.format(getString(R.string.interest_rate_value), mViewModel.interestRate)
         binding.valueTimeLeft.text = String.format(getString(R.string.weeks), 3)
     }
 

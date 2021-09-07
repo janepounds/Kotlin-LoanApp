@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import com.kabbodev.emaishapay.R
+import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.config.Config
 import com.kabbodev.emaishapay.data.enums.EnterPinType
 import com.kabbodev.emaishapay.databinding.FragmentLoginBinding
@@ -43,6 +44,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
         }
         binding.etPhoneNumber.hideKeyboard()
         mViewModel.setPhoneNumber(phoneNumber)
+        Constants.PHONE_NUMBER = phoneNumber
         navController.navigate(R.id.action_global_enterPinFragment, bundleOf(Config.LOGIN_TYPE to EnterPinType.LOGIN))
     }
 

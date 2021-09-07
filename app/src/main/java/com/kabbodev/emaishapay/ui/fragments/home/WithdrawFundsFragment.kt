@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.config.Config
@@ -22,8 +23,11 @@ import com.kabbodev.emaishapay.singleton.MyApplication
 import com.kabbodev.emaishapay.ui.adapters.TransactionAdapter
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
+import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,6 +36,7 @@ import retrofit2.Response
 class WithdrawFundsFragment : BaseFragment<FragmentWithdrawFundsBinding>() {
 
     private val mViewModel: LoanViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels()
     private lateinit var adapter: TransactionAdapter
     private lateinit var withdrawConfirmationDialogBinding: DialogWithdrawFundsConfirmationBinding
     private lateinit var withdrawFundsDialog: Dialog
@@ -77,6 +82,14 @@ class WithdrawFundsFragment : BaseFragment<FragmentWithdrawFundsBinding>() {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                     }
 
+                }else if(response.code()==401){
+                    lifecycleScope.launch { userPreferences.user?.first()?.let {
+                        loginViewModel.setPhoneNumber(
+                            it.phoneNumber.substring(3 ))
+                    } }
+                    dialogLoader?.hideProgressDialog()
+                    binding.root.snackbar(getString(R.string.session_expired))
+                    startAuth(navController)
                 } else {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
                 }
@@ -134,6 +147,14 @@ class WithdrawFundsFragment : BaseFragment<FragmentWithdrawFundsBinding>() {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                     }
 
+                }else if(response.code()==401){
+                    lifecycleScope.launch { userPreferences.user?.first()?.let {
+                        loginViewModel.setPhoneNumber(
+                            it.phoneNumber.substring(3 ))
+                    } }
+                    binding.root.snackbar(getString(R.string.session_expired))
+                    dialogLoader?.hideProgressDialog()
+                    startAuth(navController)
                 } else {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
                 }

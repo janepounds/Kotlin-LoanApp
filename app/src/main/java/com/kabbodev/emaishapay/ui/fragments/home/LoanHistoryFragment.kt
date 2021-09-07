@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.enums.LoanStatus
@@ -16,10 +17,14 @@ import com.kabbodev.emaishapay.network.ApiRequests
 import com.kabbodev.emaishapay.ui.adapters.LoanAdapter
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
+import com.kabbodev.emaishapay.ui.viewModels.LoginViewModel
 import com.kabbodev.emaishapay.utils.DialogLoader
 import com.kabbodev.emaishapay.utils.generateRequestId
 import com.kabbodev.emaishapay.utils.snackbar
+import com.kabbodev.emaishapay.utils.startAuth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,6 +33,7 @@ import retrofit2.Response
 class LoanHistoryFragment : BaseFragment<FragmentLoanHistoryBinding>() {
 
     private val mViewModel: LoanViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels()
     private lateinit var adapter: LoanAdapter
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
     private var dialogLoader: DialogLoader? = null
@@ -75,6 +81,14 @@ class LoanHistoryFragment : BaseFragment<FragmentLoanHistoryBinding>() {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                     }
 
+                }else if(response.code()==401){
+                    lifecycleScope.launch { userPreferences.user?.first()?.let {
+                        loginViewModel.setPhoneNumber(
+                            it.phoneNumber.substring(3 ))
+                    } }
+                    dialogLoader?.hideProgressDialog()
+                    binding.root.snackbar(getString(R.string.session_expired))
+                    startAuth(navController)
                 } else {
                     dialogLoader?.hideProgressDialog()
                     response.body()!!.message?.let { binding.root.snackbar(it) }
