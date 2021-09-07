@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.activityViewModels
@@ -29,7 +30,6 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
     override fun setupTheme() {
         loadAppVersion()
-        updateAccountDetails()
 
         /************get user from shared preferences********************/
 
@@ -42,14 +42,10 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
     }
 
-    private fun updateAccountDetails(){
-        binding.layoutAccountCategories.accountExpandableItem = getCustomerSupportItem()
-
-    }
 
     override fun setupClickListeners() {
         binding.layoutAccountAbove.editBtn.setOnClickListener { }
-
+        binding.layoutAccountCategories.customerSupportCardView.setOnClickListener{}
         binding.layoutAccountCategories.settingsCardView.setOnClickListener { }
         binding.layoutAccountCategories.faqCardView.setOnClickListener { }
         binding.layoutAccountCategories.loanPolicyCardView.setOnClickListener { }
@@ -99,11 +95,5 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
     }
 
 
-    private fun getCustomerSupportItem(): AccountExpandableLayout = AccountExpandableLayout(
-        tv_text_1 = getString(R.string.email),
-        tv_text_2 = getString(R.string.live_chat),
-        tv_text_3 = getString(R.string.toll_free),
-
-    )
 
 }
