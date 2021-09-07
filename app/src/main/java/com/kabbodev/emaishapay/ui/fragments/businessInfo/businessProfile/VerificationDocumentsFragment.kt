@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,10 +39,16 @@ import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
+import com.google.gson.JsonObject
+
+import com.google.gson.JsonParser
+
+
+
 
 @AndroidEntryPoint
 class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocumentsBinding>() {
-
+    private  val TAG = "VerificationDocumentsFr"
     private val mViewModel: LoginViewModel by activityViewModels()
     private var mode: Int = -1
     private var officeShopPhotoUri: Uri? = null
@@ -188,20 +195,24 @@ class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocuments
             binding.root.snackbar(error)
             return
         }
+        val requestObject = JSONObject()
+        requestObject.put("business_photo",encodedOfficeShopPhotoID!!)
+        requestObject.put("business_video",encodedOfficeShopVideoID!!)
+        requestObject.put("selfie_in_business",encodedSelfieShopOfficePhoto!!)
+        requestObject.put("neighbourhood_photo",encodedNeighbourhoodPhoto!!)
+        requestObject.put("utility_bill",encodedUtilityBillPhoto!!)
+        val jsonParser = JsonParser()
+        val jsonObject = jsonParser.parse(requestObject.toString()) as JsonObject
+        val body: HashMap<String, Any> = HashMap()
 
-        val requestBody: RequestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart("business_photo", encodedOfficeShopPhotoID!!)
-            .addFormDataPart("business_video", encodedOfficeShopVideoID!!)
-            .addFormDataPart("selfie_in_business", encodedSelfieShopOfficePhoto!!)
-            .addFormDataPart("neighbourhood_photo", encodedNeighbourhoodPhoto!!)
-            .addFormDataPart("utility_bill", encodedUtilityBillPhoto!!)
-            .build()
+        body["data"] = jsonObject
+        Log.d(TAG, "checkInputs: "+jsonObject)
+
         dialogLoader?.showProgressDialog()
         var call: Call<VerificationDocumentsResponse>? = apiRequests?.postVerificationDocuments(
             Constants.ACCESS_TOKEN,
             "application/x-www-form-urlencoded",
-            requestBody,
+            jsonObject,
             generateRequestId(),
             "saveVerificationDocs"
         )

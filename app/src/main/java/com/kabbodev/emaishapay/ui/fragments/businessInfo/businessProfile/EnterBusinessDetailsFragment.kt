@@ -72,7 +72,7 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
                         binding.etRegistrationNo.editText?.setText(response.body()!!.data!!.reg_no)
                         binding.etLocation.editText?.setText(response.body()!!.data!!.location)
                         binding.etContactPerson.editText?.setText(response.body()!!.data!!.contact_person)
-                        binding.etPhoneNumber.editText?.setText(response.body()!!.data!!.phone_number)
+                        binding.etPhoneNumber.editText?.setText(response.body()!!.data!!.phone_number.substring(3))
                         binding.etNumberOfEmployees.editText?.setText(response.body()!!.data!!.no_employees)
                         binding.etAvgMonthlyRevenue.editText?.setText(response.body()!!.data!!.avg_monthly_revenue)
                         binding.spinnerBusinessType.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.business_type

@@ -183,14 +183,14 @@ interface ApiRequests {
         @Query("action_id") action_id: String?
     ):Call<BusinessDetailsResponse>
 
-    @FormUrlEncoded
+
     @POST("api/update/businessVerification")
     fun postVerificationDocuments(
         @Header("Authorization") token:String?,
         @Header("Content-Type") contentType:String?,
-        @Body request: RequestBody,
-        @Field("request_id") request_id: String?,
-        @Field("action_id") action_id: String?,
+        @Body request: JsonObject,
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?,
     ):Call<VerificationDocumentsResponse>
 
 
