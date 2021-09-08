@@ -59,4 +59,5 @@ class LoanViewModel @Inject constructor(
 
     fun getPayment() = withdraw
 
+//    fun getPersonalDetails(context:Context): LiveData<PersonalDetails> = userRepository.getPersonalDetails(viewModelScope, context)
 }

@@ -35,6 +35,20 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
        )
    }
 
+    val businessInfo: Flow<User>?
+        get() = dataStore.data.catch { exception ->
+            if(exception is IOException){
+                emit(emptyPreferences())
+            }else{
+                throw exception
+            }
+        }.map { preferences ->
+            User(
+                regDate = preferences[REG_DATE]!!,
+                location = preferences[LOCATION]!!
+            )
+        }
+
         /**************functions for retrieving user preferences*****************************/
         val user: Flow<User>?
             get() = dataStore.data.catch { exception ->

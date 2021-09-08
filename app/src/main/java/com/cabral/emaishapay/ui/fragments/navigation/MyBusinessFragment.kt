@@ -1,8 +1,10 @@
 package com.cabral.emaishapay.ui.fragments.navigation
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.cabral.emaishapay.R
 import com.cabral.emaishapay.data.models.User
 import com.cabral.emaishapay.data.models.screen.BusinessExpandableLayout
@@ -11,11 +13,20 @@ import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoanViewModel
 import com.cabral.emaishapay.utils.addToggleClickListeners
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.lang.NullPointerException
 
 @AndroidEntryPoint
 class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
+    private  val TAG = "MyBusinessFragment"
 
     private val mViewModel: LoanViewModel by activityViewModels()
+    private var dob:String =""
+    private var nin:String =""
+    private var reg_date:String =""
+    private var location:String =""
 
 
 
@@ -23,15 +34,38 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
 
     override fun setupTheme() {
         updateBusinessLayoutValues(null)
-        /************get user from shared preferences********************/
 
-            context?.let {
-                mViewModel.getCurrentUser( false, it).observe(viewLifecycleOwner, { user ->
-                    binding.user = user
-                    updateBusinessLayoutValues(user)
-                })
+        /************get user from shared preferences********************/
+                context?.let {
+                    mViewModel.getCurrentUser(false, it).observe(viewLifecycleOwner, { user ->
+                        binding.user = user
+                        updateBusinessLayoutValues(user)
+                    })
+                }
+
+
+        try {
+            lifecycleScope.launch(Dispatchers.IO) {
+
+                if (userPreferences.personalInfo != null) {
+                    dob = userPreferences.personalInfo?.first()?.dateOfBirth.toString()
+                    nin = userPreferences.personalInfo?.first()?.nin.toString()
+                }
+                lifecycleScope.launch(Dispatchers.IO) {
+                    if (userPreferences.businessInfo != null) {
+                    reg_date = userPreferences.businessInfo?.first()?.regDate.toString()
+                    location = userPreferences.businessInfo?.first()?.location.toString()
+                }
+                    Log.d(TAG, "setupTheme: reg_date" + reg_date + "loc" + location)
+                }
+            }
+
+        } catch (exception:NullPointerException){
+
             }
     }
+
+
 
     override fun setupClickListeners() {
         binding.layoutOwnerProfile.addToggleClickListeners {
@@ -45,16 +79,16 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
         }
     }
 
-    private fun updateBusinessLayoutValues(user: User?) {
+    private  fun updateBusinessLayoutValues(user: User?) {
         binding.layoutOwnerProfile.businessExpandableItem = getOwnerProfileItem(
             valueOne = user?.fullName ?: "",
-            valueTwo = user?.dateOfBirth ?: "",
-            valueThree = user?.nin ?:""
+            valueTwo = dob,
+            valueThree = nin
         )
         binding.layoutBusinessProfile.businessExpandableItem = getBusinessProfileItem(
             valueOne = user?.fullName ?: "",
-            valueTwo = user?.regDate ?: "",
-            valueThree = user?.location ?: ""
+            valueTwo = reg_date,
+            valueThree = location
         )
         binding.layoutBusinessDocuments.businessExpandableItem = getBusinessDocumentsItem(
             valueOne = getString(R.string.not_uploaded),

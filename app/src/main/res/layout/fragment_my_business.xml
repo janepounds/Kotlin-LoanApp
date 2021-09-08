@@ -10,6 +10,7 @@
         <variable
             name="user"
             type="User" />
+
     </data>
 
     <ScrollView

@@ -1,5 +1,6 @@
 package com.cabral.emaishapay.ui.fragments.businessInfo.ownerProfile
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
@@ -193,6 +194,7 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
                                     dateOfBirth
                                 )
                             }
+
                             response.body()!!.message?.let { binding.root.snackbar(it) }
                             navController.navigate(R.id.action_enterPersonalDetailsFragment_to_enterContactDetailsFragment)
                         } else {

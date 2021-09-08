@@ -1,5 +1,6 @@
 package com.cabral.emaishapay.ui.fragments.businessInfo.businessProfile
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
@@ -22,6 +23,7 @@ import retrofit2.Response
 
 @AndroidEntryPoint
 class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBinding>() {
+    private  val TAG = "EnterBusinessDetailsFra"
 
     private val mViewModel: LoginViewModel by activityViewModels()
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
@@ -170,6 +172,7 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
                                     dateRegistered,
                                     location
                                 )
+                                Log.d(TAG, "onResponse: date"+userPreferences.businessInfo?.first()?.regDate +"locat"+userPreferences.businessInfo?.first()?.location)
                             }
                             response.body()!!.message?.let { binding.root.snackbar(it) }
                             navController.navigate(R.id.action_enterBusinessDetailsFragment_to_verificationDocumentsFragment)
