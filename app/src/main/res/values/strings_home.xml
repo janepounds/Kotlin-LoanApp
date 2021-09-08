@@ -105,6 +105,9 @@
     <string name="transferred_successfully">Transferred\nSuccessfully</string>
     <string name="transferred_successfully_detailed_text">Dear %s your amount has been transferred to your requested recipient. Thank you for using eMaisha Pay Loans</string>
     <string name="view_details">View Details</string>
+    <string name="password_reset_successfully">Password Reset\nSuccessful</string>
+    <string name="password_reset_successful">You have successfully rest your password Please create a new password to continue</string>
+
 
 
     /// Credit Score

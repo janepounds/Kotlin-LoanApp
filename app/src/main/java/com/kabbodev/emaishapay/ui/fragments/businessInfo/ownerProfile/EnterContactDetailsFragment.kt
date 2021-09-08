@@ -173,7 +173,8 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
         val landLordName = binding.etLandlordName.editText?.text.toString().trim()
         val landlordPhoneNumber = binding.etLandlordPhoneNumber.etPhoneNumber.editText?.text.toString().trim()
         var residentialType: String? = null
-        var error: String? = landlordPhoneNumber.isPhoneNumberValid()
+        var error: String? =null;
+
         val mobileNumberError = mobileNumber.isPhoneNumberValid()
 
         if (!binding.spinnerResidentialType.text.equals(getString(R.string.select))) {
@@ -187,6 +188,7 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
 
         if (mobileNumberError != null) error = mobileNumberError
         if(residentialType.equals("Tenant",ignoreCase = true)) {
+            var landlordNumber= landlordPhoneNumber.isPhoneNumberValid()
             if (landlordPhoneNumber.isEmpty()) error = String.format(
                 getString(R.string.cannot_be_empty_error), getString(
                     R.string.land_lord_phone_number

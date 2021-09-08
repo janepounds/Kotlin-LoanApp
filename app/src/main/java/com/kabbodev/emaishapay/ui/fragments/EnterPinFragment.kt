@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.config.Config
+import com.kabbodev.emaishapay.data.enums.CreatePinType
 import com.kabbodev.emaishapay.data.enums.EnterPinType
 import com.kabbodev.emaishapay.data.models.AuthenticationResponse
 import com.kabbodev.emaishapay.data.models.Loan
@@ -94,6 +95,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
         binding.keypadLayout.deleteBtn.setOnClickListener { onDeleteBtnClick() }
         binding.keypadLayout.doneBtn.setOnClickListener { onDoneBtnClick() }
         binding.keypadLayout.setKeyPadListener { keyValue -> onKeyPadClick(keyValue) }
+        binding.forgetPinTv.setOnClickListener{navController.navigate(R.id.action_enterPinFragment_to_forgotPinFragment, bundleOf(Config.CREATE_PIN_TYPE to CreatePinType.FORGOT_PIN)) }
     }
 
 
@@ -148,6 +150,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
             binding.root.snackbar(getString(R.string.invalid_pin))
             return
         }
+        mViewModel.setPin(pinValue)
 
         when (loginType) {
             EnterPinType.LOGIN -> {

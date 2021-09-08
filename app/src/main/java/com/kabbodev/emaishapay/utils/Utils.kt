@@ -5,11 +5,13 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.text.InputType
 import android.text.Spanned
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import com.google.android.material.textview.MaterialTextView
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.data.config.Config
 import com.kabbodev.emaishapay.data.enums.EnterPinType
@@ -56,4 +58,6 @@ fun startAuth( navController: NavController){
             bundleOf(Config.LOGIN_TYPE to EnterPinType.LOGIN)
         )
     }
+
+
 }

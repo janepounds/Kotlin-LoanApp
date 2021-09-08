@@ -5,14 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.databinding.FragmentAccountBinding
 import com.kabbodev.emaishapay.R
-import com.kabbodev.emaishapay.data.models.screen.AccountExpandableLayout
+import com.kabbodev.emaishapay.data.models.User
 import com.kabbodev.emaishapay.ui.activities.MainActivity
 import com.kabbodev.emaishapay.ui.base.BaseFragment
 import com.kabbodev.emaishapay.ui.viewModels.LoanViewModel
@@ -44,7 +42,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
 
     override fun setupClickListeners() {
-        binding.layoutAccountAbove.editBtn.setOnClickListener { }
+        binding.layoutAccountAbove.editBtn.setOnClickListener { updateAccountInfo()}
         binding.layoutAccountCategories.customerSupportCardView.setOnClickListener{}
         binding.layoutAccountCategories.settingsCardView.setOnClickListener { }
         binding.layoutAccountCategories.faqCardView.setOnClickListener { }
@@ -52,6 +50,12 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
         binding.rateApp.setOnClickListener { rateAppFun() }
         binding.shareApp.setOnClickListener { shareAppFun() }
         binding.logoutBtn.setOnClickListener { logOut() }
+    }
+
+    private fun updateAccountInfo() {
+        navController.navigate(R.id.action_accountFragment_to_updateAccountDetailsFragment)
+
+
     }
 
     private fun loadAppVersion() {

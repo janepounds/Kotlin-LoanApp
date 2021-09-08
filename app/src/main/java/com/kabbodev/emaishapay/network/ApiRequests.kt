@@ -36,6 +36,7 @@ interface ApiRequests {
     @POST("api/resend-otp/registration")
     fun resendOtp(
         @Field("phoneNumber") phoneNumber: String?,
+        @Field("pin") pin: String?,
         @Field("action_id") action_id: String?,
         @Field("request_id") request_id: String?
 
@@ -65,6 +66,17 @@ interface ApiRequests {
 
 
     ): Call<ChangePinResponse>?
+
+
+    @FormUrlEncoded
+    @POST("api/forgot/pin")
+    fun forgotPassword(
+        @Field("otp") phoneNumber: String?,
+        @Field("newPin") currentPin: String?,
+        @Field("request_id") request_id: String?,
+        @Field("action_id") action_id: String?,
+
+    ): Call<AuthenticationResponse>?
 
 
     @FormUrlEncoded

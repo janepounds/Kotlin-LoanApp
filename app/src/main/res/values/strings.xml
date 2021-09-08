@@ -75,6 +75,8 @@
     <string name="phone_number_hint">700100100</string>
     <string name="already_have_account">Already Have An Account?</string>
     <string name="tac_not_accepted">Terms and Conditions is not accepted! Accept it.</string>
+    <string name="via_sms">Via SMS</string>
+    <string name="via_email">Via Email</string>
 
 
     /// Verify Pin
@@ -82,11 +84,13 @@
     <string name="season_end">This season will end in %d seconds.</string>
     <string name="didnt_receive_code">Didn\'t receive code?</string>
     <string name="resend_code"><u>Resend code</u></string>
+    <string name="otp_verify_reset_code"><u>Enter 4-Digit\n Recovery Code</u></string>
 
 
     /// Create Pin
     <string name="create_pin">Create PIN</string>
     <string name="create_pin_subtitle">Enter a 4 digit PIN to get started</string>
+    <string name="forgot_pin_subtitle">Select which contact details should we use to reset your password</string>
     <string name="pin">PIN</string>
     <string name="pin_cannot_be_empty">Pin cannot be empty!</string>
     <string name="confirm_pin">Confirm PIN</string>
@@ -95,13 +99,15 @@
     <string name="pin_hint">&asterisk;&asterisk;&asterisk;&asterisk;</string>
     <string name="both_pins_must_match">Both PINs must match</string>
     <string name="remember_me">Remember me</string>
+    <string name="forgot_pin">Forgot Password</string>
+    <string name="create_new_pin">Create new PIN</string>
 
 
     /// Enter Pin
     <string name="enter_pin">Enter Pin</string>
     <string name="enter_pin_hint">Enter your 4 digit PIN to confirm</string>
     <string name="invalid_pin">Invalid Pin! Pin must be equal to 4 digits.</string>
-    <string name="forget_pin">Forget Pin?</string>
+    <string name="forget_pin">Forgot Pin?</string>
     <string name="click_here">Click here</string>
     <string name="one">1</string>
     <string name="two">2</string>
@@ -141,6 +147,11 @@
     <string name="log_out">Logout</string>
     <string name="currency_code">UGX</string>
     <string name="session_expired">Session Expired</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="placeholder_phone">....9 5 6 7</string>
+    <string name="placeholder_email">...drew@gmail.com</string>
+    <string name="personal_details_value">personal details</string>
 
 
 </resources>

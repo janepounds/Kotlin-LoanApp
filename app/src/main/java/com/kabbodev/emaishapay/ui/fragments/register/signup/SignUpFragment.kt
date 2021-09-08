@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
+import com.kabbodev.emaishapay.data.config.Config
+import com.kabbodev.emaishapay.data.enums.CreatePinType
 import com.kabbodev.emaishapay.data.models.RegistrationResponse
 import com.kabbodev.emaishapay.databinding.FragmentSignUpBinding
 import com.kabbodev.emaishapay.network.ApiClient
@@ -86,12 +89,11 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
                 if (response.isSuccessful) {
                     dialogLoader?.hideProgressDialog()
                     if (response.body()!!.status == 1) {
-                        arguments = Bundle().apply {
-                            putString("phone",getString(R.string.phone_code)+phoneNumber)
-                        }
+
 
                         /**********navigate to otp fragment**************/
-                        navController.navigate(R.id.action_registerFragment_to_otpVerifyFragment,arguments)
+                        navController.navigate(R.id.action_registerFragment_to_otpVerifyFragment, bundleOf(
+                            Config.CREATE_PIN_TYPE to CreatePinType.SIGNUP))
                     }else{
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                     }

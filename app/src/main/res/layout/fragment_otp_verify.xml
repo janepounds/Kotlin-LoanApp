@@ -11,6 +11,10 @@
             type="String" />
 
         <variable
+            name="isForgotPin"
+            type="Boolean" />
+
+        <variable
             name="timeLeft"
             type="Integer" />
     </data>

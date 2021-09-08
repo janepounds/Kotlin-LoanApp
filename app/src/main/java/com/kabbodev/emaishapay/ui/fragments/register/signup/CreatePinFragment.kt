@@ -10,6 +10,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
+import com.kabbodev.emaishapay.data.config.Config
+import com.kabbodev.emaishapay.data.enums.CreatePinType
+import com.kabbodev.emaishapay.data.enums.EnterPinType
 import com.kabbodev.emaishapay.data.models.AuthenticationResponse
 import com.kabbodev.emaishapay.data.preferences.UserPreferences
 import com.kabbodev.emaishapay.databinding.FragmentCreatePinBinding
@@ -32,12 +35,15 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
     private val mViewModel: LoginViewModel by activityViewModels()
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
     private var dialogLoader: DialogLoader? = null
+    private var loginType: CreatePinType = CreatePinType.SIGNUP
 
 
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentCreatePinBinding.inflate(inflater, container, false)
 
     override fun setupTheme() {
+        loginType = requireArguments().getSerializable(Config.CREATE_PIN_TYPE) as CreatePinType
+        binding.isForgotPin = loginType == CreatePinType.FORGOT_PIN
         binding.etPin.editText?.transformationMethod = AsteriskPasswordTransformationMethod()
         binding.etConfirmPin.editText?.transformationMethod = AsteriskPasswordTransformationMethod()
         binding.etPin.addEndIconClickListener()
@@ -82,51 +88,123 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
             return
         }
 
+        when (loginType) {
+            CreatePinType.SIGNUP -> {
 
-        /*************Retrofit call to verify otp******************************/
-        dialogLoader?.showProgressDialog()
-        var call: Call<AuthenticationResponse>? = apiRequests?.verifyRegistration(
-             mViewModel.getOtp(),
-            getString(R.string.phone_code)+mViewModel.getPhoneNumber(),
-            "verifyUserRegistration",
-             generateRequestId(),
-            Constants.PREPIN+pin
+                /*************Retrofit call to verify otp******************************/
+                dialogLoader?.showProgressDialog()
+                var call: Call<AuthenticationResponse>? = apiRequests?.verifyRegistration(
+                    mViewModel.getOtp(),
+                    getString(R.string.phone_code) + mViewModel.getPhoneNumber(),
+                    "verifyUserRegistration",
+                    generateRequestId(),
+                    Constants.PREPIN + pin
 
-        )
-        call!!.enqueue(object : Callback<AuthenticationResponse> {
-            override fun onResponse(
-                call: Call<AuthenticationResponse>,
-                response: Response<AuthenticationResponse>
-            ) {
-                if (response.isSuccessful) {
-                    dialogLoader?.hideProgressDialog()
-                    if (response.body()!!.status == 1) {
-                        Constants.ACCESS_TOKEN = response.body()!!.access_token.toString()
-                        val user_data = response.body()!!.data
-                        /***************save user details and login user***************/
-                        lifecycleScope.launch { response.body()?.let { userPreferences.saveUserData(it!!.data, it!!.access_token,pin, true) }}
+                )
+                call!!.enqueue(object : Callback<AuthenticationResponse> {
+                    override fun onResponse(
+                        call: Call<AuthenticationResponse>,
+                        response: Response<AuthenticationResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            dialogLoader?.hideProgressDialog()
+                            if (response.body()!!.status == 1) {
+                                Constants.ACCESS_TOKEN = response.body()!!.access_token.toString()
 
-                        /**********navigate to home fragment**************/
-                        navController.navigateUsingPopUp(R.id.welcomeFragment, R.id.action_global_homeFragment)
-                    }else{
-                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                                /***************save user details and login user***************/
+                                lifecycleScope.launch {
+                                    response.body()?.let {
+                                        userPreferences.saveUserData(
+                                            it!!.data,
+                                            it!!.access_token,
+                                            pin,
+                                            true
+                                        )
+                                    }
+                                }
+
+                                /**********navigate to home fragment**************/
+                                navController.navigateUsingPopUp(
+                                    R.id.welcomeFragment,
+                                    R.id.action_global_homeFragment
+                                )
+                            } else {
+                                response.body()!!.message?.let { binding.root.snackbar(it) }
+                            }
+
+                        } else {
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
+                        }
+
                     }
 
-                } else {
-                    response.body()!!.message?.let { binding.root.snackbar(it) }
-                }
+                    override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
+                        t.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+
+                    }
+                })
+
 
             }
+            CreatePinType.FORGOT_PIN -> {
+                /***************save new user data and navigate to home***************/
+                dialogLoader?.showProgressDialog()
+                var call: Call<AuthenticationResponse>? = apiRequests?.forgotPassword(
+                    mViewModel.getOtp(),
+                    Constants.PREPIN + pin,
+                    generateRequestId(),
+                    "verifyUserRegistration"
 
-            override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
-                t.message?.let { binding.root.snackbar(it) }
-                dialogLoader?.hideProgressDialog()
+                )
+                call!!.enqueue(object : Callback<AuthenticationResponse> {
+                    override fun onResponse(
+                        call: Call<AuthenticationResponse>,
+                        response: Response<AuthenticationResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            dialogLoader?.hideProgressDialog()
+                            if (response.body()!!.status == 1) {
+                                Constants.ACCESS_TOKEN = response.body()!!.access_token.toString()
+
+                                /***************save user details and login user***************/
+                                lifecycleScope.launch {
+                                    response.body()?.let {
+                                        userPreferences.saveUserData(
+                                            it!!.data,
+                                            it!!.access_token,
+                                            pin,
+                                            true
+                                        )
+                                    }
+                                }
+
+                                /**********navigate to home fragment**************/
+                                navController.navigateUsingPopUp(
+                                    R.id.welcomeFragment,
+                                    R.id.action_global_homeFragment
+                                )
+                            } else {
+                                response.body()!!.message?.let { binding.root.snackbar(it) }
+                            }
+
+                        } else {
+                            response.body()!!.message?.let { binding.root.snackbar(it) }
+                        }
+
+                    }
+
+                    override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
+                        t.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+
+                    }
+                })
 
             }
-        })
-
-
+        }
     }
+
 
 }
 

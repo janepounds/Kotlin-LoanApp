@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.constants.Constants
 import com.kabbodev.emaishapay.data.config.Config
+import com.kabbodev.emaishapay.data.enums.CreatePinType
 import com.kabbodev.emaishapay.data.enums.EnterPinType
 import com.kabbodev.emaishapay.databinding.FragmentLoginBinding
 import com.kabbodev.emaishapay.ui.base.BaseFragment
@@ -30,7 +31,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
     override fun setupClickListeners() {
         binding.nextBtn.setOnClickListener { checkInputs() }
-        binding.forgetPassTv.setOnClickListener { }
+        binding.forgetPassTv.setOnClickListener {}
         binding.createAccountTv.setOnClickListener { RegisterFragment.updateCurrentItem(1, true) }
     }
 

@@ -2,13 +2,10 @@ package com.kabbodev.emaishapay.utils
 
 import android.text.method.LinkMovementMethod
 import android.widget.ImageView
-import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.checkbox.MaterialCheckBox
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 import com.kabbodev.emaishapay.R
 import com.kabbodev.emaishapay.data.config.Config
