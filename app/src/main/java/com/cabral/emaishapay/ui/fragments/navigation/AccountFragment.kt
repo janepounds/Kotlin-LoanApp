@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.cabral.emaishapay.databinding.FragmentAccountBinding
 import com.cabral.emaishapay.R
+import com.cabral.emaishapay.data.models.User
 import com.cabral.emaishapay.ui.activities.MainActivity
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoanViewModel
@@ -41,7 +42,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
 
     override fun setupClickListeners() {
-        binding.layoutAccountAbove.editBtn.setOnClickListener { }
+        binding.layoutAccountAbove.editBtn.setOnClickListener { updateAccountInfo()}
         binding.layoutAccountCategories.customerSupportCardView.setOnClickListener{}
         binding.layoutAccountCategories.settingsCardView.setOnClickListener { }
         binding.layoutAccountCategories.faqCardView.setOnClickListener { }
@@ -49,6 +50,12 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
         binding.rateApp.setOnClickListener { rateAppFun() }
         binding.shareApp.setOnClickListener { shareAppFun() }
         binding.logoutBtn.setOnClickListener { logOut() }
+    }
+
+    private fun updateAccountInfo() {
+        navController.navigate(R.id.action_accountFragment_to_updateAccountDetailsFragment)
+
+
     }
 
     private fun loadAppVersion() {

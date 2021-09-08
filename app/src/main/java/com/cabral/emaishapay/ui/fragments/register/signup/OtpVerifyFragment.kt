@@ -3,9 +3,14 @@ package com.cabral.emaishapay.ui.fragments.register.signup
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.cabral.emaishapay.R
+import com.cabral.emaishapay.constants.Constants
+import com.cabral.emaishapay.data.config.Config
+import com.cabral.emaishapay.data.enums.CreatePinType
+import com.cabral.emaishapay.data.enums.EnterPinType
 import com.cabral.emaishapay.data.models.RegistrationResponse
 import com.cabral.emaishapay.databinding.FragmentOtpVerifyBinding
 import com.cabral.emaishapay.network.ApiClient
@@ -27,7 +32,7 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
     private val mViewModel: LoginViewModel by activityViewModels()
     private var timeLeft: Int = 20
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
-
+    private var loginType: CreatePinType = CreatePinType.SIGNUP
 
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentOtpVerifyBinding.inflate(
@@ -37,6 +42,12 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
     )
 
     override fun setupTheme() {
+        loginType = requireArguments().getSerializable(Config.CREATE_PIN_TYPE) as CreatePinType
+        binding.isForgotPin = loginType == CreatePinType.FORGOT_PIN
+        when (loginType) {
+            CreatePinType.FORGOT_PIN -> binding.tvOtpVerify.text = getString(R.string.otp_verify_reset_code)
+
+        }
         binding.phoneNumber = mViewModel.getPhoneNumber()
         binding.timeLeft = timeLeft
         lifecycleScope.launch {
@@ -65,6 +76,7 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
             /***************Retrofit call for resend otp**************************/
             var call: Call<RegistrationResponse>? = apiRequests?.resendOtp(
                 getString(R.string.phone_code)+mViewModel.getPhoneNumber(),
+                Constants.PREPIN+mViewModel.getPin(),
                 "resendUserOTP",
                 generateRequestId()
 
@@ -77,9 +89,7 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
                     if (response.isSuccessful) {
 
                         if (response.body()!!.status == 1) {
-                            arguments = Bundle().apply {
-                                putString("phone", getString(R.string.phone_code) + mViewModel.getPhoneNumber())
-                            }
+
 
                         }else{
                             response.body()!!.message?.let { binding.root.snackbar(it) }
@@ -123,8 +133,20 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
 
         val otp_value = otp1+otp2+otp3+otp4
         mViewModel.setOtp(otp_value)
+        when(loginType){
+            CreatePinType.FORGOT_PIN ->{
+                navController.navigate(R.id.action_otpVerifyFragment_to_passwordResetSuccessFragment,
+                    bundleOf(Config.LOGIN_TYPE to CreatePinType.FORGOT_PIN)
+                )
+            }
+            CreatePinType.SIGNUP ->{
+                navController.navigate(R.id.action_otpVerifyFragment_to_createPinFragment,
+                    bundleOf(Config.LOGIN_TYPE to CreatePinType.SIGNUP)
+                )
+            }
+        }
 
-        navController.navigate(R.id.action_otpVerifyFragment_to_createPinFragment)
+
     }
 
 }

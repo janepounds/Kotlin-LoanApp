@@ -6,15 +6,21 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.cabral.emaishapay.R
 import com.cabral.emaishapay.constants.Constants
 import com.cabral.emaishapay.data.config.Config
+import com.cabral.emaishapay.data.enums.CreatePinType
 import com.cabral.emaishapay.data.enums.EnterPinType
 import com.cabral.emaishapay.data.models.AuthenticationResponse
+import com.cabral.emaishapay.data.models.Loan
+import com.cabral.emaishapay.data.models.User
+import com.cabral.emaishapay.data.models.Withdraw
 import com.cabral.emaishapay.data.models.responses.LoanInitiationResponse
 import com.cabral.emaishapay.data.models.responses.LoanRepaymentResponse
+import com.cabral.emaishapay.data.models.responses.LoanResponse
 import com.cabral.emaishapay.data.models.responses.WithdrawResponse
 import com.cabral.emaishapay.databinding.DialogLoanStatusBinding
 import com.cabral.emaishapay.databinding.FragmentEnterPinBinding
@@ -87,6 +93,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
         binding.keypadLayout.deleteBtn.setOnClickListener { onDeleteBtnClick() }
         binding.keypadLayout.doneBtn.setOnClickListener { onDoneBtnClick() }
         binding.keypadLayout.setKeyPadListener { keyValue -> onKeyPadClick(keyValue) }
+        binding.forgetPinTv.setOnClickListener{navController.navigate(R.id.action_enterPinFragment_to_forgotPinFragment, bundleOf(Config.CREATE_PIN_TYPE to CreatePinType.FORGOT_PIN)) }
     }
 
 
@@ -141,6 +148,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
             binding.root.snackbar(getString(R.string.invalid_pin))
             return
         }
+        mViewModel.setPin(pinValue)
 
         when (loginType) {
             EnterPinType.LOGIN -> {

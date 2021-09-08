@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import com.cabral.emaishapay.R
 import com.cabral.emaishapay.constants.Constants
 import com.cabral.emaishapay.data.config.Config
+import com.cabral.emaishapay.data.enums.CreatePinType
 import com.cabral.emaishapay.data.enums.EnterPinType
 import com.cabral.emaishapay.databinding.FragmentLoginBinding
 import com.cabral.emaishapay.ui.base.BaseFragment
@@ -30,7 +31,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
     override fun setupClickListeners() {
         binding.nextBtn.setOnClickListener { checkInputs() }
-        binding.forgetPassTv.setOnClickListener { }
+        binding.forgetPassTv.setOnClickListener {}
         binding.createAccountTv.setOnClickListener { RegisterFragment.updateCurrentItem(1, true) }
     }
 
