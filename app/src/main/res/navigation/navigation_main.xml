@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.SplashFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.SplashFragment"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash">
         <action
@@ -23,19 +23,19 @@
 
     <fragment
         android:id="@+id/introFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.IntroFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.IntroFragment"
         android:label="fragment_intro"
         tools:layout="@layout/fragment_intro" />
 
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.register.WelcomeFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.register.WelcomeFragment"
         android:label="fragment_welcome"
         tools:layout="@layout/fragment_welcome" />
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.register.RegisterFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register">
         <action
@@ -49,7 +49,7 @@
 
     <fragment
         android:id="@+id/otpVerifyFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.register.signup.OtpVerifyFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.register.signup.OtpVerifyFragment"
         android:label="OtpVerifyFragment"
         tools:layout="@layout/fragment_otp_verify">
         <action
@@ -63,19 +63,19 @@
 
     <fragment
         android:id="@+id/createPinFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.register.signup.CreatePinFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.register.signup.CreatePinFragment"
         android:label="CreatePinFragment"
         tools:layout="@layout/fragment_create_pin" />
 
     <fragment
         android:id="@+id/enterPinFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.EnterPinFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.EnterPinFragment"
         android:label="EnterPinFragment"
         tools:layout="@layout/fragment_enter_pin" />
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.navigation.HomeFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.navigation.HomeFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_home">
         <action
@@ -101,7 +101,7 @@
 
     <fragment
         android:id="@+id/myBusinessFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.navigation.MyBusinessFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.navigation.MyBusinessFragment"
         android:label="@string/title_my_business"
         tools:layout="@layout/fragment_my_business">
         <action
@@ -129,13 +129,13 @@
 
     <fragment
         android:id="@+id/creditScoreFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.navigation.CreditScoreFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.navigation.CreditScoreFragment"
         android:label="@string/title_credit_score"
         tools:layout="@layout/fragment_credit_score" />
 
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.navigation.AccountFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.navigation.AccountFragment"
         android:label="@string/title_account"
         tools:layout="@layout/fragment_account" />
 
@@ -143,7 +143,7 @@
     <!--    Business Info-->
     <fragment
         android:id="@+id/enterPersonalDetailsFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.businessInfo.ownerProfile.EnterPersonalDetailsFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.businessInfo.ownerProfile.EnterPersonalDetailsFragment"
         android:label="EnterPersonalDetailsFragment"
         tools:layout="@layout/fragment_enter_personal_details">
         <action
@@ -157,7 +157,7 @@
 
     <fragment
         android:id="@+id/enterContactDetailsFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.businessInfo.ownerProfile.EnterContactDetailsFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.businessInfo.ownerProfile.EnterContactDetailsFragment"
         android:label="EnterContactDetailsFragment"
         tools:layout="@layout/fragment_enter_contact_details">
         <action
@@ -171,7 +171,7 @@
 
     <fragment
         android:id="@+id/enterGuarantorDetailsFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.businessInfo.ownerProfile.EnterGuarantorDetailsFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.businessInfo.ownerProfile.EnterGuarantorDetailsFragment"
         android:label="EnterGuarantorDetailsFragment"
         tools:layout="@layout/fragment_enter_guarantor_details">
         <action
@@ -185,14 +185,14 @@
 
     <fragment
         android:id="@+id/uploadIdDocumentsFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.businessInfo.ownerProfile.UploadIdDocumentsFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.businessInfo.ownerProfile.UploadIdDocumentsFragment"
         android:label="UploadIdDocumentsFragment"
         tools:layout="@layout/fragment_upload_id_documents" />
 
 
     <fragment
         android:id="@+id/enterBusinessDetailsFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.businessInfo.businessProfile.EnterBusinessDetailsFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.businessInfo.businessProfile.EnterBusinessDetailsFragment"
         android:label="EnterBusinessDetailsFragment"
         tools:layout="@layout/fragment_enter_business_details">
         <action
@@ -206,14 +206,14 @@
 
     <fragment
         android:id="@+id/verificationDocumentsFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.businessInfo.businessProfile.VerificationDocumentsFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.businessInfo.businessProfile.VerificationDocumentsFragment"
         android:label="VerificationDocumentsFragment"
         tools:layout="@layout/fragment_verification_documents" />
 
 
     <fragment
         android:id="@+id/uploadBusinessDocumentsFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.businessInfo.businessDocuments.UploadBusinessDocumentsFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.businessInfo.businessDocuments.UploadBusinessDocumentsFragment"
         android:label="UploadBusinessDocumentsFragment"
         tools:layout="@layout/fragment_upload_business_documents" />
 
@@ -221,31 +221,31 @@
     <!--    Home-->
     <fragment
         android:id="@+id/myLoansFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.home.MyLoansFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.home.MyLoansFragment"
         android:label="MyLoansFragment"
         tools:layout="@layout/fragment_my_loans" />
 
     <fragment
         android:id="@+id/loanConfirmationFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.home.LoanConfirmationFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.home.LoanConfirmationFragment"
         android:label="LoanConfirmationFragment"
         tools:layout="@layout/fragment_loan_confirmation" />
 
     <fragment
         android:id="@+id/withdrawFundsFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.home.WithdrawFundsFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.home.WithdrawFundsFragment"
         android:label="WithdrawFundsFragment"
         tools:layout="@layout/fragment_withdraw_funds" />
 
     <fragment
         android:id="@+id/makePaymentsFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.home.MakePaymentsFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.home.MakePaymentsFragment"
         android:label="MakePaymentsFragment"
         tools:layout="@layout/fragment_make_payments" />
 
     <fragment
         android:id="@+id/loanDetailsFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.home.LoanDetailsFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.home.LoanDetailsFragment"
         android:label="LoanDetailsFragment"
         tools:layout="@layout/fragment_loan_details">
         <action
@@ -259,7 +259,7 @@
 
     <fragment
         android:id="@+id/transferredSuccessfullyFragment"
-        android:name="com.kabbodev.emaishapay.ui.fragments.home.TransferredSuccessfullyFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.home.TransferredSuccessfullyFragment"
         android:label="TransferredSuccessfullyFragment"
         tools:layout="@layout/fragment_transferred_successfully" />
 

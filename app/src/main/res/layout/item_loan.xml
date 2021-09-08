@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.kabbodev.emaishapay.data.models.Loan" />
+        <import type="com.cabral.emaishapay.data.models.Loan" />
 
         <variable
             name="loan"

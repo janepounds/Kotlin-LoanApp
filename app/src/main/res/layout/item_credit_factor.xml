@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.kabbodev.emaishapay.data.models.screen.CreditFactorItem" />
+        <import type="com.cabral.emaishapay.data.models.screen.CreditFactorItem" />
 
         <variable
             name="creditFactorItem"
