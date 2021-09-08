@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+
 import com.cabral.emaishapay.databinding.FragmentAccountBinding
 import com.cabral.emaishapay.R
 import com.cabral.emaishapay.data.models.User
@@ -15,6 +16,7 @@ import com.cabral.emaishapay.ui.activities.MainActivity
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoanViewModel
 import com.cabral.emaishapay.utils.snackbar
+
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
