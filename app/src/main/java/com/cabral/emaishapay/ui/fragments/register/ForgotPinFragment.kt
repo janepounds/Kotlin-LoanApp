@@ -38,6 +38,7 @@ class ForgotPinFragment : BaseFragment<FragmentForgotPinBinding>() {
     override fun setupClickListeners() {
         mViewModel.setPhoneNumber(Constants.PHONE_NUMBER!!)
         binding.etPhoneLayout.setOnClickListener { getOtp()}
+        binding.toolbarLayout.backBtn.setOnClickListener { requireActivity().onBackPressed() }
 
     }
     private fun getOtp(){

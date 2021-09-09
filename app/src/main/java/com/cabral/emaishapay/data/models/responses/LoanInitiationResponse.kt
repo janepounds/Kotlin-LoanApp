@@ -50,4 +50,6 @@ class LoanInitiationResponseData(
     @SerializedName("id")
     @Expose
     val id:Double,
+    @SerializedName("due_date")
+    val due_date:String
 )

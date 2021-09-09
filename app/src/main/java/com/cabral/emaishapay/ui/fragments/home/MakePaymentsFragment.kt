@@ -22,8 +22,10 @@ import com.cabral.emaishapay.ui.viewModels.LoanViewModel
 import com.cabral.emaishapay.ui.viewModels.LoginViewModel
 import com.cabral.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,7 +43,21 @@ class MakePaymentsFragment : BaseFragment<FragmentMakePaymentsBinding>() {
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentMakePaymentsBinding.inflate(inflater, container, false)
 
     override fun setupTheme() {
-        binding.tvBalance.text = String.format(getString(R.string.balance_amt), MyApplication.getNumberFormattedString(1500))
+        lifecycleScope.launch(Dispatchers.IO) {
+
+            withContext(Dispatchers.Main) {
+                context?.let {
+                    mViewModel.getCurrentUser(false, it)
+                        .observe(viewLifecycleOwner, { user ->
+                            binding.user = user
+                            binding.tvBalance.text = String.format(getString(R.string.balance_amt),
+                                user.walletBalance)
+
+                        })
+                }
+            }
+        }
+
 
         adapter = TransactionAdapter()
         binding.recyclerView.adapter = adapter

@@ -6,6 +6,7 @@
     <string name="next_payment_date">Next Payment Date %s</string>
     <string name="quick_actions">Quick Actions</string>
     <string name="dear_user">Dear %s</string>
+    <string name="loan_duration"> %s</string>
 
     <string name="withdraw_funds">Withdraw Funds</string>
     <string name="my_loans">My Loans</string>

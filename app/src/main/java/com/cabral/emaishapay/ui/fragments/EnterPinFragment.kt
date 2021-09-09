@@ -211,6 +211,7 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                         if (response.isSuccessful) {
                             dialogLoader?.hideProgressDialog()
                             if (response.body()!!.status == 1) {
+                                loanViewModel.setDueDate(response.body()!!.data!!.due_date)
                                 statusDialog.show()
                             }else{
                                 dialogLoader?.hideProgressDialog()

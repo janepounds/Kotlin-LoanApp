@@ -14,8 +14,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoanDetailsFragment : BaseFragment<FragmentLoanDetailsBinding>() {
 
+    private  val TAG = "LoanDetailsFragment"
     private val mViewModel: LoanViewModel by activityViewModels()
     private lateinit var loan: Loan
+    private var weeklyPay:Long? = null
+
 
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentLoanDetailsBinding.inflate(inflater, container, false)
@@ -26,12 +29,30 @@ class LoanDetailsFragment : BaseFragment<FragmentLoanDetailsBinding>() {
         binding.valueRemaining.text = String.format(getString(R.string.wallet_balance_value), loan.amt)
 
         binding.tvPaidToAmt.text = String.format(getString(R.string.wallet_balance_value), loan.amt)
-        binding.tvWeeklyPaymentValue.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(7500))
+        calculateWeeklyPayments(loan.amt,loan.durationType,loan.duration)
+
 
         binding.valueLoanAmt.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(loan.amt))
-        binding.valueLoanPeriod.text = String.format(getString(R.string.weeks), mViewModel.duration)
-        binding.valueInterestRate.text = String.format(getString(R.string.interest_rate_value), mViewModel.interestRate)
-        binding.valueTimeLeft.text = String.format(getString(R.string.weeks), 3)
+        binding.valueLoanPeriod.text = String.format(getString(R.string.loan_duration)+" "+loan.durationType, loan.duration)
+        binding.valueInterestRate.text = String.format(getString(R.string.interest_rate_value), loan.interestRate)
+        binding.valueTimeLeft.text = String.format(getString(R.string.loan_duration)+" "+loan.durationType, loan.duration)
+
+    }
+
+    private fun calculateWeeklyPayments(amt: Long, durationType: String, duration: Int) {
+        if(durationType.equals("months",ignoreCase = true)){
+            weeklyPay = amt /(4 * duration)
+
+            binding.tvWeeklyPaymentValue.text = String.format(getString(R.string.wallet_balance_value), weeklyPay)
+
+        }else if(durationType.equals("weeks",ignoreCase = true)){
+            weeklyPay = amt / duration
+            binding.tvWeeklyPaymentValue.text = String.format(getString(R.string.wallet_balance_value), weeklyPay)
+        }else{
+            binding.tvWeeklyPayment.text = getString(R.string.daily_payments)
+            weeklyPay = amt/duration
+        }
+
     }
 
     override fun setupClickListeners() {

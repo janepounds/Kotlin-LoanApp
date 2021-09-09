@@ -40,7 +40,7 @@ class LoanConfirmationFragment : BaseFragment<FragmentLoanConfirmationBinding>()
                 payBackAmount = MyApplication.getNumberFormattedString(mViewModel.loanDueAmount),
                 type = type,
                 typeAmount = MyApplication.getNumberFormattedString(mViewModel.typePayment),
-                interestRate = 10
+                interestRate = mViewModel.interestRate
             )
         )
     }

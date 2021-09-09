@@ -130,14 +130,15 @@
         <item>Electronics</item>
         <item>Grocery Store</item>
         <item>Furniture</item>
-        <item>Hardware &amp; Construction</item>
+        <item>Hardware and Construction</item>
         <item>Home Appliances</item>
         <item>Restaurant</item>
-        <item>Mobile Phones &amp; Computers</item>
+        <item>Mobile Phones and Computers</item>
         <item>Wholesale Shop</item>
         <item>Supermarket</item>
         <item>Agricultural Inputs shop</item>
-        <item>Stationery &amp; Printery &amp; Agency Business</item>
+        <item>Stationery and Printery </item>
+        <item>Agency Business</item>
     </string-array>
     <string-array name="business_type">
         <item>Sole Proprietorship</item>
@@ -171,6 +172,8 @@
     <string name="audited_financials">Audited Financials</string>
     <string name="business_plan">Business Plan</string>
     <string name="receipt_book">Receipt Book</string>
+
+    <string name="daily_payments">Daily Payments</string>
 
 
 </resources>
