@@ -14,8 +14,6 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.cabral.emaishapay.R
-import com.cabral.emaishapay.databinding.LayoutBusinessExpandableBinding
-import com.cabral.emaishapay.databinding.LayoutUploadDocumentBinding
 import com.skydoves.powerspinner.PowerSpinnerView
 import android.text.InputType
 
@@ -23,8 +21,7 @@ import android.app.DatePickerDialog
 import android.widget.DatePicker
 
 import android.widget.EditText
-import com.cabral.emaishapay.databinding.LayoutAccountCategoriesBinding
-import com.cabral.emaishapay.databinding.LayoutAccountCustomerSupportExpandableBinding
+import com.cabral.emaishapay.databinding.*
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -108,6 +105,7 @@ fun LayoutUploadDocumentBinding.updatePhotoLayout(selectedUri: Uri?) {
     this.uploadedPhoto = selectedUri != null
     this.uploadImage.loadImage(selectedUri!!)
 }
+
 
 fun MaterialButton.enableButton() {
     this.isEnabled = true

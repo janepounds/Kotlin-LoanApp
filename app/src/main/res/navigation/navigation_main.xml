@@ -157,6 +157,9 @@
         <action
             android:id="@+id/action_accountFragment_to_changePinFragment"
             app:destination="@id/changePinFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_sendEmailFragment"
+            app:destination="@id/sendEmailFragment" />
     </fragment>
 
 
@@ -359,5 +362,9 @@
         android:id="@+id/updateAccountDetailsFragment"
         android:name="com.cabral.emaishapay.ui.fragments.UpdateAccountDetailsFragment"
         android:label="UpdateAccountDetailsFragment" />
+    <fragment
+        android:id="@+id/sendEmailFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.SendEmailFragment"
+        android:label="SendEmailFragment" />
 
 </navigation>

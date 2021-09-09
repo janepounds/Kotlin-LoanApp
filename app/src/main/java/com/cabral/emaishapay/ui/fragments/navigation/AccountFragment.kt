@@ -43,7 +43,6 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
         }
         updateAccountDetails()
 
-
     }
 
 
@@ -51,7 +50,12 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
         binding.layoutAccountAbove.editBtn.setOnClickListener { updateAccountInfo()}
         binding.layoutCustomerSupport.addToggleClickListeners{
             if(binding.layoutCustomerSupport.tvText1.isChecked){
+                navController.navigate(R.id.action_accountFragment_to_sendEmailFragment)
 
+            }else if(binding.layoutCustomerSupport.tvText3.isChecked){
+                val intent = Intent(Intent.ACTION_DIAL)
+                intent.data = Uri.parse("tel:0123456789")
+                startActivity(intent)
             }
         }
         binding.layoutAccountCategories.settingsCardView.setOnClickListener {navController.navigate(R.id.action_accountFragment_to_changePinFragment) }
