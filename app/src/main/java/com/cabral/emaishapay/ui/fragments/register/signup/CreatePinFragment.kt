@@ -148,7 +148,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                 /***************save new user data and navigate to home***************/
                 dialogLoader?.showProgressDialog()
                 var call: Call<AuthenticationResponse>? = apiRequests?.confirmPin(
-                    mViewModel.getPhoneNumber(),
+                    getString(R.string.phone_code)+mViewModel.getPhoneNumber(),
                     generateRequestId(),
                     "comfirmForgotPin",
                     mViewModel.getOtp(),
