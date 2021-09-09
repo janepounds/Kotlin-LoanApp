@@ -9,7 +9,7 @@
         <import type="android.view.View" />
 
         <variable
-            name="isChangePin"
+            name="isForgotPin"
             type="Boolean" />
 
     </data>
@@ -29,13 +29,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:title="@{@string/back}" />
+        <ImageButton
+            android:id="@+id/close_btn"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="@dimen/register_padding"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:padding="4dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/darkGrey" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_create_pin"
+            android:id="@+id/tv_change_pin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/create_pin"
+            android:text="@string/change_pin"
             android:textColor="@color/darkBlue_1"
             android:textSize="28sp"
             android:textStyle="bold"
@@ -44,31 +58,19 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar_layout" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_create_pin_subtitle"
+            android:id="@+id/tv_old_pin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/create_pin_subtitle"
-            android:textColor="@color/primaryColor"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_create_pin" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_pin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/pin"
+            android:layout_marginTop="36dp"
+            android:text="@string/old_pin"
             android:textColor="@color/darkBlue_1"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_create_pin_subtitle" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_change_pin" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_pin"
+            android:id="@+id/et_old_pin"
             style="@style/OutlinedEditTextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -76,7 +78,44 @@
             app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_pin"
+            app:layout_constraintTop_toBottomOf="@+id/tv_old_pin"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/pin_hint"
+                android:inputType="numberPassword"
+                android:letterSpacing="2"
+                android:maxLength="4"
+                android:textColor="@color/black"
+                android:textColorHint="@color/darkBlue_1"
+                tools:hint="＊＊＊＊" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_new_pin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/new_pin"
+            android:textColor="@color/darkBlue_1"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_old_pin" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_new_pin"
+            style="@style/OutlinedEditTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_new_pin"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -97,12 +136,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="@string/confirm_pin"
+            android:text="@string/confirm_new_pin"
             android:textColor="@color/darkBlue_1"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_pin" />
+            app:layout_constraintTop_toBottomOf="@+id/et_new_pin" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/et_confirm_pin"
@@ -134,7 +173,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/both_pins_must_match"
+            android:text="@string/new_pin_and_confirm_new_pin_must_match"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -165,46 +204,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/confirm_pin"
+            android:text="@string/confirm_new_pin"
             app:cornerRadius="90dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_remember_me" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/already_have_account"
-            android:textColor="@color/darkBlue_3"
-            android:textSize="16sp" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/sign_in_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/sign_in"
-            android:textColor="@color/primaryColor"
-            android:textSize="16sp" />
 
-        <androidx.constraintlayout.helper.widget.Flow
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal"
-            app:constraint_referenced_ids="textView,sign_in_tv"
-            app:flow_horizontalGap="8dp"
-            app:flow_horizontalStyle="packed"
-            app:flow_wrapMode="aligned"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/confirm_pin_btn"
-            app:layout_constraintVertical_bias="0.0" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
