@@ -47,6 +47,8 @@ class UserRepository @Inject constructor(
                 regDate = it.regDate,
                 location = it.location,
                 walletBalance = it.walletBalance,
+                payment_due = it.payment_due,
+                payment_due_date = it.payment_due_date
 
                 )
 

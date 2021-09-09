@@ -15,5 +15,7 @@ data class User(
     val pin: String?=null,
     val interestRate: Float?=null,
     val processingFee: Double?=null,
+    var payment_due:Long? = null,
+    var payment_due_date:String? = null,
 
 )

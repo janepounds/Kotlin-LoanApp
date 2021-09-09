@@ -54,7 +54,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
             }
         }
-        binding.layoutAccountCategories.settingsCardView.setOnClickListener { }
+        binding.layoutAccountCategories.settingsCardView.setOnClickListener {navController.navigate(R.id.action_accountFragment_to_changePinFragment) }
         binding.layoutAccountCategories.faqCardView.setOnClickListener { }
         binding.layoutLoanPolicy.addToggleClickListeners { }
         binding.rateApp.setOnClickListener { rateAppFun() }

@@ -48,6 +48,11 @@ class AuthenticationResponse(
         var dob: String,
         @SerializedName("nin")
         @Expose
-        var nin: String
+        var nin: String,
+        @SerializedName("payment_due_date")
+        @Expose
+        val payment_due_date:String,
+        @SerializedName("payment_due")
+        val payment_due:Long
 )
 

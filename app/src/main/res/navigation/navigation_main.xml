@@ -71,6 +71,12 @@
         tools:layout="@layout/fragment_create_pin" />
 
     <fragment
+        android:id="@+id/changePinFragment"
+        android:name="com.cabral.emaishapay.ui.fragments.ChangePinFragment"
+        android:label="CreatePinFragment"
+        tools:layout="@layout/fragment_change_pin" />
+
+    <fragment
         android:id="@+id/enterPinFragment"
         android:name="com.cabral.emaishapay.ui.fragments.EnterPinFragment"
         android:label="EnterPinFragment"
@@ -148,6 +154,9 @@
         <action
             android:id="@+id/action_accountFragment_to_updateAccountDetailsFragment"
             app:destination="@id/updateAccountDetailsFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_changePinFragment"
+            app:destination="@id/changePinFragment" />
     </fragment>
 
 

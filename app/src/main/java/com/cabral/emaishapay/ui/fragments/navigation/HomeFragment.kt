@@ -72,6 +72,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                                     getString(R.string.wallet_balance_value),
                                     user.walletBalance
                                 )
+                                binding.tvPaymentDueAmt.text = String.format(getString(R.string.wallet_balance_value),user.payment_due)
+                                binding.tvPaymentDueDate.text = user.payment_due_date
                             })
                     }
                 }
@@ -79,8 +81,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
 
         binding.tvNextPaymentDate.text = String.format(getString(R.string.next_payment_date), "05th August 2021")
-        binding.tvPaymentDueAmt.text = String.format(getString(R.string.wallet_balance_value),mViewModel.loanDueAmount)
-        binding.tvPaymentDueDate.text ="05th August 2021"
+
     }
 
     override fun setupClickListeners() {

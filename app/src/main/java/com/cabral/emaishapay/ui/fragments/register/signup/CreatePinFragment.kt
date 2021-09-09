@@ -40,7 +40,6 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
     override fun setupTheme() {
         loginType = requireArguments().getSerializable(Config.CREATE_PIN_TYPE) as CreatePinType
-        binding.isForgotPin = loginType == CreatePinType.FORGOT_PIN
         binding.etPin.editText?.transformationMethod = AsteriskPasswordTransformationMethod()
         binding.etConfirmPin.editText?.transformationMethod = AsteriskPasswordTransformationMethod()
         binding.etPin.addEndIconClickListener()

@@ -68,6 +68,8 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
                     walletBalance= preferences[BALANCE]!!,
                     interestRate=preferences[INTEREST_RATE],
                     processingFee=preferences[PROCESSING_FEE],
+                    payment_due_date= preferences[PAYMENT_DUE_DATE],
+                    payment_due= preferences[PAYMENT_DUE],
 
                 )
             }
@@ -136,6 +138,8 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
                 mutablePreferences[BALANCE] = it.balance
                 mutablePreferences[INTEREST_RATE] = it.interest_rate
                 mutablePreferences[PROCESSING_FEE] = it.processing_fee
+                mutablePreferences[PAYMENT_DUE] = it.payment_due
+                mutablePreferences[PAYMENT_DUE_DATE] = it.payment_due_date
             }
             accessToken?.let { mutablePreferences[ACCESS_TOKEN] =it }
             mutablePreferences[PIN] = pinValue
@@ -158,6 +162,8 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
         private val DOB = stringPreferencesKey("dob")
         private val REG_DATE = stringPreferencesKey("reg_date")
         private val LOCATION = stringPreferencesKey("location")
+        private val PAYMENT_DUE = longPreferencesKey("payment_due")
+        private val PAYMENT_DUE_DATE = stringPreferencesKey("payment_due_date")
 
 
         private val KEY_SHOW_INTRO = booleanPreferencesKey("show_intro")

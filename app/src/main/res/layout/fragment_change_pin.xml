@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:paddingStart="@dimen/register_padding"
         android:paddingEnd="@dimen/register_padding"
-        tools:context=".ui.fragments.register.signup.CreatePinFragment">
+        tools:context=".ui.fragments.register.signup.ChangePinFragment">
 
         <include
             android:id="@+id/toolbar_layout"

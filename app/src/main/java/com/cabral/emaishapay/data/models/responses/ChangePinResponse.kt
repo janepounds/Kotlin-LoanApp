@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 class ChangePinResponse (
     @SerializedName("status")
     @Expose
-    val status: String?,
+    val status: Int?,
     @SerializedName("message")
     @Expose
     val message: String?
