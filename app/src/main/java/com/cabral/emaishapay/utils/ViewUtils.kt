@@ -71,10 +71,10 @@ fun LayoutBusinessExpandableBinding.addToggleClickListeners(callback: () -> Unit
     this.clickToExpandLayout.setOnClickListener {
         this.expandableLayout.toggle()
         if (this.expandableLayout.isExpanded) {
-            this.expandIcon.loadImage(R.drawable.ic_up_arrow)
+            this.expandIcon.loadImage(R.drawable.ic_down_arrow)
             this.tvCollapseOrExpand.text = context.getString(R.string.click_to_collapse_tab)
         } else {
-            this.expandIcon.loadImage(R.drawable.ic_down_arrow)
+            this.expandIcon.loadImage(R.drawable.ic_next)
             this.tvCollapseOrExpand.text = context.getString(R.string.click_to_expand_tab)
         }
     }
@@ -87,10 +87,10 @@ fun LayoutAccountCustomerSupportExpandableBinding.addToggleClickListeners(callba
     this.clickToExpandLayout.setOnClickListener {
         this.expandableLayout.toggle()
         if (this.expandableLayout.isExpanded) {
-            this.expandIcon.loadImage(R.drawable.ic_up_arrow)
+            this.expandIcon.loadImage(R.drawable.ic_down_arrow)
 
         } else {
-            this.expandIcon.loadImage(R.drawable.ic_down_arrow)
+            this.expandIcon.loadImage(R.drawable.ic_next)
         }
     }
     this.tvText1.setOnClickListener { callback() }

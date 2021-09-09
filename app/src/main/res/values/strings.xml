@@ -153,6 +153,7 @@
     <string name="placeholder_email">… drew@gmail.com</string>
     <string name="personal_details_value">personal details</string>
     <string name="edit">Edit</string>
+    <string name="description_placeholder">Description will be here</string>
 
 
 </resources>
