@@ -24,6 +24,7 @@ class UserRepository @Inject constructor(
 
 
 
+
     fun getCurrentUser(viewModelScope: CoroutineScope, reload: Boolean,context: Context): MutableLiveData<User> {
         if (_currentUser == null || reload) viewModelScope.launch { loadCurrentUser(context) }
         currentUser.postValue(_currentUser)
@@ -54,5 +55,27 @@ class UserRepository @Inject constructor(
 
 
     }
+
+//    fun getPersonalDetails(viewModelScope: CoroutineScope,context: Context):MutableLiveData<User>{
+//       if(_personalDetails!= null) viewModelScope.launch { loadPersonalDetails(context) }
+//        personalDetails.postValue(_personalDetails)
+//        return personalDetails
+//    }
+//
+//    private suspend fun loadPersonalDetails(context: Context) {
+//        userPreferences = UserPreferences(context.dataStore)
+//
+//        userPreferences.personalInfo?.collect {
+//            _currentUser = User(
+//
+//                nin = it.nin,
+//                dateOfBirth = it.dateOfBirth
+//
+//            )
+//
+//            currentUser.postValue(_personalDetails)
+//        }
+//    }
+
 
 }

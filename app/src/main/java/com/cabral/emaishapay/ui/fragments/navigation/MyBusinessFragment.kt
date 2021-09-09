@@ -14,8 +14,10 @@ import com.cabral.emaishapay.ui.viewModels.LoanViewModel
 import com.cabral.emaishapay.utils.addToggleClickListeners
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.NullPointerException
 
 @AndroidEntryPoint
@@ -25,7 +27,7 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
     private val mViewModel: LoanViewModel by activityViewModels()
     private var dob:String =""
     private var nin:String =""
-    private var reg_date:String =""
+    private var regDate:String =""
     private var location:String =""
 
 
@@ -34,6 +36,7 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
 
     override fun setupTheme() {
         updateBusinessLayoutValues(null)
+
 
         /************get user from shared preferences********************/
                 context?.let {
@@ -44,25 +47,24 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
                 }
 
 
-        try {
-            lifecycleScope.launch(Dispatchers.IO) {
+//            lifecycleScope.launch(Dispatchers.IO) {
+//
+//                withContext(Dispatchers.Main) {
+//
+//                    if (userPreferences.personalInfo != null) {
+//                        dob = userPreferences.personalInfo?.first()?.dateOfBirth.toString()
+//                        nin = userPreferences.personalInfo?.first()?.nin.toString()
+//                    }
+//                        if (userPreferences.businessInfo != null) {
+//                            regDate = userPreferences.businessInfo?.first()?.regDate.toString()
+//                            location = userPreferences.businessInfo?.first()?.location.toString()
+//                        }
+//                        Log.d(TAG, "setupTheme: reg_date" + regDate + "loc" + location)
+//
+//                    throw NullPointerException()
+//                }
+//            }
 
-                if (userPreferences.personalInfo != null) {
-                    dob = userPreferences.personalInfo?.first()?.dateOfBirth.toString()
-                    nin = userPreferences.personalInfo?.first()?.nin.toString()
-                }
-                lifecycleScope.launch(Dispatchers.IO) {
-                    if (userPreferences.businessInfo != null) {
-                    reg_date = userPreferences.businessInfo?.first()?.regDate.toString()
-                    location = userPreferences.businessInfo?.first()?.location.toString()
-                }
-                    Log.d(TAG, "setupTheme: reg_date" + reg_date + "loc" + location)
-                }
-            }
-
-        } catch (exception:NullPointerException){
-
-            }
     }
 
 
@@ -87,8 +89,8 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
         )
         binding.layoutBusinessProfile.businessExpandableItem = getBusinessProfileItem(
             valueOne = user?.fullName ?: "",
-            valueTwo = reg_date,
-            valueThree = location
+            valueTwo = user?.regDate?:"",
+            valueThree = user?.location?:""
         )
         binding.layoutBusinessDocuments.businessExpandableItem = getBusinessDocumentsItem(
             valueOne = getString(R.string.not_uploaded),
