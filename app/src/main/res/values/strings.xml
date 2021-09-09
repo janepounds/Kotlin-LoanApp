@@ -90,7 +90,7 @@
     /// Create Pin
     <string name="create_pin">Create PIN</string>
     <string name="create_pin_subtitle">Enter a 4 digit PIN to get started</string>
-    <string name="forgot_pin_subtitle">Select which contact details should we use to reset your password</string>
+    <string name="forgot_pin_subtitle">Select which contact details we should use to reset your password</string>
     <string name="pin">PIN</string>
     <string name="pin_cannot_be_empty">Pin cannot be empty!</string>
     <string name="confirm_pin">Confirm PIN</string>
@@ -149,8 +149,8 @@
     <string name="session_expired">Session Expired</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="placeholder_phone">....9 5 6 7</string>
-    <string name="placeholder_email">...drew@gmail.com</string>
+    <string name="placeholder_phone">… … 95 67</string>
+    <string name="placeholder_email">… drew@gmail.com</string>
     <string name="personal_details_value">personal details</string>
 
 

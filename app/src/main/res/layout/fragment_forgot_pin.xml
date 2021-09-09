@@ -49,19 +49,18 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/et_phone_layout"
-            android:layout_width="322dp"
-            android:layout_height="121dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:background="@drawable/slider_bg_with_stroke_2"
+            android:background="@drawable/slider_bg_with_stroke_9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_create_pin_subtitle">
 
             <ImageView
                 android:id="@+id/phone_image"
-                android:layout_width="44dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
                 android:contentDescription="@string/app_name"
@@ -76,11 +75,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/placeholder_phone"
-                android:textColor="@color/black"
+                android:textColor="@color/darkBlue_2"
                 android:textSize="20sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/phone_image"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@id/tv_phone" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_phone"
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/via_sms"
                 android:textColor="@color/primaryColor"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_via_sms"
                 app:layout_constraintStart_toEndOf="@+id/phone_image"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -97,19 +97,19 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/et_email_layout"
-            android:layout_width="322dp"
-            android:layout_height="121dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:background="@drawable/slider_bg_with_stroke_2"
+            android:background="@drawable/slider_bg_with_stroke_9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_phone_layout">
 
             <ImageView
                 android:id="@+id/email"
-                android:layout_width="44dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
                 android:contentDescription="@string/app_name"
@@ -120,24 +120,27 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/country_code"
-                android:layout_width="wrap_content"
+                android:id="@+id/email_address"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/placeholder_email"
-                android:textColor="@color/black"
+                android:textColor="@color/darkBlue_2"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textStyle="bold"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="2dp"
                 app:layout_constraintStart_toEndOf="@+id/email"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/tv_email_address"/>
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/email_address"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_email_address"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:text="@string/via_email"
                 android:textColor="@color/primaryColor"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="@+id/country_code"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/email_address"
                 app:layout_constraintStart_toEndOf="@+id/email"
                 app:layout_constraintTop_toTopOf="parent" />
 
