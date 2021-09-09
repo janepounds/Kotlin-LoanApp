@@ -152,6 +152,15 @@
     <string name="placeholder_phone">… … 95 67</string>
     <string name="placeholder_email">… drew@gmail.com</string>
     <string name="personal_details_value">personal details</string>
+    <string name="edit">Edit</string>
+    <string name="description_placeholder">Description will be here</string>
+    <string name="change_pin">Change Pin</string>
+    <string name="new_pin">New PIN</string>
+    <string name="old_pin">Old PIN</string>
+    <string name="new_pin_and_confirm_new_pin_must_match">New PIN and Confirm New PIN must match</string>
+    <string name="confirm_new_pin">Confirm New PIN</string>
+    <string name="send_email">Send Email</string>
+    <string name="description">Description</string>
 
 
 </resources>

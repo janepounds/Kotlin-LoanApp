@@ -56,10 +56,10 @@
             android:padding="4dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_edit"
-            android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/title" />
+            app:layout_constraintTop_toTopOf="@+id/title"
+            app:tint="@color/white" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/user_info_card_view"
@@ -151,6 +151,28 @@
                 android:src="@drawable/ic_default_user"
                 app:circleImageSrc="@{user.profileImage}" />
 
+
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/user_image_camera_card"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:cardCornerRadius="50dp"
+            app:layout_constraintStart_toEndOf="@id/user_image_card"
+            app:layout_constraintTop_toTopOf="@+id/user_info_card_view"
+            app:strokeColor="@color/white"
+            app:strokeWidth="4dp"
+            app:cardElevation="2dp"
+            android:layout_marginStart="-22dp"
+            android:layout_marginTop="10dp">
+        <ImageView
+            android:id="@+id/user_image_camera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="6dp"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_camera" />
         </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
