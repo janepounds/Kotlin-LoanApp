@@ -32,6 +32,7 @@ class ForgotPinFragment : BaseFragment<FragmentForgotPinBinding>() {
     private fun getOtp(){
         /*******endpoint for get otp********/
 
+
         navController.navigate(R.id.action_forgotPinFragment_to_otpVerifyFragment,
             bundleOf(Config.CREATE_PIN_TYPE to CreatePinType.FORGOT_PIN))
 

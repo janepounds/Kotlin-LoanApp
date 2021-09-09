@@ -23,6 +23,8 @@ import android.app.DatePickerDialog
 import android.widget.DatePicker
 
 import android.widget.EditText
+import com.cabral.emaishapay.databinding.LayoutAccountCategoriesBinding
+import com.cabral.emaishapay.databinding.LayoutAccountCustomerSupportExpandableBinding
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -79,6 +81,22 @@ fun LayoutBusinessExpandableBinding.addToggleClickListeners(callback: () -> Unit
     this.editBtn.setOnClickListener { callback() }
 }
 
+
+fun LayoutAccountCustomerSupportExpandableBinding.addToggleClickListeners(callback: () -> Unit) {
+    val context = this.root.context
+    this.clickToExpandLayout.setOnClickListener {
+        this.expandableLayout.toggle()
+        if (this.expandableLayout.isExpanded) {
+            this.expandIcon.loadImage(R.drawable.ic_up_arrow)
+
+        } else {
+            this.expandIcon.loadImage(R.drawable.ic_down_arrow)
+        }
+    }
+    this.tvText1.setOnClickListener { callback() }
+    this.tvText2.setOnClickListener { callback() }
+    this.tvText3.setOnClickListener { callback() }
+}
 fun PowerSpinnerView.initSpinner(lifecycleOwner: LifecycleOwner) {
     this.lifecycleOwner = lifecycleOwner
     this.setOnSpinnerOutsideTouchListener { _, _ -> this.dismiss() }

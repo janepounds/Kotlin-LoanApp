@@ -136,12 +136,12 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
         when(loginType){
             CreatePinType.FORGOT_PIN ->{
                 navController.navigate(R.id.action_otpVerifyFragment_to_passwordResetSuccessFragment,
-                    bundleOf(Config.LOGIN_TYPE to CreatePinType.FORGOT_PIN)
+                    bundleOf(Config.CREATE_PIN_TYPE to CreatePinType.FORGOT_PIN)
                 )
             }
             CreatePinType.SIGNUP ->{
                 navController.navigate(R.id.action_otpVerifyFragment_to_createPinFragment,
-                    bundleOf(Config.LOGIN_TYPE to CreatePinType.SIGNUP)
+                    bundleOf(Config.CREATE_PIN_TYPE to CreatePinType.SIGNUP)
                 )
             }
         }

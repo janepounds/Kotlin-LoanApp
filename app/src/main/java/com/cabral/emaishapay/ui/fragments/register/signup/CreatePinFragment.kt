@@ -147,12 +147,12 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
             CreatePinType.FORGOT_PIN -> {
                 /***************save new user data and navigate to home***************/
                 dialogLoader?.showProgressDialog()
-                var call: Call<AuthenticationResponse>? = apiRequests?.forgotPassword(
-                    mViewModel.getOtp(),
-                    Constants.PREPIN + pin,
+                var call: Call<AuthenticationResponse>? = apiRequests?.confirmPin(
+                    mViewModel.getPhoneNumber(),
                     generateRequestId(),
-                    "verifyUserRegistration"
-
+                    "comfirmForgotPin",
+                    mViewModel.getOtp(),
+                    Constants.PREPIN+pin,
                 )
                 call!!.enqueue(object : Callback<AuthenticationResponse> {
                     override fun onResponse(

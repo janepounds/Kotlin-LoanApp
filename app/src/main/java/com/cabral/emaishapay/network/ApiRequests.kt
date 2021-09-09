@@ -69,15 +69,24 @@ interface ApiRequests {
 
 
     @FormUrlEncoded
-    @POST("api/forgot/pin")
+    @POST("api/initiate/forgotpin")
     fun forgotPassword(
-        @Field("otp") phoneNumber: String?,
-        @Field("newPin") currentPin: String?,
+        @Field("phoneNumber") phoneNumber: String?,
         @Field("request_id") request_id: String?,
         @Field("action_id") action_id: String?,
 
     ): Call<AuthenticationResponse>?
 
+    @FormUrlEncoded
+    @POST("api/confirm/changepin")
+    fun confirmPin(
+        @Field("phoneNumber") phoneNumber: String?,
+        @Field("request_id") request_id: String?,
+        @Field("action_id") action_id: String?,
+        @Field("otp") otp: String?,
+        @Field("newpin") newpin: String?,
+
+        ): Call<AuthenticationResponse>?
 
     @FormUrlEncoded
     @POST("api/update/business/personaldetails")
@@ -260,12 +269,13 @@ interface ApiRequests {
     ):Call<CreditScoreResponse>
 
     @FormUrlEncoded
-    @POST("api/get/businessdetails")
+    @POST("api/momo/withdraw")
     fun withdrawFunds(
         @Header("Authorization") token:String?,
-        @Field("recipientMobileNumber") recipientMobileNumber:String?,
+        @Field("receipt_number") receipt_number:String?,
         @Field("amount") amount:Long?,
         @Field("pin") pin:String?,
+        @Field("currency_code") currency_code:String?,
         @Field("request_id") request_id: String?,
         @Field("action_id") action_id: String?
     ):Call<WithdrawResponse>

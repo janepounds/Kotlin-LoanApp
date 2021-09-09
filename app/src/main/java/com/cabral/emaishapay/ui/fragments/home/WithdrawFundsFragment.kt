@@ -179,7 +179,7 @@ class WithdrawFundsFragment : BaseFragment<FragmentWithdrawFundsBinding>() {
             binding.root.snackbar(error)
             return
         }
-        mViewModel.setWithdraw(Withdraw(amount = amount.toLong(),phoneNumber = Constants.PREPIN+recipient))
+        mViewModel.setWithdraw(Withdraw(amount = amount.toLong(),phoneNumber = getString(R.string.phone_code)+recipient))
 
 
         withdrawConfirmationDialogBinding.valueText1.text = "John Doe"

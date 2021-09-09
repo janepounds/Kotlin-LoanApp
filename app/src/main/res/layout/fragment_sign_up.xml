@@ -203,7 +203,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/already_have_account"
-            android:textColor="@color/primaryColor"
+            android:textColor="@color/darkBlue_3"
             android:textSize="16sp" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -212,7 +212,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/sign_in"
-            android:textColor="@color/darkBlue_3"
+            android:textColor="@color/primaryColor"
             android:textSize="16sp" />
 
         <androidx.constraintlayout.helper.widget.Flow

@@ -89,11 +89,10 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
     override fun setupClickListeners() {
         binding.toolbarLayout.backBtn.setOnClickListener { requireActivity().onBackPressed() }
         binding.closeBtn.setOnClickListener { requireActivity().onBackPressed() }
-        binding.clickHereTv.setOnClickListener { }
         binding.keypadLayout.deleteBtn.setOnClickListener { onDeleteBtnClick() }
         binding.keypadLayout.doneBtn.setOnClickListener { onDoneBtnClick() }
         binding.keypadLayout.setKeyPadListener { keyValue -> onKeyPadClick(keyValue) }
-        binding.forgetPinTv.setOnClickListener{navController.navigate(R.id.action_enterPinFragment_to_forgotPinFragment, bundleOf(Config.CREATE_PIN_TYPE to CreatePinType.FORGOT_PIN)) }
+        binding.clickHereTv.setOnClickListener{navController.navigate(R.id.action_enterPinFragment_to_forgotPinFragment, bundleOf(Config.CREATE_PIN_TYPE to CreatePinType.FORGOT_PIN)) }
     }
 
 
@@ -249,8 +248,9 @@ class EnterPinFragment : BaseFragment<FragmentEnterPinBinding>() {
                     loanViewModel.getWithdraw()?.phoneNumber,
                     loanViewModel.getWithdraw()?.amount,
                     Constants.PREPIN+pinValue,
+                    getString(R.string.currency_code),
                     generateRequestId(),
-                    ""
+                    "mobileMoneyWithdraw"
                 )
                 call!!.enqueue(object : Callback<WithdrawResponse> {
                     override  fun onResponse(
