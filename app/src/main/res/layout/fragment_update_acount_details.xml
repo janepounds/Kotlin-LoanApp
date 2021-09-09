@@ -76,12 +76,15 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@{user.fullName}"
-                    android:textColor="@color/darkBlue_1"
+                    android:textColor="@color/darkBlue_2"
                     android:textSize="@dimen/button_text"
                     android:textStyle="bold"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="22dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/divider1"
                     tools:text="@tools:sample/full_names" />
 
                 <View
@@ -90,22 +93,37 @@
                     android:layout_height="1dp"
                     android:background="?android:attr/listDivider"
                     app:layout_constraintBottom_toBottomOf="@+id/user_name"
-                    app:layout_constraintEnd_toEndOf="@+id/user_name" />
+                    app:layout_constraintEnd_toEndOf="@+id/user_name"
+                    app:layout_constraintTop_toBottomOf="@id/user_name"
+                    app:layout_constraintStart_toStartOf="@id/user_name"/>
 
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_personal_details"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/edit_text_title_margin_start_end"
-                    android:layout_marginTop="@dimen/progress_layout_margin_top"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="@dimen/edit_text_title_margin_start_end"
                     android:text="@string/personal_details_value"
                     android:textAllCaps="true"
-                    android:textColor="@color/darkBlue_1"
-                    android:textSize="@dimen/edit_text_title_size"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:textColor="@color/darkBlue_2"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@id/tv_personal_details_edit"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider1" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_personal_details_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/edit"
+                    android:textAllCaps="true"
+                    android:textColor="@color/red"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/divider1" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -115,21 +133,28 @@
                     android:layout_marginTop="@dimen/edit_text_title_margin_top"
                     android:text="@string/full_name"
                     android:textColor="@color/primaryColor"
-                    android:textSize="@dimen/edit_text_title_size"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_district"
-                    app:layout_constraintStart_toStartOf="@+id/tv_district"
+                    android:textSize="11sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_personal_details" />
 
 
-                <com.google.android.material.textview.MaterialTextView
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tv_full_name_value"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/edit_text_title_margin_top"
+                    android:layout_marginTop="@dimen/edit_text_margin_top"
                     android:text="@{user.fullName}"
-                    android:textColor="@color/darkBlue_1"
-                    android:textSize="@dimen/edit_text_title_size"
+                    android:textColor="@color/darkBlue_2"
+                    android:textSize="15sp"
+                    android:background="@drawable/slider_bg"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:cursorVisible="false"
                     app:layout_constraintTop_toBottomOf="@+id/tv_full_name"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     tools:text="@string/full_name" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -139,17 +164,26 @@
                     android:layout_marginTop="@dimen/edit_text_title_margin_top"
                     android:text="@string/email_address"
                     android:textColor="@color/primaryColor"
-                    android:textSize="@dimen/edit_text_title_size"
+                    android:textSize="11sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_full_name_value" />
 
-                <com.google.android.material.textview.MaterialTextView
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tv_meail_value"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/edit_text_title_margin_top"
+                    android:layout_marginTop="@dimen/edit_text_margin_top"
                     android:text="@{user.emailAddress}"
                     android:textColor="@color/darkBlue_1"
-                    android:textSize="@dimen/edit_text_title_size"
+                    android:textSize="15sp"
+                    android:background="@drawable/slider_bg"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_email"
                     tools:text="@string/email_address" />
 
@@ -160,45 +194,41 @@
                     android:layout_marginTop="@dimen/edit_text_title_margin_top"
                     android:text="@string/phone_number"
                     android:textColor="@color/primaryColor"
-                    android:textSize="@dimen/edit_text_title_size"
+                    android:textSize="11sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_meail_value" />
 
-                <com.google.android.material.textview.MaterialTextView
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tv_phone_number_value"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/edit_text_title_margin_top"
+                    android:layout_marginTop="@dimen/edit_text_margin_top"
                     android:text="@{user.phoneNumber}"
                     android:textColor="@color/darkBlue_1"
-                    android:textSize="@dimen/edit_text_title_size"
+                    android:textSize="15sp"
+                    android:background="@drawable/slider_bg"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_phone_number"
                     tools:text="@string/phone_number" />
-
-                <ImageButton
-                    android:id="@+id/edit_btn"
-                    android:layout_width="23dp"
-                    android:layout_height="22dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/app_name"
-                    android:padding="4dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_edit"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/divider1"
-                    app:tint="@color/primaryColor" />
 
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/confirm_btn"
                     style="@style/MaterialFilledButton"
-                    android:layout_width="262dp"
-                    android:layout_height="40dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginEnd="24dp"
                     android:text="@string/confirm"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
                     app:cornerRadius="90dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -230,6 +260,28 @@
                 app:circleImageSrc="@{user.profileImage}" />
 
         </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/user_image_camera_card"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:cardCornerRadius="50dp"
+            app:layout_constraintStart_toEndOf="@id/user_image_card"
+            app:layout_constraintTop_toTopOf="@+id/user_info_card_view"
+            app:strokeColor="@color/white"
+            app:strokeWidth="4dp"
+            app:cardElevation="2dp"
+            android:layout_marginStart="-22dp"
+            android:layout_marginTop="10dp">
+            <ImageView
+                android:id="@+id/user_image_camera"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="6dp"
+                android:contentDescription="@string/app_name"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_camera" />
+        </com.google.android.material.card.MaterialCardView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

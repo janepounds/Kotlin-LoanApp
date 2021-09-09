@@ -8,6 +8,7 @@ import com.google.android.material.textview.MaterialTextView
 import com.cabral.emaishapay.databinding.FragmentUpdateAcountDetailsBinding
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoanViewModel
+import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -28,15 +29,14 @@ class UpdateAccountDetailsFragment :  BaseFragment<FragmentUpdateAcountDetailsBi
     }
 
     override fun setupClickListeners() {
-        binding.editBtn.setOnClickListener{activateTextViewEditable()}
+        binding.tvPersonalDetailsEdit.setOnClickListener{activateTextViewEditable()}
        binding.confirmBtn.setOnClickListener{checkInputs()}
     }
 
     private fun activateTextViewEditable(){
-
-        allowEditable(binding.tvFullNameValue)
         allowEditable(binding.tvPhoneNumberValue)
         allowEditable(binding.tvMeailValue)
+        allowEditable(binding.tvFullNameValue)
 
     }
 
@@ -45,11 +45,11 @@ class UpdateAccountDetailsFragment :  BaseFragment<FragmentUpdateAcountDetailsBi
 
     }
 
-    private fun allowEditable(textview: MaterialTextView){
-        textview.isCursorVisible = true;
-        textview.isFocusableInTouchMode = true;
-        textview.inputType = InputType.TYPE_CLASS_TEXT;
-        textview.requestFocus(); //to trigger the soft input
+    private fun allowEditable(editTextView: TextInputEditText){
+        editTextView.isCursorVisible = true;
+        editTextView.isFocusableInTouchMode = true;
+        editTextView.inputType = InputType.TYPE_CLASS_TEXT;
+        editTextView.requestFocus(); //to trigger the soft input
     }
 
 }

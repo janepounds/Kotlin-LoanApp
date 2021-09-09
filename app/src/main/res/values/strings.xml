@@ -152,6 +152,7 @@
     <string name="placeholder_phone">… … 95 67</string>
     <string name="placeholder_email">… drew@gmail.com</string>
     <string name="personal_details_value">personal details</string>
+    <string name="edit">Edit</string>
 
 
 </resources>
