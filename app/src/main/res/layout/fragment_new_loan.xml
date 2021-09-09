@@ -9,7 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".ui.fragments.home.NewLoanFragment">
 
         <com.google.android.material.textview.MaterialTextView
@@ -28,12 +28,11 @@
             android:id="@+id/calculator_card_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="16dp"
-            app:contentPadding="16dp"
+            app:contentPadding="14dp"
+            app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_calculator">
@@ -126,11 +125,12 @@
                     tools:text="5" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/divider8"
@@ -138,29 +138,29 @@
 
                     <ImageView
                         android:id="@+id/calendar_image"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:contentDescription="@string/app_name"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_calendar_check"
-                        android:tint="@color/primaryColor"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/primaryColor" />
 
                     <com.skydoves.powerspinner.PowerSpinnerView
                         android:id="@+id/spinner_duration"
                         style="@style/PowerSpinner"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:background="@color/white"
-                        android:gravity="center"
+                        android:gravity="center_vertical"
                         android:hint="@string/select"
                         android:paddingStart="8dp"
-                        android:paddingTop="8dp"
+                        android:paddingTop="0dp"
                         android:paddingEnd="0dp"
-                        android:paddingBottom="8dp"
+                        android:paddingBottom="0dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/calendar_image"
