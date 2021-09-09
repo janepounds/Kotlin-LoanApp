@@ -53,6 +53,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         binding.signInTv.setOnClickListener {
             navController.navigateUsingPopUp(R.id.registerFragment, R.id.action_global_registerFragment, bundleOf(RegisterFragment.KEY_SHOW_LOGIN_FIRST to true))
         }
+
     }
 
     private fun onRememberMeClick() {

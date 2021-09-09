@@ -261,7 +261,6 @@
                 android:contentDescription="@string/app_name"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_default_user"
-                android:visibility="@{uploadedPhoto ? View.VISIBLE : View.INVISIBLE, default=visible}"
                 app:circleImageSrc="@{user.profileImage}" />
 
         </com.google.android.material.card.MaterialCardView>

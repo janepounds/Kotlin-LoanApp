@@ -38,7 +38,6 @@ class UpdateAccountDetailsFragment :  BaseFragment<FragmentUpdateAcountDetailsBi
                     1 -> {
 
                         profilePicUri = result.toUri()
-                        binding.uploadedPhoto = profilePicUri!=null
                         binding.userImage.loadImage(profilePicUri!!)
 
                     }
