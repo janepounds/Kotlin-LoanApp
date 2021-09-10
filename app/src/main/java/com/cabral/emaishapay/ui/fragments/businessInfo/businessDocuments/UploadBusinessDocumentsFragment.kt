@@ -153,7 +153,6 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
                         binding.bankStatement.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.bank_statement).toUri())
                         binding.auditedFinancials.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.audited_financials).toUri())
                         binding.receiptBook.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.receipt_book).toUri())
-                        response.body()!!.message?.let { binding.root.snackbar(it) }
 
                     } else {
                         response.body()!!.message?.let { binding.root.snackbar(it) }

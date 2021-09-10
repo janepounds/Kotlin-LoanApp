@@ -114,7 +114,6 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
                         binding.nationalIdBackSide.updatePhotoLayout((Constants.LOAN_API_URL+ response.body()!!.data?.national_id_back).toUri())
                         binding.profilePhoto.updatePhotoLayout((Constants.LOAN_API_URL+ response.body()!!.data?.profile_picture).toUri())
                         binding.selfieInYourBusiness.updatePhotoLayout((Constants.LOAN_API_URL+ response.body()!!.data?.selfie_in_business).toUri())
-                        response.body()!!.message?.let { binding.root.snackbar(it) }
 
                     } else {
                         response.body()!!.message?.let { binding.root.snackbar(it) }

@@ -208,7 +208,7 @@ interface ApiRequests {
     @POST("api/update/businessVerification")
     fun postVerificationDocuments(
         @Header("Authorization") token:String?,
-        @Body request: JsonObject,
+        @Body data: JsonObject,
         @Query("request_id") request_id: String?,
         @Query("action_id") action_id: String?,
     ):Call<VerificationDocumentsResponse>

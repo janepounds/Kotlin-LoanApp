@@ -123,7 +123,6 @@ class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocuments
                         binding.selfieShopOffice.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.selfie_in_business).toUri())
                         binding.neighbourhoodPhoto.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.neighbourhood_photo).toUri())
                         binding.utilityBill.updatePhotoLayout((Constants.LOAN_API_URL+response.body()!!.data?.utility_bill).toUri())
-                        response.body()!!.message?.let { binding.root.snackbar(it) }
 
 
                     } else {
