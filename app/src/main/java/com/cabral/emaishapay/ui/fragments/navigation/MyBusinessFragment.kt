@@ -46,25 +46,6 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
                     })
                 }
 
-
-//            lifecycleScope.launch(Dispatchers.IO) {
-//
-//                withContext(Dispatchers.Main) {
-//
-//                    if (userPreferences.personalInfo != null) {
-//                        dob = userPreferences.personalInfo?.first()?.dateOfBirth.toString()
-//                        nin = userPreferences.personalInfo?.first()?.nin.toString()
-//                    }
-//                        if (userPreferences.businessInfo != null) {
-//                            regDate = userPreferences.businessInfo?.first()?.regDate.toString()
-//                            location = userPreferences.businessInfo?.first()?.location.toString()
-//                        }
-//                        Log.d(TAG, "setupTheme: reg_date" + regDate + "loc" + location)
-//
-//                    throw NullPointerException()
-//                }
-//            }
-
     }
 
 
@@ -84,8 +65,8 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
     private  fun updateBusinessLayoutValues(user: User?) {
         binding.layoutOwnerProfile.businessExpandableItem = getOwnerProfileItem(
             valueOne = user?.fullName ?: "",
-            valueTwo = dob,
-            valueThree = nin
+            valueTwo = user?.dateOfBirth?:"",
+            valueThree = user?.nin?:""
         )
         binding.layoutBusinessProfile.businessExpandableItem = getBusinessProfileItem(
             valueOne = user?.fullName ?: "",

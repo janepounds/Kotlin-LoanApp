@@ -129,7 +129,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                                 response.body()!!.message?.let { binding.root.snackbar(it) }
                             }
 
-                        } else {
+                        }else {
                             response.body()!!.message?.let { binding.root.snackbar(it) }
                         }
 
