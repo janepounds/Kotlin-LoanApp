@@ -36,7 +36,6 @@ interface ApiRequests {
     @POST("api/resend-otp/registration")
     fun resendOtp(
         @Field("phoneNumber") phoneNumber: String?,
-        @Field("pin") pin: String?,
         @Field("action_id") action_id: String?,
         @Field("request_id") request_id: String?
 

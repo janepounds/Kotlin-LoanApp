@@ -76,7 +76,6 @@ class OtpVerifyFragment : BaseFragment<FragmentOtpVerifyBinding>() {
             /***************Retrofit call for resend otp**************************/
             var call: Call<RegistrationResponse>? = apiRequests?.resendOtp(
                 getString(R.string.phone_code)+mViewModel.getPhoneNumber(),
-                Constants.PREPIN+mViewModel.getPin(),
                 "resendUserOTP",
                 generateRequestId()
 
