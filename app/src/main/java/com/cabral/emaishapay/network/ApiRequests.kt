@@ -161,13 +161,13 @@ interface ApiRequests {
     ):Call<GuarantorResponse>?
 
 
-    @FormUrlEncoded
+
     @POST("api/update/business/Ids")
     fun postIdDocuments(
         @Header("Authorization") token:String?,
         @Body pics:JsonObject,
-        @Field("request_id") request_id: String?,
-        @Field("action_id") action_id: String?
+        @Query("request_id") request_id: String?,
+        @Query("action_id") action_id: String?
     ):Call<IdDocumentResponse>
 
 
