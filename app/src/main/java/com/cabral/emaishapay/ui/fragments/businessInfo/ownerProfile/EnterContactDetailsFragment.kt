@@ -3,9 +3,12 @@ package com.cabral.emaishapay.ui.fragments.businessInfo.ownerProfile
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.annotation.Nullable
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.cabral.emaishapay.R
@@ -17,12 +20,14 @@ import com.cabral.emaishapay.network.ApiRequests
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoginViewModel
 import com.cabral.emaishapay.utils.*
+import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 @AndroidEntryPoint
 class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBinding>() {
@@ -43,34 +48,23 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
         loadContactDetails()
         binding.spinnerResidentialType.initSpinner(this)
 
-        binding.spinnerResidentialType.addTextChangedListener(object :TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        binding.spinnerResidentialType.setOnSpinnerItemSelectedListener(OnSpinnerItemSelectedListener<String?> { oldIndex, oldItem, newIndex, newItem ->
+            if(binding.spinnerResidentialType.text.toString().trim().equals("Owner",ignoreCase = true)){
+                binding.tvLandlordName.visibility = GONE
+                binding.etLandlordName.visibility = GONE
+                binding.tvLandlordPhoneNumber.visibility = GONE
+                binding.etLandlordPhoneNumber.phone.visibility = GONE
 
+
+            }else{
+                binding.tvLandlordName.visibility = VISIBLE
+                binding.etLandlordName.visibility = VISIBLE
+                binding.tvLandlordPhoneNumber.visibility = VISIBLE
+                binding.etLandlordPhoneNumber.phone.visibility = VISIBLE
             }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(binding.spinnerResidentialType.text.equals("Owner")){
-                    /**********hide landlord contact and name************/
-                    binding.tvLandlordName.visibility = GONE
-                    binding.etLandlordName.visibility = GONE
-                    binding.tvLandlordPhoneNumber.visibility = GONE
-                    binding.etLandlordPhoneNumber.etPhoneNumber.visibility = GONE
-
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                if(binding.spinnerResidentialType.text.equals("Owner")){
-                    /**********hide landlord contact and name************/
-                    binding.tvLandlordName.visibility = GONE
-                    binding.etLandlordName.visibility = GONE
-                    binding.tvLandlordPhoneNumber.visibility = GONE
-                    binding.etLandlordPhoneNumber.etPhoneNumber.visibility = GONE
-
-                }
-            }
-
         })
+
+
 
 
         val districtListAdapter: ArrayAdapter<String>? =

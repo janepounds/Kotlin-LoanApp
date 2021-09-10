@@ -65,7 +65,7 @@ interface ApiRequests {
         @Field("confirmNewPin") confirmNewPin: String?
 
 
-    ): Call<ChangePinResponse>?
+    ): Call<AuthenticationResponse>?
 
 
     @FormUrlEncoded

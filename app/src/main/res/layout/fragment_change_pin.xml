@@ -7,10 +7,15 @@
     <data>
 
         <import type="android.view.View" />
+        <import type="com.cabral.emaishapay.data.models.User" />
 
         <variable
             name="isForgotPin"
             type="Boolean" />
+
+        <variable
+            name="user"
+            type="User" />
 
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -16,6 +16,7 @@ import com.cabral.emaishapay.databinding.FragmentChangePinBinding
 import com.cabral.emaishapay.network.ApiClient
 import com.cabral.emaishapay.network.ApiRequests
 import com.cabral.emaishapay.ui.base.BaseFragment
+import com.cabral.emaishapay.ui.viewModels.LoanViewModel
 import com.cabral.emaishapay.ui.viewModels.LoginViewModel
 import com.cabral.emaishapay.utils.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +30,9 @@ import retrofit2.Response
 class ChangePinFragment : BaseFragment<FragmentChangePinBinding>(){
     private val apiRequests: ApiRequests? by lazy { ApiClient.getLoanInstance() }
     private var pin: String? = null
+    private var phoneNumber: String? = null
     private var dialogLoader: DialogLoader? = null
+    private val mViewModel: LoanViewModel by activityViewModels()
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentChangePinBinding.inflate(inflater, container, false)
 
     override fun setupTheme() {
@@ -40,7 +43,15 @@ class ChangePinFragment : BaseFragment<FragmentChangePinBinding>(){
         binding.eetNewPin.addEndIconClickListener()
         binding.etConfirmPin.addEndIconClickListener()
 
-        lifecycleScope.launch { pin = userPreferences.user?.first()?.pin }
+        context?.let {
+            mViewModel.getCurrentUser( false, it).observe(viewLifecycleOwner, { user ->
+                pin = user.pin
+                phoneNumber = user.phoneNumber
+
+            })
+        }
+
+
     }
 
     override fun setupClickListeners() {
@@ -83,31 +94,46 @@ class ChangePinFragment : BaseFragment<FragmentChangePinBinding>(){
         dialogLoader = context?.let { DialogLoader(it) }
         dialogLoader?.showProgressDialog()
         /**********************Retrofit to initiate login *********************/
-        var call: Call<ChangePinResponse>? = apiRequests?.changePin(
-            "","", generateRequestId(),"","" +
-                    "",""
-
+        var call: Call<AuthenticationResponse>? = apiRequests?.changePin(
+            phoneNumber,Constants.PREPIN+pin, generateRequestId(),"changeCustomerPin",Constants.PREPIN +newPin,
+            Constants.PREPIN+confirmPin
         )
-        call!!.enqueue(object : Callback<ChangePinResponse> {
+        call!!.enqueue(object : Callback<AuthenticationResponse> {
             override  fun onResponse(
-                call: Call<ChangePinResponse>,
-                response: Response<ChangePinResponse>
+                call: Call<AuthenticationResponse>,
+                response: Response<AuthenticationResponse>
             ) {
                 if (response.isSuccessful) {
                     dialogLoader?.hideProgressDialog()
                     if (response.body()!!.status == 1) {
+                        Constants.ACCESS_TOKEN = response.body()!!.access_token.toString()
+
+                        /***************save user details and login user***************/
+                        lifecycleScope.launch {
+                            response.body()?.let {
+                                userPreferences.saveUserData(
+                                    it!!.data,
+                                    it!!.access_token,
+                                    newPin,
+                                    true
+                                )
+                            }
+                        }
 
                     }else{
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                     }
 
-                } else {
+                } else if(response.code()==401){
+                    binding.root.snackbar(getString(R.string.session_expired))
+                    startAuth(navController)
+                }else {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
                 }
 
             }
 
-            override fun onFailure(call: Call<ChangePinResponse>, t: Throwable) {
+            override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
                 t.message?.let { binding.root.snackbar(it) }
                 dialogLoader?.hideProgressDialog()
 
