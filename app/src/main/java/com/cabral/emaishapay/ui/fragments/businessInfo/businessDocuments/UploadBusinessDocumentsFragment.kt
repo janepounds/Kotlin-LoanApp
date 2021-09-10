@@ -21,6 +21,7 @@ import com.cabral.emaishapay.ui.activities.ImagePickerActivity
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoginViewModel
 import com.cabral.emaishapay.utils.*
+import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -223,23 +224,20 @@ class UploadBusinessDocumentsFragment : BaseFragment<FragmentUploadBusinessDocum
         }
         /*****************post documents and redirect to home*************************/
 
-        val requestBody: RequestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart("trade_license", encodedTradeLicensePhotoID!!)
-            .addFormDataPart("reg_certificate", encodedRegistrationCertificatePhotoID!!)
-            .addFormDataPart("tax_reg_certificate", encodedTaxRegCertificatePhotoID!!)
-            .addFormDataPart("tax_clearance_certificate", encodedTaxClearanceCertificatePhotoID!!)
-            .addFormDataPart("bank_statement", encodedBankStatementPhotoID!!)
-            .addFormDataPart("audited_financials", encodedAuditedFinancialsPhotoID!!)
-            .addFormDataPart("business_plan", encodedBusinessPlanPhotoID!!)
-            .addFormDataPart("receipt_book", encodedReceiptBookPhotoID!!)
-            .build()
+        val jsonObject = JsonObject()
+        jsonObject.addProperty("trade_license",encodedTradeLicensePhotoID)
+        jsonObject.addProperty("reg_certificate",encodedRegistrationCertificatePhotoID)
+        jsonObject.addProperty("tax_reg_certificate",encodedTaxRegCertificatePhotoID)
+        jsonObject.addProperty("tax_clearance_certificate",encodedTaxClearanceCertificatePhotoID)
+        jsonObject.addProperty("bank_statement",encodedBankStatementPhotoID)
+        jsonObject.addProperty("audited_financials",encodedAuditedFinancialsPhotoID)
+        jsonObject.addProperty("business_plan",encodedBusinessPlanPhotoID)
+        jsonObject.addProperty("receipt_book",encodedReceiptBookPhotoID)
 
         dialogLoader?.showProgressDialog()
         var call: Call<BusinessDocumentsResponse>? = apiRequests?.postBusinessDocuments(
             Constants.ACCESS_TOKEN,
-            "application/x-www-form-urlencoded",
-            requestBody,
+            jsonObject,
             generateRequestId(),
             "saveBusinessDocs"
         )

@@ -22,6 +22,7 @@ import com.cabral.emaishapay.ui.activities.ImagePickerActivity
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoginViewModel
 import com.cabral.emaishapay.utils.*
+import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -181,18 +182,17 @@ class UploadIdDocumentsFragment : BaseFragment<FragmentUploadIdDocumentsBinding>
         }
 
         /*****************post documents and redirect to home*************************/
-        val requestObject = JSONObject()
-        val data = IdDocumentData(
-            national_id_back = encodedNidBackSidePhotoID!!,
-            national_id_front = encodedNidFrontSidePhotoID!!,
-            profile_picture = encodedProfilePhotoID!!,
-            selfie_in_business = encodedSelfieInBusinessPhotoID!!
-        )
-        requestObject.put("params",data)
+        val jsonObject = JsonObject()
+        jsonObject.addProperty("national_id_back",encodedNidBackSidePhotoID)
+        jsonObject.addProperty("national_id_front",encodedNidFrontSidePhotoID)
+        jsonObject.addProperty("profile_picture",encodedProfilePhotoID)
+        jsonObject.addProperty("selfie_in_business",encodedSelfieInBusinessPhotoID)
+
+
         dialogLoader?.showProgressDialog()
         var call: Call<IdDocumentResponse>? = apiRequests?.postIdDocuments(
             Constants.ACCESS_TOKEN,
-            requestObject,
+            jsonObject,
             generateRequestId(),
             "saveIdDocuments"
             )

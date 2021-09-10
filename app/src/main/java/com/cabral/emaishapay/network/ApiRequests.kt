@@ -165,7 +165,7 @@ interface ApiRequests {
     @POST("api/update/business/Ids")
     fun postIdDocuments(
         @Header("Authorization") token:String?,
-        @Body pics:JSONObject,
+        @Body pics:JsonObject,
         @Field("request_id") request_id: String?,
         @Field("action_id") action_id: String?
     ):Call<IdDocumentResponse>
@@ -208,7 +208,6 @@ interface ApiRequests {
     @POST("api/update/businessVerification")
     fun postVerificationDocuments(
         @Header("Authorization") token:String?,
-        @Header("Content-Type") contentType:String?,
         @Body request: JsonObject,
         @Query("request_id") request_id: String?,
         @Query("action_id") action_id: String?,
@@ -226,8 +225,7 @@ interface ApiRequests {
     @POST("api/update/businessDocuments")
     fun postBusinessDocuments(
         @Header("Authorization") token:String?,
-        @Header("Content-Type") contentType:String?,
-        @Body data:RequestBody,
+        @Body data:JsonObject,
         @Query("request_id") request_id: String?,
         @Query("action_id") action_id: String?
     ):Call<BusinessDocumentsResponse>

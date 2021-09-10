@@ -187,23 +187,19 @@ class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocuments
             binding.root.snackbar(error)
             return
         }
-        val requestObject = JSONObject()
-        requestObject.put("business_photo",encodedOfficeShopPhotoID!!)
-        requestObject.put("business_video",encodedOfficeShopVideoID!!)
-        requestObject.put("selfie_in_business",encodedSelfieShopOfficePhoto!!)
-        requestObject.put("neighbourhood_photo",encodedNeighbourhoodPhoto!!)
-        requestObject.put("utility_bill",encodedUtilityBillPhoto!!)
-        val jsonParser = JsonParser()
-        val jsonObject = jsonParser.parse(requestObject.toString()) as JsonObject
-        val body: HashMap<String, Any> = HashMap()
 
-        body["data"] = jsonObject
-        Log.d(TAG, "checkInputs: "+jsonObject)
+
+        val jsonObject = JsonObject()
+        jsonObject.addProperty("business_photo",encodedOfficeShopPhotoID)
+        jsonObject.addProperty("business_video",encodedOfficeShopVideoID)
+        jsonObject.addProperty("selfie_in_business",encodedSelfieShopOfficePhoto)
+        jsonObject.addProperty("neighbourhood_photo",encodedNeighbourhoodPhoto)
+        jsonObject.addProperty("utility_bill",encodedUtilityBillPhoto)
+
 
         dialogLoader?.showProgressDialog()
         var call: Call<VerificationDocumentsResponse>? = apiRequests?.postVerificationDocuments(
             Constants.ACCESS_TOKEN,
-            "application/x-www-form-urlencoded",
             jsonObject,
             generateRequestId(),
             "saveVerificationDocs"
