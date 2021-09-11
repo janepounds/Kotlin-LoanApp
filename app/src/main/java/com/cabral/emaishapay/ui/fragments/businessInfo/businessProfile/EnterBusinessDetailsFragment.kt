@@ -74,7 +74,6 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
                         binding.etAvgMonthlyRevenue.editText?.setText(response.body()!!.data!!.avg_monthly_revenue)
                         binding.spinnerBusinessType.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.business_type
                         binding.spinnerIndustry.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.industry
-                        response.body()!!.message?.let { binding.root.snackbar(it) }
 
 
                     } else {

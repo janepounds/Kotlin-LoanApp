@@ -71,7 +71,7 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
                         binding.secondKin.spinnerRelationship.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data!!.relationship2
                         binding.secondKin.etMobileNumber.etPhoneNumber.editText?.setText(response.body()!!.data!!.mobile2?.substring(3))
                         binding.secondKin.etResidentialAddress.editText?.setText(response.body()!!.data!!.residential_address2)
-                        response.body()!!.message?.let { binding.root.snackbar(it) }
+
 
                     } else {
                         response.body()!!.message?.let { binding.root.snackbar(it) }

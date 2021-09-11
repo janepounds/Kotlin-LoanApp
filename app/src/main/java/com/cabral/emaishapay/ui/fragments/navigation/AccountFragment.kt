@@ -1,10 +1,12 @@
 package com.cabral.emaishapay.ui.fragments.navigation
 
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.activityViewModels
@@ -12,12 +14,18 @@ import androidx.lifecycle.lifecycleScope
 
 import com.cabral.emaishapay.databinding.FragmentAccountBinding
 import com.cabral.emaishapay.R
+import com.cabral.emaishapay.data.enums.EnterPinType
 import com.cabral.emaishapay.data.models.User
 import com.cabral.emaishapay.data.models.screen.AccountExpandableLayout
+import com.cabral.emaishapay.databinding.DialogLoanStatusBinding
+import com.cabral.emaishapay.databinding.LoanPolicyDialogBinding
+import com.cabral.emaishapay.singleton.MyApplication
 import com.cabral.emaishapay.ui.activities.MainActivity
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoanViewModel
 import com.cabral.emaishapay.utils.addToggleClickListeners
+import com.cabral.emaishapay.utils.createFullScreenDialog
+import com.cabral.emaishapay.utils.navigateUsingPopUp
 import com.cabral.emaishapay.utils.snackbar
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +35,8 @@ import kotlinx.coroutines.launch
 class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
     private val mViewModel: LoanViewModel by activityViewModels()
+    private lateinit var statusDialogBinding: LoanPolicyDialogBinding
+    private lateinit var statusDialog: Dialog
 
 
     override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentAccountBinding.inflate(inflater, container, false)
@@ -42,7 +52,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
             })
         }
         updateAccountDetails()
-
+        setupDialog()
     }
 
 
@@ -60,12 +70,31 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
         }
         binding.layoutAccountCategories.settingsCardView.setOnClickListener {navController.navigate(R.id.action_accountFragment_to_changePinFragment) }
         binding.layoutAccountCategories.faqCardView.setOnClickListener { }
-        binding.layoutLoanPolicy.addToggleClickListeners { }
+        binding.layoutLoanPolicy.addToggleClickListeners {
+            if(binding.layoutLoanPolicy.tvText1.isChecked){
+                statusDialog.show()
+            }else if(binding.layoutLoanPolicy.tvText3.isChecked){
+                statusDialog.show()
+            }
+        }
         binding.rateApp.setOnClickListener { rateAppFun() }
         binding.shareApp.setOnClickListener { shareAppFun() }
         binding.logoutBtn.setOnClickListener { logOut() }
     }
 
+    private fun setupDialog(){
+        statusDialogBinding = LoanPolicyDialogBinding.inflate(layoutInflater, binding.root as ViewGroup, false)
+        statusDialog = createFullScreenDialog(statusDialogBinding, R.drawable.slider_bg, false)
+
+//        if(binding.layoutLoanPolicy.tvText3.isChecked){
+//            statusDialogBinding.tvTitle.text = getString(R.string.recovery_policy)
+//        }
+        statusDialogBinding.okBtn.setOnClickListener {
+            statusDialog.dismiss()
+
+            navController.navigateUsingPopUp(R.id.accountFragment, R.id.accountFragment)
+        }
+    }
     private fun updateAccountInfo() {
         navController.navigate(R.id.action_accountFragment_to_updateAccountDetailsFragment)
 

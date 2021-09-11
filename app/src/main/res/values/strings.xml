@@ -140,6 +140,8 @@
     <string name="loan_agreement">Loan Agreement</string>
     <string name="recovery_policy">Recovery Policy</string>
     <string name="what_you_need_to_know">What you need to know</string>
+    <string name="what_you_need_to_about_loan">What you need to know before you apply for a loan</string>
+    <string name="loren_ipsum">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley. scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. into electronic typesetting, remaining essentially unchanged.</string>
 
     <string name="rate_app">Rate App</string>
     <string name="share_app">Share App</string>

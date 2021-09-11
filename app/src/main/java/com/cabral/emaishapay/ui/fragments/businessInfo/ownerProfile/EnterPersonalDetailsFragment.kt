@@ -76,7 +76,7 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
                         binding.spinnerMaritalStatus.getSpinnerAdapter<String>().spinnerView.text = response.body()!!.data.marital_status
                         binding.etYearInBusiness.editText?.setText(response.body()!!.data.years_in_business.toString())
                         binding.etNationalId.editText?.setText( response.body()!!.data.nin)
-                        response.body()!!.message?.let { binding.root.snackbar(it) }
+
 
 
                     } else {

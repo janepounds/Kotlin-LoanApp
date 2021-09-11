@@ -116,7 +116,7 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
                         binding.etLandlordPhoneNumber.etPhoneNumber.editText?.setText(response.body()!!.data!!.landlord_contact?.substring(3))
                         binding.etLandlordName.editText?.setText(response.body()!!.data!!.landlord)
 
-                        response.body()!!.message?.let { binding.root.snackbar(it) }
+
 
                     }else{
                         response.body()!!.message?.let { binding.root.snackbar(it) }
