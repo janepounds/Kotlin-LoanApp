@@ -89,9 +89,10 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
                     startAuth(navController)
 
 
-                } else {
+                } else {  if(response.body()!!.message?.isNotEmpty()) {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
                     dialogLoader?.hideProgressDialog()
+                }
                 }
 
             }
@@ -179,9 +180,10 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
                         if (response.body()!!.status == 1) {
                             response.body()!!.message?.let { binding.root.snackbar(it) }
                             navController.navigate(R.id.action_enterGuarantorDetailsFragment_to_uploadIdDocumentsFragment)
-                        } else {
+                        } else {  if(response.body()!!.message?.isNotEmpty()) {
                             response.body()!!.message?.let { binding.root.snackbar(it) }
-
+                            dialogLoader?.hideProgressDialog()
+                        }
                         }
 
                     } else if(response.code()==401) {
@@ -192,9 +194,10 @@ class EnterGuarantorDetailsFragment : BaseFragment<FragmentEnterGuarantorDetails
                         dialogLoader?.hideProgressDialog()
                         binding.root.snackbar(getString(R.string.session_expired))
                         startAuth(navController)
-                    }else{
+                    }else{  if(response.body()!!.message?.isNotEmpty()) {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                         dialogLoader?.hideProgressDialog()
+                    }
                     }
 
                 }

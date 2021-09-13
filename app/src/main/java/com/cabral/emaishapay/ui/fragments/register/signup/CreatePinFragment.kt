@@ -182,11 +182,17 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                                     R.id.action_global_homeFragment
                                 )
                             } else {
-                                response.body()!!.message?.let { binding.root.snackbar(it) }
+                                  if(response.body()!!.message?.isNotEmpty()) {
+                                    response.body()!!.message?.let { binding.root.snackbar(it) }
+                                    dialogLoader?.hideProgressDialog()
+                                }
+
                             }
 
-                        } else {
+                        } else {  if(response.body()!!.message?.isNotEmpty()) {
                             response.body()!!.message?.let { binding.root.snackbar(it) }
+                            dialogLoader?.hideProgressDialog()
+                        }
                         }
 
                     }

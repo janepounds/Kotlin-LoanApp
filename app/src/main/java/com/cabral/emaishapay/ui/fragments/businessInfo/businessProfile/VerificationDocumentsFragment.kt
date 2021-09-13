@@ -232,9 +232,10 @@ class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocuments
                     startAuth(navController)
 
 
-                } else {
+                } else {  if(response.body()!!.message?.isNotEmpty()) {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
                     dialogLoader?.hideProgressDialog()
+                }
                 }
 
             }

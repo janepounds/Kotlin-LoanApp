@@ -87,9 +87,10 @@ class LoanHistoryFragment : BaseFragment<FragmentLoanHistoryBinding>() {
                     dialogLoader?.hideProgressDialog()
                     binding.root.snackbar(getString(R.string.session_expired))
                     startAuth(navController)
-                } else {
-                    dialogLoader?.hideProgressDialog()
+                } else{  if(response.body()!!.message?.isNotEmpty()) {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
+                }
                 }
 
             }

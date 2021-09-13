@@ -88,8 +88,10 @@ class WithdrawFundsFragment : BaseFragment<FragmentWithdrawFundsBinding>() {
                     dialogLoader?.hideProgressDialog()
                     binding.root.snackbar(getString(R.string.session_expired))
                     startAuth(navController)
-                } else {
+                } else {  if(response.body()!!.message?.isNotEmpty()) {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
+                }
                 }
 
             }

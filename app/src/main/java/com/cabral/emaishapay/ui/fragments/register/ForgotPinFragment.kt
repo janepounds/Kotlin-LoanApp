@@ -70,14 +70,17 @@ class ForgotPinFragment : BaseFragment<FragmentForgotPinBinding>() {
                     binding.root.snackbar(getString(R.string.session_expired))
                     startAuth(navController)
 
-                } else {
-                    dialogLoader?.hideProgressDialog()
+                } else
+                {  if(response.body()!!.message?.isNotEmpty()) {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
+                    dialogLoader?.hideProgressDialog()
+                 }
                 }
 
             }
 
             override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
+
                 t.message?.let { binding.root.snackbar(it) }
                 dialogLoader?.hideProgressDialog()
 

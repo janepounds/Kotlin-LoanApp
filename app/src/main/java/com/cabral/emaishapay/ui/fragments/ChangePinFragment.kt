@@ -128,7 +128,10 @@ class ChangePinFragment : BaseFragment<FragmentChangePinBinding>(){
                     binding.root.snackbar(getString(R.string.session_expired))
                     startAuth(navController)
                 }else {
-                    response.body()!!.message?.let { binding.root.snackbar(it) }
+                    if(response.body()!!.message?.isNotEmpty()) {
+                        response.body()!!.message?.let { binding.root.snackbar(it) }
+                        dialogLoader?.hideProgressDialog()
+                    }
                 }
 
             }

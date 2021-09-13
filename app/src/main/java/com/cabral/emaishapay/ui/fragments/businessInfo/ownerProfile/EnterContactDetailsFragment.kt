@@ -118,10 +118,10 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
 
 
 
-                    }else{
+                    }else{  if(response.body()!!.message?.isNotEmpty()) {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                         dialogLoader?.hideProgressDialog()
-
+                    }
                     }
 
                 } else if(response.code()==401) {
@@ -135,9 +135,10 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
                     startAuth(navController)
 
 
-                }else{
+                }else{  if(response.body()!!.message?.isNotEmpty()) {
                     response.body()!!.message?.let { binding.root.snackbar(it) }
                     dialogLoader?.hideProgressDialog()
+                }
                 }
 
             }
@@ -225,9 +226,10 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
                         if (response.body()!!.status == 1) {
                             response.body()!!.message?.let { binding.root.snackbar(it) }
                             navController.navigate(R.id.action_enterContactDetailsFragment_to_enterGuarantorDetailsFragment)
-                        } else {
+                        } else {  if(response.body()!!.message?.isNotEmpty()) {
                             response.body()!!.message?.let { binding.root.snackbar(it) }
-
+                            dialogLoader?.hideProgressDialog()
+                        }
                         }
 
                     } else if(response.code()==401){
@@ -238,9 +240,10 @@ class EnterContactDetailsFragment : BaseFragment<FragmentEnterContactDetailsBind
                         dialogLoader?.hideProgressDialog()
                         binding.root.snackbar(getString(R.string.session_expired))
                         startAuth(navController)
-                    }else{
+                    }else{  if(response.body()!!.message?.isNotEmpty()) {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                         dialogLoader?.hideProgressDialog()
+                    }
                     }
 
                 }

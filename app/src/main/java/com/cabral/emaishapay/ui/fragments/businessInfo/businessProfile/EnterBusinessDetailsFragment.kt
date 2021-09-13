@@ -193,9 +193,10 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
                         startAuth(navController)
 
 
-                    } else {
+                    } else {  if(response.body()!!.message?.isNotEmpty()) {
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                         dialogLoader?.hideProgressDialog()
+                    }
                     }
 
                 }
