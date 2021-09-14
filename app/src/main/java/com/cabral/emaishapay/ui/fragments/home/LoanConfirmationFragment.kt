@@ -32,7 +32,7 @@ class LoanConfirmationFragment : BaseFragment<FragmentLoanConfirmationBinding>()
             else -> getString(R.string.weekly)
         }.lowercase()
 
-        binding.valueTotalLoan.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(mViewModel.loanAmount))
+        binding.valueTotalLoan.text = String.format(getString(R.string.wallet_balance_value), MyApplication.getNumberFormattedString(mViewModel.loanDueAmount))
         binding.tvRepaymentTime.text = String.format(getString(R.string.repayment_time_value), mViewModel.duration, mViewModel.type)
         binding.tvStartingDate.text = String.format(getString(R.string.starting_date), "25 July")
         binding.tvLoanText.text = spannedFromHtml(

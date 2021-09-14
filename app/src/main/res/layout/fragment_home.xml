@@ -79,8 +79,7 @@
                         android:layout_height="match_parent"
                         android:contentDescription="@string/app_name"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_default_user"
-                        app:circleImageSrc="@{user.profileImage}" />
+                        android:src="@drawable/ic_default_user" />
 
                 </com.google.android.material.card.MaterialCardView>
 

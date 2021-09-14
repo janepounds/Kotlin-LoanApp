@@ -70,7 +70,7 @@ class LoanHistoryFragment : BaseFragment<FragmentLoanHistoryBinding>() {
                         val list = ArrayList<Loan>()
                         for (i in response.body()!!.data!!){
 
-                            list.add(Loan(loanId = i.loan_id, status = LoanStatus.valueOf(i.status.uppercase()), amt = i.amount.toLong(),interestRate = i.interest_rate,duration = i.duration,i.duration_units))
+                            list.add(Loan(loanId = i.loan_id, status = LoanStatus.valueOf(i.status.uppercase()), amt = i.amount.toLong(),interestRate = i.interest_rate,duration = i.duration,i.duration_units,loanDueAmount = i.amount_due.toLong()))
                         }
                         adapter.updateList(list)
 

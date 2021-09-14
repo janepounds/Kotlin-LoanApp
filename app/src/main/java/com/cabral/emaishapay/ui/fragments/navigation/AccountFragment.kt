@@ -43,8 +43,13 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
     override fun setupTheme() {
         loadAppVersion()
-        binding.layoutAccountAbove.userImage.loadImage((Constants.LOAN_API_URL+ Prefs.getString("profile_pic")).toUri())
-
+        if(Prefs.getString("profile_pic")!=null) {
+            binding.layoutAccountAbove.userImage.loadImage(
+                (Constants.LOAN_API_URL + Prefs.getString(
+                    "profile_pic"
+                )).toUri()
+            )
+        }
         /************get user from shared preferences********************/
 
         context?.let {

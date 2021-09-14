@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -11,12 +12,15 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.cabral.emaishapay.R
+import com.cabral.emaishapay.constants.Constants
 import com.cabral.emaishapay.data.models.screen.ScreenItem
 import com.cabral.emaishapay.databinding.FragmentHomeBinding
 import com.cabral.emaishapay.ui.adapters.screen.HomeViewPagerAdapter
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoanViewModel
 import com.cabral.emaishapay.utils.getHomeViewPagerHtmlText
+import com.cabral.emaishapay.utils.loadImage
+import com.pixplicity.easyprefs.library.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import java.lang.Runnable
@@ -59,7 +63,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun setupTheme() {
         setupViewPager()
-
+        if(Prefs.getString("profile_pic")!=null) {
+            binding.userImage.loadImage((Constants.LOAN_API_URL + Prefs.getString("profile_pic")).toUri())
+        }
         /************get user from shared preferences********************/
         lifecycleScope.launch(Dispatchers.IO) {
 
@@ -74,13 +80,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                                 )
                                 binding.tvPaymentDueAmt.text = String.format(getString(R.string.wallet_balance_value),user.payment_due)
                                 binding.tvPaymentDueDate.text = user.payment_due_date
+                                binding.tvNextPaymentDate.text = String.format(getString(R.string.next_payment_date), user.payment_due_date)
                             })
                     }
                 }
         }
-
-
-        binding.tvNextPaymentDate.text = String.format(getString(R.string.next_payment_date), "05th August 2021")
 
     }
 

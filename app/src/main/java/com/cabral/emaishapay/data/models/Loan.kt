@@ -8,7 +8,7 @@ data class Loan(
     val amt: Long,
     val interestRate:Int,
     val duration:Int,
-    val durationType: String
-
+    val durationType: String,
+    val loanDueAmount:Long
 
 )

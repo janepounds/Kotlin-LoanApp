@@ -51,8 +51,9 @@ class UpdateAccountDetailsFragment :  BaseFragment<FragmentUpdateAcountDetailsBi
 
     override fun setupTheme() {
         /************get user from shared preferences********************/
-        binding.userImage.loadImage((Constants.LOAN_API_URL+ Prefs.getString("profile_pic")).toUri())
-
+        if(Prefs.getString("profile_pic")!=null) {
+            binding.userImage.loadImage((Constants.LOAN_API_URL + Prefs.getString("profile_pic")).toUri())
+        }
         context?.let {
             mViewModel.getCurrentUser( false, it).observe(viewLifecycleOwner, { user ->
                 binding.user=user
