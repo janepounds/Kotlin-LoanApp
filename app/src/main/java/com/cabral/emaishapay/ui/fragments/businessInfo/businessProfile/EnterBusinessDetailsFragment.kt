@@ -14,6 +14,7 @@ import com.cabral.emaishapay.network.ApiRequests
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoginViewModel
 import com.cabral.emaishapay.utils.*
+import com.pixplicity.easyprefs.library.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -166,13 +167,9 @@ class EnterBusinessDetailsFragment : BaseFragment<FragmentEnterBusinessDetailsBi
 
                         if (response.body()!!.status == 1) {
                             /************save values reg and location in the shared preferences*****************/
-                            lifecycleScope.launch {
-                                userPreferences.saveBusinessInfo(
-                                    dateRegistered,
-                                    location
-                                )
-                                Log.d(TAG, "onResponse: date"+userPreferences.businessInfo?.first()?.regDate +"locat"+userPreferences.businessInfo?.first()?.location)
-                            }
+                            Prefs.putString("date_registered",dateRegistered)
+                            Prefs.putString("location",location)
+                            Prefs.putString("biz_name",businessName)
                             response.body()!!.message?.let { binding.root.snackbar(it) }
                             navController.navigate(R.id.action_enterBusinessDetailsFragment_to_verificationDocumentsFragment)
 

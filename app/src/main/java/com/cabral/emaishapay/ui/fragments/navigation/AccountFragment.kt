@@ -9,11 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 
 import com.cabral.emaishapay.databinding.FragmentAccountBinding
 import com.cabral.emaishapay.R
+import com.cabral.emaishapay.constants.Constants
 import com.cabral.emaishapay.data.enums.EnterPinType
 import com.cabral.emaishapay.data.models.User
 import com.cabral.emaishapay.data.models.screen.AccountExpandableLayout
@@ -23,10 +25,8 @@ import com.cabral.emaishapay.singleton.MyApplication
 import com.cabral.emaishapay.ui.activities.MainActivity
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoanViewModel
-import com.cabral.emaishapay.utils.addToggleClickListeners
-import com.cabral.emaishapay.utils.createFullScreenDialog
-import com.cabral.emaishapay.utils.navigateUsingPopUp
-import com.cabral.emaishapay.utils.snackbar
+import com.cabral.emaishapay.utils.*
+import com.pixplicity.easyprefs.library.Prefs
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -43,6 +43,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
     override fun setupTheme() {
         loadAppVersion()
+        binding.layoutAccountAbove.userImage.loadImage((Constants.LOAN_API_URL+ Prefs.getString("profile_pic")).toUri())
 
         /************get user from shared preferences********************/
 

@@ -1,6 +1,5 @@
 package com.cabral.emaishapay.ui.fragments.businessInfo.ownerProfile
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
@@ -15,6 +14,7 @@ import com.cabral.emaishapay.network.ApiRequests
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoginViewModel
 import com.cabral.emaishapay.utils.*
+import com.pixplicity.easyprefs.library.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -190,12 +190,8 @@ class EnterPersonalDetailsFragment : BaseFragment<FragmentEnterPersonalDetailsBi
                         if (response.body()!!.status == 1) {
                             /************save values dob and nin in the shared preferences*****************/
 
-                            lifecycleScope.launch {
-                                userPreferences.savePersonalInfo(
-                                    nationalId,
-                                    dateOfBirth
-                                )
-                            }
+                            Prefs.putString("nin",nationalId)
+                            Prefs.putString("dob",dateOfBirth)
 
                             response.body()!!.message?.let { binding.root.snackbar(it) }
                             navController.navigate(R.id.action_enterPersonalDetailsFragment_to_enterContactDetailsFragment)

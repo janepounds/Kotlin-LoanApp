@@ -3,15 +3,20 @@ package com.cabral.emaishapay.ui.fragments.navigation
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.cabral.emaishapay.R
+import com.cabral.emaishapay.constants.Constants
 import com.cabral.emaishapay.data.models.User
 import com.cabral.emaishapay.data.models.screen.BusinessExpandableLayout
 import com.cabral.emaishapay.databinding.FragmentMyBusinessBinding
 import com.cabral.emaishapay.ui.base.BaseFragment
 import com.cabral.emaishapay.ui.viewModels.LoanViewModel
 import com.cabral.emaishapay.utils.addToggleClickListeners
+import com.cabral.emaishapay.utils.loadImage
+import com.cabral.emaishapay.utils.updatePhotoLayout
+import com.pixplicity.easyprefs.library.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -36,9 +41,9 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
 
     override fun setupTheme() {
         updateBusinessLayoutValues(null)
+        binding.userImage.loadImage((Constants.LOAN_API_URL+Prefs.getString("profile_pic")).toUri())
 
-
-        /************get user from shared preferences********************/
+        /***********get user from shared preferences********************/
                 context?.let {
                     mViewModel.getCurrentUser(false, it).observe(viewLifecycleOwner, { user ->
                         binding.user = user
@@ -65,13 +70,13 @@ class MyBusinessFragment : BaseFragment<FragmentMyBusinessBinding>() {
     private  fun updateBusinessLayoutValues(user: User?) {
         binding.layoutOwnerProfile.businessExpandableItem = getOwnerProfileItem(
             valueOne = user?.fullName ?: "",
-            valueTwo = user?.dateOfBirth?:"",
-            valueThree = user?.nin?:""
+            valueTwo = Prefs.getString("dob"),
+            valueThree = Prefs.getString("nin")
         )
         binding.layoutBusinessProfile.businessExpandableItem = getBusinessProfileItem(
-            valueOne = user?.fullName ?: "",
-            valueTwo = user?.regDate?:"",
-            valueThree = user?.location?:""
+            valueOne = Prefs.getString("biz_name"),
+            valueTwo = Prefs.getString("date_registered"),
+            valueThree = Prefs.getString("location")
         )
         binding.layoutBusinessDocuments.businessExpandableItem = getBusinessDocumentsItem(
             valueOne = getString(R.string.not_uploaded),

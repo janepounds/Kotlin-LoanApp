@@ -111,6 +111,9 @@ dependencies {
     implementation 'io.ak1.pix:piximagepicker:1.6.2'
     implementation 'com.github.paroca72:sc-gauges:3.5.4'
 
+    //EasyPrefs
+    implementation 'com.pixplicity.easyprefs:EasyPrefs:1.10.0'
+
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'

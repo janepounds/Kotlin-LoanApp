@@ -107,6 +107,8 @@ fun LayoutUploadDocumentBinding.updatePhotoLayout(selectedUri: Uri?) {
 }
 
 
+
+
 fun MaterialButton.enableButton() {
     this.isEnabled = true
     this.setTextColor(ContextCompat.getColor(this.context, R.color.white))

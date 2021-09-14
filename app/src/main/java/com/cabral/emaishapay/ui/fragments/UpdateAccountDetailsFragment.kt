@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
+import com.cabral.emaishapay.constants.Constants
 import com.google.android.material.textview.MaterialTextView
 import com.cabral.emaishapay.databinding.FragmentUpdateAcountDetailsBinding
 import com.cabral.emaishapay.ui.activities.ImagePickerActivity
@@ -18,6 +19,7 @@ import com.cabral.emaishapay.utils.getRealPathFromUri
 import com.cabral.emaishapay.utils.loadImage
 import com.cabral.emaishapay.utils.updatePhotoLayout
 import com.google.android.material.textfield.TextInputEditText
+import com.pixplicity.easyprefs.library.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -49,6 +51,7 @@ class UpdateAccountDetailsFragment :  BaseFragment<FragmentUpdateAcountDetailsBi
 
     override fun setupTheme() {
         /************get user from shared preferences********************/
+        binding.userImage.loadImage((Constants.LOAN_API_URL+ Prefs.getString("profile_pic")).toUri())
 
         context?.let {
             mViewModel.getCurrentUser( false, it).observe(viewLifecycleOwner, { user ->

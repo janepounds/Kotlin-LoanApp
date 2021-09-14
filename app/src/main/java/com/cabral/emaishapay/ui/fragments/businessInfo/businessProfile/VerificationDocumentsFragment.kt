@@ -126,6 +126,7 @@ class VerificationDocumentsFragment : BaseFragment<FragmentVerificationDocuments
 
 
                     } else {
+                        if(response.body()!!.message?.isNotEmpty())
                         response.body()!!.message?.let { binding.root.snackbar(it) }
                         dialogLoader?.hideProgressDialog()
 

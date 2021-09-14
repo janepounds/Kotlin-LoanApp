@@ -2,7 +2,9 @@ package com.cabral.emaishapay.singleton
 
 import android.app.Application
 import android.content.Context
+import android.content.ContextWrapper
 import com.cabral.emaishapay.BuildConfig
+import com.pixplicity.easyprefs.library.Prefs
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import java.text.NumberFormat
@@ -20,6 +22,13 @@ class MyApplication : Application() {
 
   override fun onCreate() {
     super.onCreate()
+    // Initialize the Prefs class
+    Prefs.Builder()
+      .setContext(this)
+      .setMode(ContextWrapper.MODE_PRIVATE)
+      .setPrefsName(packageName)
+      .setUseDefaultSharedPreference(true)
+      .build()
     mInstance = this
     numberFormat = NumberFormat.getNumberInstance(Locale.US)
 
